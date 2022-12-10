@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Carnegie Mellon University
+# SPDX-License-Identifier: 0BSD
+
+/dist/
+__pycache__/
+*~
+*.swp

@@ -1,0 +1,5 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: poetry.lock
+Copyright: 2022 Carnegie Mellon University
+License: 0BSD

@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: 2022 Carnegie Mellon University
+# SPDX-License-Identifier: 0BSD
+
+# github_url = "https://github.com/cmusatyalab/sinfonia/"
+
+[version]
+current = "0.1.0"
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  (?P<extra>\.post\.dev\d+)?
+  '''
+
+[[field]]
+name = "extra"
+default = ""
+
+[git]
+message_template = "Bumping to {new_version}"
+tag_template = "v{new_version}"
+
+[[file]]
+src = "pyproject.toml"
+search = 'version = "{current_version}"'
+
+[[file]]
+src = "src/wireguard_tools/__init__.py"
+search = '__version__ = "{current_version}"'
+
+[[before_commit]]
+name = "run unit tests"
+cmd = "poetry run pytest"
+
+[[before_commit]]
+name = "run pre-commit checks"
+cmd = "poetry run pre-commit run -a"
+
+#  [[after_push]]
+#  name = "publish"
+#  cmd = "./publish.sh"
