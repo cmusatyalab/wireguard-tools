@@ -137,8 +137,8 @@ implementation actually does something closer to syncconf, while the uapi-api
 implementation matches setconf.
 
 This implementation has only been tested on Linux where we've only actively
-used a subset of the available functionality, i.e. the common scenerio is
-configuring an interface just once with a single peer.
+used a subset of the available functionality, i.e. the common scenario is
+configuring an interface only once with just a single peer.
 
 
 ## Licenses
