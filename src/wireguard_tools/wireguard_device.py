@@ -78,9 +78,13 @@ class WireguardNetlinkDevice:
 
         # set/update the configuration
         iface_config = config.asdict()
-        peers = {peer["public_key"]: peer for peer in iface_config.pop("peers", [])}
 
-        self.wg.set(self.interface, iface_config)
+        # strip any non-interface related keys from the config
+        peers = {peer["public_key"]: peer for peer in iface_config.pop("peers", [])}
+        for key in ["addresses", "dns_servers", "search_domains"]:
+            iface_config.pop(key)
+
+        self.wg.set(self.interface, **iface_config)
 
         # remove peers that are no longer in the configuration
         for key in set(prev.peers).difference(peers):
@@ -90,12 +94,12 @@ class WireguardNetlinkDevice:
         for key in set(peers).intersection(prev.peers):
             if peers[key] != prev.peers[key]:
                 peer = peers[key]
-                self.wg.set(self.interface, peer=peer.asdict())
+                self.wg.set(self.interface, peer=peer)
 
         # add any new peers
         for key in set(peers).difference(prev.peers):
             peer = peers[key]
-            self.wg.set(self.interface, peer=peer.asdict())
+            self.wg.set(self.interface, peer=peer)
 
 
 class WireguardUAPIDevice:
