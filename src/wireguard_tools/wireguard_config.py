@@ -72,6 +72,15 @@ class WireguardPeer:
     rx_bytes: int | None = field(converter=optional(int), default=None, eq=False)
     tx_bytes: int | None = field(converter=optional(int), default=None, eq=False)
 
+    @classmethod
+    def from_dict(cls, config_dict: dict[str, Any]) -> WireguardPeer:
+        endpoint = config_dict.pop("endpoint", None)
+        if endpoint is not None:
+            host, port = endpoint.rsplit(":", 1)
+            config_dict["endpoint_host"] = host
+            config_dict["endpoint_port"] = int(port)
+        return cls(**config_dict)
+
     def asdict(self) -> dict[str, Any]:
         def _filter(attr: Any, value: Any) -> bool:
             return value is not None
@@ -87,7 +96,7 @@ class WireguardPeer:
         return asdict(self, filter=_filter, value_serializer=_serializer)
 
     @classmethod
-    def from_wgconfig_peer(cls, config: Sequence[tuple[str, str]]) -> WireguardPeer:
+    def from_wgconfig(cls, config: Sequence[tuple[str, str]]) -> WireguardPeer:
         conf: dict[str, Any] = dict()
         for key, value in config:
             key = key.lower()
@@ -96,11 +105,8 @@ class WireguardPeer:
             elif key == "presharedkey":
                 conf["preshared_key"] = WireguardKey(value)
             elif key == "endpoint":
-                host, port = value.rsplit(":")
-                try:
-                    conf["endpoint_host"] = ip_address(host)
-                except ValueError:
-                    conf["endpoint_host"] = host
+                host, port = value.rsplit(":", 1)
+                conf["endpoint_host"] = host
                 conf["endpoint_port"] = int(port)
             elif key == "persistentkeepalive":
                 conf["persistent_keepalive"] = int(value)
@@ -112,8 +118,7 @@ class WireguardPeer:
 
     def as_wgconfig_snippet(self) -> list[str]:
         conf = [
-            "",
-            "[Peer]",
+            "\n[Peer]",
             f"PublicKey = {self.public_key}",
         ]
         if self.preshared_key:
@@ -129,7 +134,7 @@ class WireguardPeer:
 @define(on_setattr=setters_convert)
 class WireguardConfig:
     private_key: WireguardKey | None = field(
-        converter=optional(WireguardKey), default=None, repr=lambda _: "'****'"
+        converter=optional(WireguardKey), default=None, repr=lambda _: "(hidden)"
     )
     fwmark: int | None = field(converter=optional(int), default=None)
     listen_port: int | None = field(converter=optional(int), default=None)
@@ -148,10 +153,17 @@ class WireguardConfig:
     @classmethod
     def from_dict(cls, config_dict: dict[str, Any]) -> WireguardConfig:
         config_dict = config_dict.copy()
+
+        dns = config_dict.pop("dns", [])
         peers = config_dict.pop("peers", [])
+
         config = cls(**config_dict)
+
+        for item in dns:
+            config._add_dns_entry(item)
+
         for peer_dict in peers:
-            peer = WireguardPeer(**peer_dict)
+            peer = WireguardPeer.from_dict(peer_dict)
             config.add_peer(peer)
         return config
 
@@ -190,7 +202,7 @@ class WireguardConfig:
             if section == "interface":
                 config._update_from_conf(key_value)
             else:
-                peer = WireguardPeer.from_wgconfig_peer(key_value)
+                peer = WireguardPeer.from_wgconfig(key_value)
                 config.add_peer(peer)
         return config
 
@@ -207,12 +219,15 @@ class WireguardConfig:
                 self.addresses.extend(ip_interface(addr) for addr in value.split(", "))
             elif key == "dns":
                 for item in value.split(", "):
-                    try:
-                        self.dns_servers.append(ip_address(item))
-                    except ValueError:
-                        self.search_domains.append(item)
+                    self._add_dns_entry(item)
             elif key == "mtu":
                 self.mtu = int(value)
+
+    def _add_dns_entry(self, item: str) -> None:
+        try:
+            self.dns_servers.append(ip_address(item))
+        except ValueError:
+            self.search_domains.append(item)
 
     def add_peer(self, peer: WireguardPeer) -> None:
         self.peers[peer.public_key] = peer
@@ -242,7 +257,7 @@ class WireguardConfig:
     def to_resolvconf(self, opt_ndots: int | None = None) -> str:
         conf = [f"nameserver {addr}" for addr in self.dns_servers]
         if self.search_domains:
-            search_domains = ", ".join(self.search_domains)
+            search_domains = " ".join(self.search_domains)
             conf.append(f"search {search_domains}")
         if opt_ndots is not None:
             conf.append(f"options ndots:{opt_ndots}")

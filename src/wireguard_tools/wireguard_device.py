@@ -74,32 +74,47 @@ class WireguardNetlinkDevice:
         return wgconfig
 
     def set_config(self, config: WireguardConfig) -> None:
-        prev = self.get_config()
+        current_config = self.get_config()
 
         # set/update the configuration
-        iface_config = config.asdict()
+        self.wg.set(
+            interface=self.interface,
+            private_key=str(config.private_key) if config.private_key else None,
+            listen_port=config.listen_port,
+            fwmark=config.fwmark,
+        )
 
-        # strip any non-interface related keys from the config
-        peers = {peer["public_key"]: peer for peer in iface_config.pop("peers", [])}
-        for key in ["addresses", "dns_servers", "search_domains"]:
-            iface_config.pop(key)
-
-        self.wg.set(self.interface, **iface_config)
+        cur_peers = set(current_config.peers)
+        new_peers = set(config.peers)
 
         # remove peers that are no longer in the configuration
-        for key in set(prev.peers).difference(peers):
+        for key in cur_peers.difference(new_peers):
             self.wg.set(self.interface, peer=dict(public_key=key, remove=True))
 
         # update any changed peers
-        for key in set(peers).intersection(prev.peers):
-            if peers[key] != prev.peers[key]:
-                peer = peers[key]
-                self.wg.set(self.interface, peer=peer)
+        for key in cur_peers.intersection(new_peers):
+            peer = config.peers[key]
+            if peer != current_config.peers[key]:
+                self.wg.set(self.interface, peer=self._wg_set_peer_arg(peer))
 
         # add any new peers
-        for key in set(peers).difference(prev.peers):
-            peer = peers[key]
-            self.wg.set(self.interface, peer=peer)
+        for key in new_peers.difference(cur_peers):
+            peer = config.peers[key]
+            self.wg.set(self.interface, peer=self._wg_set_peer_arg(peer))
+
+    def _wg_set_peer_arg(self, peer: WireguardPeer) -> dict[str, str | int | list[str]]:
+        peer_dict: dict[str, str | int | list[str]] = dict(
+            public_key=str(peer.public_key)
+        )
+        if peer.endpoint_host is not None and peer.endpoint_port is not None:
+            peer_dict["endpoint_addr"] = str(peer.endpoint_host)
+            peer_dict["endpoint_port"] = peer.endpoint_port
+        if peer.preshared_key is not None:
+            peer_dict["preshared_key"] = str(peer.preshared_key)
+        if peer.persistent_keepalive is not None:
+            peer_dict["persistent_keepalive"] = peer.persistent_keepalive
+        peer_dict["allowed_ips"] = [str(addr) for addr in peer.allowed_ips]
+        return peer_dict
 
 
 class WireguardUAPIDevice:

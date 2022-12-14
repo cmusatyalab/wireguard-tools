@@ -54,7 +54,7 @@ base64 or hex encoded keys as 'str' and not 'bytes', otherwise it will assume
 the key has already been decoded to its raw form.
 
 ```python
-from wireguard_tools.wireguard_key import WireguardKey
+from wireguard_tools import WireguardKey
 
 private_key = WireguardKey.generate()
 public_key = private_key.public_key()
@@ -77,7 +77,7 @@ configuration keys within a section. AllowedIPs, Address, and DNS configuration
 keys 'may be specified multiple times'. So we implemented our own parser.
 
 ```python
-from wireguard_tools.wireguard_config import WireguardConfig
+from wireguard_tools import WireguardConfig
 
 with open("wg0.conf") as fh:
     config = WireguardConfig.from_wgconfig(fh)
@@ -89,7 +89,7 @@ formats (i.e. json, yaml, toml, pickle) either to disk or to pass over a
 network.
 
 ```python
-from wireguard_tools.wireguard_config import WireguardConfig
+from wireguard_tools import WireguardConfig
 from pprint import pprint
 
 dict_config = dict(
@@ -146,7 +146,6 @@ configuring an interface only once with just a single peer.
 wireguard-tools is MIT licensed
 
     Copyright (c) 2022 Carnegie Mellon University
-    SPDX-License-Identifier: MIT
 
     Permission is hereby granted, free of charge, to any person obtaining a copy of
     this software and associated documentation files (the "Software"), to deal in

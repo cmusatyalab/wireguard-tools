@@ -6,3 +6,11 @@
 #
 
 __version__ = "0.1.0.post.dev0"
+
+from .wireguard_config import WireguardConfig
+from .wireguard_key import WireguardKey
+
+__all__ = [
+    "WireguardConfig",
+    "WireguardKey",
+]
