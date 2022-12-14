@@ -4,7 +4,7 @@
 # github_url = "https://github.com/cmusatyalab/sinfonia/"
 
 [version]
-current = "0.1.0.post.dev0"
+current = "0.1.1"
 regex = '''
   (?P<major>\d+)
   \.
