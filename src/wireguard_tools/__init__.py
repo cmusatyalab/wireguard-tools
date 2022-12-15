@@ -12,5 +12,5 @@ from .wireguard_key import WireguardKey
 
 __all__ = [
     "WireguardConfig",
-    "WireguardKey",
+    "WireguardKey"
 ]
