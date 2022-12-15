@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Carnegie Mellon University
 # SPDX-License-Identifier: 0BSD
 
-# github_url = "https://github.com/cmusatyalab/sinfonia/"
+# github_url = "https://github.com/cmusatyalab/wireguard-tools/"
 
 [version]
 current = "0.1.1.post.dev0"
