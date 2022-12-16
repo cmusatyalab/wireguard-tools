@@ -23,7 +23,7 @@ sequence = [
     {cmd = "poetry update"},
     {cmd = "poetry run pre-commit autoupdate"},
     {ref = "check"},
-    {cmd = "git commit --no-verify -m 'Update dependencies' poetry.lock, .pre-commit-config.yaml"},
+    {cmd = "git commit --no-verify -m 'Update dependencies' poetry.lock .pre-commit-config.yaml"},
 ]
 
 [tool.poe.tasks.tag-release]
