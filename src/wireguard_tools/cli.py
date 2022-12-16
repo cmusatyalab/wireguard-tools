@@ -10,8 +10,10 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from contextlib import closing
 from secrets import token_bytes
 from stat import S_IRWXO, S_ISREG
+from typing import Iterable
 
 from .wireguard_config import WireguardConfig
 from .wireguard_device import WireguardDevice
@@ -22,7 +24,7 @@ def show(args: argparse.Namespace) -> int:
     """Shows the current configuration and device information"""
     try:
         if args.interface is None:
-            devices = WireguardDevice.list()
+            devices: Iterable[WireguardDevice] = WireguardDevice.list()
         else:
             device = WireguardDevice.get(args.interface)
             if device is None:
@@ -33,6 +35,7 @@ def show(args: argparse.Namespace) -> int:
 
         for device in devices:
             config = device.get_config()
+            device.close()
 
             print(f"interface: {device.interface}")
             if config.private_key is not None:
@@ -75,14 +78,10 @@ def showconf(args: argparse.Namespace) -> int:
     """Shows the current configuration of a given WireGuard interface, \
     for use with `setconf`"""
     try:
-        device = WireguardDevice.get(args.interface)
-        if device is None:
-            raise RuntimeError(
-                f"Unable to access interface: {args.interface} not found"
-            )
-        config = device.get_config()
-        print(config.to_wgconfig(), end="")
-        return 0
+        with closing(WireguardDevice.get(args.interface)) as device:
+            config = device.get_config()
+            print(config.to_wgconfig(), end="")
+            return 0
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
@@ -99,13 +98,9 @@ def setconf(args: argparse.Namespace) -> int:
     # XXX our device.set_config implicitly does a syncconf
     try:
         config = WireguardConfig.from_wgconfig(args.configfile)
-        device = WireguardDevice.get(args.interface)
-        if device is None:
-            raise RuntimeError(
-                f"Unable to access interface: {args.interface} not found"
-            )
-        device.set_config(config)
-        return 0
+        with closing(WireguardDevice.get(args.interface)) as device:
+            device.set_config(config)
+            return 0
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
@@ -121,13 +116,9 @@ def syncconf(args: argparse.Namespace) -> int:
     """Synchronizes a configuration file to a WireGuard interface"""
     try:
         config = WireguardConfig.from_wgconfig(args.configfile)
-        device = WireguardDevice.get(args.interface)
-        if device is None:
-            raise RuntimeError(
-                f"Unable to access interface: {args.interface} not found"
-            )
-        device.set_config(config)
-        return 0
+        with closing(WireguardDevice.get(args.interface)) as device:
+            device.set_config(config)
+            return 0
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1

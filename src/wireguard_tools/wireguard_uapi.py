@@ -11,7 +11,7 @@ import os
 import socket
 from ipaddress import ip_address, ip_interface
 from pathlib import Path
-from typing import Iterable
+from typing import Iterator
 
 from .wireguard_config import WireguardConfig, WireguardPeer
 from .wireguard_device import WireguardDevice
@@ -22,7 +22,14 @@ WG_UAPI_SOCKET_DIR = Path("/var/run/wireguard")
 
 class WireguardUAPIDevice(WireguardDevice):
     def __init__(self, uapi_path: str | os.PathLike[str]) -> None:
-        self.uapi_path = Path(uapi_path)
+        self.uapi_path = (
+            WG_UAPI_SOCKET_DIR.joinpath(uapi_path).with_suffix(".sock")
+            if isinstance(uapi_path, str)
+            else Path(uapi_path)
+        )
+        if not self.uapi_path.exists():
+            raise FileNotFoundError
+
         super().__init__(self.uapi_path.stem)
 
         self.uapi_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -151,13 +158,6 @@ class WireguardUAPIDevice(WireguardDevice):
         return message
 
     @classmethod
-    def get(cls, ifname: str) -> WireguardDevice | None:
-        uapi_socket_path = WG_UAPI_SOCKET_DIR.joinpath(ifname).with_suffix(".sock")
-        if not uapi_socket_path.exists():
-            return None
-        return cls(uapi_socket_path)
-
-    @classmethod
-    def list(cls) -> Iterable[WireguardDevice]:
+    def list(cls) -> Iterator[WireguardDevice]:
         for socket_path in WG_UAPI_SOCKET_DIR.glob("*.sock"):
             yield cls(socket_path.stem)

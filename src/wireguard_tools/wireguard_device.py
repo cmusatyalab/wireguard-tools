@@ -8,7 +8,8 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from contextlib import suppress
+from typing import Iterator
 
 from .wireguard_config import WireguardConfig
 
@@ -17,9 +18,8 @@ class WireguardDevice(ABC):
     def __init__(self, interface: str) -> None:
         self.interface = interface
 
-    @abstractmethod
     def close(self) -> None:
-        pass
+        return None
 
     @abstractmethod
     def get_config(self) -> WireguardConfig:
@@ -30,17 +30,16 @@ class WireguardDevice(ABC):
         ...
 
     @classmethod
-    def get(cls, ifname: str) -> WireguardDevice | None:
+    def get(cls, ifname: str) -> WireguardDevice:
         from .wireguard_netlink import WireguardNetlinkDevice
         from .wireguard_uapi import WireguardUAPIDevice
 
-        device = WireguardUAPIDevice.get(ifname)
-        if device is None:
-            device = WireguardNetlinkDevice.get(ifname)
-        return device
+        with suppress(FileNotFoundError):
+            return WireguardUAPIDevice(ifname)
+        return WireguardNetlinkDevice(ifname)
 
     @classmethod
-    def list(cls) -> Iterable[WireguardDevice]:
+    def list(cls) -> Iterator[WireguardDevice]:
         from .wireguard_netlink import WireguardNetlinkDevice
         from .wireguard_uapi import WireguardUAPIDevice
 

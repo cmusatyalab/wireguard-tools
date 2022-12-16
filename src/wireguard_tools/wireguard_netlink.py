@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Iterator
 
 import pyroute2
 
@@ -20,9 +20,6 @@ class WireguardNetlinkDevice(WireguardDevice):
     def __init__(self, interface: str) -> None:
         super().__init__(interface)
         self.wg = pyroute2.WireGuard()
-
-    def close(self) -> None:
-        pass
 
     def get_config(self) -> WireguardConfig:
         try:
@@ -113,17 +110,8 @@ class WireguardNetlinkDevice(WireguardDevice):
         return peer_dict
 
     @classmethod
-    def get(cls, ifname: str) -> WireguardDevice | None:
-        if ifname not in cls._ifnames():
-            return None
-        return cls(ifname)
-
-    @classmethod
-    def list(cls) -> Iterable[WireguardDevice]:
-        for ifname in cls._ifnames():
-            yield cls(ifname)
-
-    @classmethod
-    def _ifnames(cls) -> set[str]:
+    def list(cls) -> Iterator[WireguardDevice]:
         with pyroute2.NDB() as ndb:
-            return {nic.ifname for nic in ndb.interfaces if nic.kind == "wireguard"}
+            for nic in ndb.interfaces:
+                if nic.kind == "wireguard":
+                    yield cls(nic.ifname)
