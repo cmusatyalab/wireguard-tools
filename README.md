@@ -115,14 +115,11 @@ pprint(dict_config)
 ### Working with WireGuard devices
 
 ```python
-from wireguard_tools.wireguard_device import (
-    list_wireguard_devices,
-    get_wireguard_device,
-)
+from wireguard_tools import WireguardDevice
 
-ifnames = list_wireguard_devices()
+ifnames = [device.interface for device in WireguardDevice.list()]
 
-device = get_wireguard_device("wg0")
+device = WireguardDevice.get("wg0")
 
 wgconfig = device.get_config()
 

@@ -8,9 +8,7 @@
 __version__ = "0.1.1.post.dev0"
 
 from .wireguard_config import WireguardConfig
+from .wireguard_device import WireguardDevice
 from .wireguard_key import WireguardKey
 
-__all__ = [
-    "WireguardConfig",
-    "WireguardKey"
-]
+__all__ = ["WireguardConfig", "WireguardDevice", "WireguardKey"]
