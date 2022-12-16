@@ -37,7 +37,7 @@ pyroute2 = "^0.7.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
-invoke = "^1.7.3"
+poethepoet = "^0.16.5"
 pre-commit = "^2.16.0"
 tbump = "^6.9.0"
 
@@ -78,6 +78,9 @@ files = ["src", "tests"]
 # pytest decorators are not typed
 module = "tests.*"
 disallow_untyped_decorators = false
+
+[tool.poe]
+include = "tasks.toml"
 
 [build-system]
 requires = ["poetry-core"]
