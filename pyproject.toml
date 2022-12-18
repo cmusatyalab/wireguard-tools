@@ -21,10 +21,10 @@ classifiers = [
 ]
 packages = [
     {include = "wireguard_tools", from = "src"},
-    {include = "tests", format = "sdist"},
 ]
 include = [
     {path = "LICENSES", format = "sdist"},
+    {path = "tests", format = "sdist"},
 ]
 
 [tool.poetry.scripts]
