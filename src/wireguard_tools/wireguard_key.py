@@ -4,6 +4,10 @@
 # Copyright (c) 2022 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 #
+"""This module defines a class to represent WireGuard keys
+
+The constructor will parse from various base64 and hex encodings. There are
+also class methods to generate new private keys and derive public keys."""
 
 from __future__ import annotations
 
@@ -38,6 +42,7 @@ def convert_wireguard_key(value: str | bytes | WireguardKey) -> bytes:
 
 @define(frozen=True)
 class WireguardKey:
+    """Representation of a WireGuard key"""
     keydata: bytes = field(converter=convert_wireguard_key)
 
     @classmethod
@@ -60,11 +65,14 @@ class WireguardKey:
         return f"WireguardKey('{self}')"
 
     def __str__(self) -> str:
+        """return a base64 encoded representation of the key"""
         return standard_b64encode(self.keydata).decode("utf-8")
 
     @property
     def urlsafe(self) -> str:
+        """return a urlsafe base64 encoded representation of the key"""
         return urlsafe_b64encode(self.keydata).decode("utf-8").rstrip("=")
 
     def hex(self) -> str:
+        """return a hexadecimal encoded representation of the key"""
         return self.keydata.hex()

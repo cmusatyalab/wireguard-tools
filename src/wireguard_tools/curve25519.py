@@ -16,6 +16,8 @@ level interface using the X25519PrivateKey and X25519PublicKey classes that are
 compatible with the classes in cryptography.hazmat.primitives.asymmetric.x25519 with
 the same names.
 """
+# trying to keep this somewhat close to the original gist
+# pylint: disable=invalid-name,missing-class-docstring,missing-function-docstring
 
 # By Nicko van Someren, 2021. This code is released into the public domain.
 
