@@ -3,7 +3,7 @@
 
 [tool.poetry]
 name = "wireguard-tools"
-version = "0.3.0"
+version = "0.3.0.post.dev0"
 description = "Pure python reimplementation of wireguard-tools"
 authors = [
     "Carnegie Mellon University <satya+group@cs.cmu.edu>",
