@@ -79,6 +79,10 @@ files = ["src", "tests"]
 module = "tests.*"
 disallow_untyped_decorators = false
 
+[[tool.mypy.overrides]]
+module = "pyroute2.*"
+ignore_missing_imports = true
+
 [tool.poe]
 include = "tasks.toml"
 

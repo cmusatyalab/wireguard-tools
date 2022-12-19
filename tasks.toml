@@ -13,6 +13,7 @@ cmd = "poetry build"
 help = "Run pre-commit and unit tests"
 sequence = [
     "poetry run pre-commit run -a",
+    "poetry run mypy",
     "poetry run pytest",
 ]
 default_item_type = "cmd"
