@@ -43,6 +43,7 @@ def convert_wireguard_key(value: str | bytes | WireguardKey) -> bytes:
 @define(frozen=True)
 class WireguardKey:
     """Representation of a WireGuard key"""
+
     keydata: bytes = field(converter=convert_wireguard_key)
 
     @classmethod
@@ -73,6 +74,7 @@ class WireguardKey:
         """return a urlsafe base64 encoded representation of the key"""
         return urlsafe_b64encode(self.keydata).decode("utf-8").rstrip("=")
 
+    @property
     def hex(self) -> str:
         """return a hexadecimal encoded representation of the key"""
         return self.keydata.hex()

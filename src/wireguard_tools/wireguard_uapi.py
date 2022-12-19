@@ -106,7 +106,7 @@ class WireguardUAPIDevice(WireguardDevice):
     def set_config(self, config: WireguardConfig) -> None:
         uapi = ["set=1"]
         if config.private_key is not None:
-            uapi.append(f"private_key={config.private_key.hex()}")
+            uapi.append(f"private_key={config.private_key.hex}")
         if config.listen_port is not None:
             uapi.append(f"listen_port={config.listen_port}")
         if config.fwmark is not None:
@@ -118,7 +118,7 @@ class WireguardUAPIDevice(WireguardDevice):
             assert not isinstance(peer.endpoint_host, str)
             uapi.extend(
                 [
-                    f"public_key={peer.public_key.hex()}",
+                    f"public_key={peer.public_key.hex}",
                     f"endpoint={peer.endpoint_host}:{peer.endpoint_port}",
                 ]
             )
