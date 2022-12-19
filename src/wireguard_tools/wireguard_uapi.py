@@ -103,17 +103,17 @@ class WireguardUAPIDevice(WireguardDevice):
                     )
         return config
 
-    def set_config(self, wgconfig: WireguardConfig) -> None:
+    def set_config(self, config: WireguardConfig) -> None:
         uapi = ["set=1"]
-        if wgconfig.private_key is not None:
-            uapi.append(f"private_key={wgconfig.private_key.hex()}")
-        if wgconfig.listen_port is not None:
-            uapi.append(f"listen_port={wgconfig.listen_port}")
-        if wgconfig.fwmark is not None:
-            uapi.append(f"fwmark={wgconfig.fwmark}")
+        if config.private_key is not None:
+            uapi.append(f"private_key={config.private_key.hex()}")
+        if config.listen_port is not None:
+            uapi.append(f"listen_port={config.listen_port}")
+        if config.fwmark is not None:
+            uapi.append(f"fwmark={config.fwmark}")
 
         uapi.append("replace_peers=true")
-        for peer in wgconfig.peers.values():
+        for peer in config.peers.values():
             # should resolve hostname for endpoint here
             assert not isinstance(peer.endpoint_host, str)
             uapi.extend(
