@@ -65,6 +65,7 @@ repos:
         pass_filenames: false
         additional_dependencies:
           - attrs
+          - segno
 
 #  - repo: https://github.com/fsfe/reuse-tool
 #    rev: v1.0.0

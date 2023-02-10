@@ -34,6 +34,7 @@ wg-py = "wireguard_tools.cli:main"
 python = "^3.7"
 attrs = ">=22.1.0"
 pyroute2 = "^0.7.3"
+segno = "^1.5.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"

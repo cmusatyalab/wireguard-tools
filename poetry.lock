@@ -355,6 +355,14 @@ python-versions = "*"
 contextlib2 = ">=0.5.5"
 
 [[package]]
+name = "segno"
+version = "1.5.2"
+description = "QR Code and Micro QR Code generator for Python 2 and Python 3"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+
+[[package]]
 name = "setuptools"
 version = "65.6.3"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
@@ -481,7 +489,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "4ee0dc634f81387e776159ed32eab5d2f794c2f1adddf8bd744b6fca83803de8"
+content-hash = "16a7a29b850435ba7030b9b1010e0b4d247f2bdc6124df3cac0b558a226052e6"
 
 [metadata.files]
 atomicwrites = [
@@ -677,6 +685,10 @@ pyyaml = [
 schema = [
     {file = "schema-0.7.5-py2.py3-none-any.whl", hash = "sha256:f3ffdeeada09ec34bf40d7d79996d9f7175db93b7a5065de0faa7f41083c1e6c"},
     {file = "schema-0.7.5.tar.gz", hash = "sha256:f06717112c61895cabc4707752b88716e8420a8819d71404501e114f91043197"},
+]
+segno = [
+    {file = "segno-1.5.2-py2.py3-none-any.whl", hash = "sha256:b17ace8171aad3987e01bb4aeadf7e0450c40674024c4c57b4da54028e55f1e9"},
+    {file = "segno-1.5.2.tar.gz", hash = "sha256:983424b296e62189d70fc73460cd946cf56dcbe82b9bda18c066fc1b24371cdc"},
 ]
 setuptools = [
     {file = "setuptools-65.6.3-py3-none-any.whl", hash = "sha256:57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54"},

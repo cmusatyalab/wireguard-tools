@@ -48,10 +48,10 @@ have to pass the full path to the script in the virtualenv, or use
 ### Parsing WireGuard keys
 
 The WireguardKey class will parse base64-encoded keys, the default base64
-encoded string, but also a urlsafe-base64 encoded variant. It also exposes
-private key generating and public key deriving functions. Be sure to pass any
-base64 or hex encoded keys as 'str' and not 'bytes', otherwise it will assume
-the key has already been decoded to its raw form.
+encoded string, but also an urlsafe base64 encoded variant. It also exposes
+both private key generating and public key deriving functions. Be sure to pass
+any base64 or hex encoded keys as 'str' and not 'bytes', otherwise it will
+assume the key was already decoded to its raw form.
 
 ```python
 from wireguard_tools import WireguardKey
@@ -71,10 +71,11 @@ print(public_key.hex())
 
 ### Working with WireGuard configuration files
 
-The WireGuard configuration file similar but not quit INI format because it has
-duplicate keys for both section names (i.e. [Peer]) as well as for
-configuration keys within a section. AllowedIPs, Address, and DNS configuration
-keys 'may be specified multiple times'. So we implemented our own parser.
+The WireGuard configuration file is similar to, but not quite, the INI format
+because it has duplicate keys for both section names (i.e. [Peer]) as well as
+configuration keys within a section. According to the format description,
+AllowedIPs, Address, and DNS configuration keys 'may be specified multiple
+times'.
 
 ```python
 from wireguard_tools import WireguardConfig
@@ -109,6 +110,36 @@ config = WireguardConfig.from_dict(dict_config)
 
 dict_config = config.asdict()
 pprint(dict_config)
+```
+
+Finally, there is a `to_qrcode` function that returns a segno.QRCode object
+which contains the configuration. This can be printed and scanned with the
+wireguard-android application. Careful with these because the QRcode exposes
+an easily captured copy of the private key as part of the configuration file.
+It is convenient, but definitely not secure.
+
+```python
+from wireguard_tools import WireguardConfig
+from pprint import pprint
+
+dict_config = dict(
+    private_key="...",
+    peers=[
+        dict(
+            public_key="...",
+            preshared_key=None,
+            endpoint_host="remote_host",
+            endpoint_port=5120,
+            persistent_keepalive=30,
+            allowed_ips=["0.0.0.0/0"],
+        ),
+    ],
+)
+config = WireguardConfig.from_dict(dict_config)
+
+qr = config.to_qrcode()
+qr.save("wgconfig.png")
+qr.terminal(compact=True)
 ```
 
 

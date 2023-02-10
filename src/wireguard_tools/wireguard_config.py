@@ -21,6 +21,7 @@ from typing import Any, Sequence, TextIO, TypeVar
 from attrs import asdict, define, field
 from attrs.converters import optional
 from attrs.setters import convert as setters_convert
+from segno import QRCode, make_qr
 
 from .wireguard_key import WireguardKey
 
@@ -150,6 +151,10 @@ class WireguardConfig:
     search_domains: list[str] = field(factory=list)
     mtu: int | None = field(converter=optional(int), default=None)
 
+    # wireguard-android specific extensions
+    included_applications: list[str] = field(factory=list)
+    excluded_applications: list[str] = field(factory=list)
+
     @classmethod
     def from_dict(cls, config_dict: dict[str, Any]) -> WireguardConfig:
         config_dict = config_dict.copy()
@@ -222,6 +227,10 @@ class WireguardConfig:
                     self._add_dns_entry(item)
             elif key == "mtu":
                 self.mtu = int(value)
+            elif key == "includedapplications":
+                self.included_applications.extend(item for item in value.split(", "))
+            elif key == "excludedapplications":
+                self.excluded_applications.extend(item for item in value.split(", "))
 
     def _add_dns_entry(self, item: str) -> None:
         try:
@@ -249,6 +258,14 @@ class WireguardConfig:
             conf.extend([f"Address = {addr}" for addr in self.addresses])
             conf.extend([f"DNS = {addr}" for addr in self.dns_servers])
             conf.extend([f"DNS = {domain}" for domain in self.search_domains])
+
+            # wireguard-android specific extensions
+            if self.included_applications:
+                apps = ", ".join(self.included_applications)
+                conf.append(f"IncludedApplications = {apps}")
+            if self.excluded_applications:
+                apps = ", ".join(self.excluded_applications)
+                conf.append(f"ExcludedApplications = {apps}")
         for peer in self.peers.values():
             conf.extend(peer.as_wgconfig_snippet())
         conf.append("")
@@ -263,3 +280,7 @@ class WireguardConfig:
             conf.append(f"options ndots:{opt_ndots}")
         conf.append("")
         return "\n".join(conf)
+
+    def to_qrcode(self) -> QRCode:
+        config = self.to_wgconfig(wgquick_format=True)
+        return make_qr(config)
