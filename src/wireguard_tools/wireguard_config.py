@@ -283,4 +283,4 @@ class WireguardConfig:
 
     def to_qrcode(self) -> QRCode:
         config = self.to_wgconfig(wgquick_format=True)
-        return make_qr(config)
+        return make_qr(config, mode="byte", encoding="utf-8", eci=True)
