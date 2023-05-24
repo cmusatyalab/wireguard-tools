@@ -82,7 +82,7 @@ class WireguardNetlinkDevice(WireguardDevice):
 
         # remove peers that are no longer in the configuration
         for key in cur_peers.difference(new_peers):
-            self.wg.set(self.interface, peer=dict(public_key=key, remove=True))
+            self.wg.set(self.interface, peer=dict(public_key=str(key), remove=True))
 
         # update any changed peers
         for key in cur_peers.intersection(new_peers):
