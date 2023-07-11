@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from ipaddress import (
     IPv4Address,
@@ -16,7 +17,7 @@ from ipaddress import (
     ip_address,
     ip_interface,
 )
-from typing import Any, Sequence, TextIO, TypeVar
+from typing import Any, Sequence, TextIO, TypeVar, Union
 
 from attrs import asdict, define, field
 from attrs.converters import optional
@@ -25,6 +26,7 @@ from segno import QRCode, make_qr
 
 from .wireguard_key import WireguardKey
 
+SimpleJsonTypes = Union[str, int, float, bool, None]
 T = TypeVar("T")
 
 
@@ -65,6 +67,9 @@ class WireguardPeer:
     allowed_ips: list[IPv4Interface | IPv6Interface] = field(
         converter=_list_of_ipinterface, factory=list
     )
+    # comment tags that can be parsed by prometheus-wireguard-exporter
+    friendly_name: str | None = None
+    friendly_json: dict[str, SimpleJsonTypes] | None = None
 
     # peer statistics from device
     last_handshake: float | None = field(
@@ -115,13 +120,20 @@ class WireguardPeer:
                 conf.setdefault("allowed_ips", []).extend(
                     ip_interface(addr) for addr in value.split(", ")
                 )
+            elif key == "# friendly_name":
+                conf["friendly_name"] = value
+            elif key == "# friendly_json":
+                conf["friendly_json"] = json.loads(value)
         return cls(**conf)
 
     def as_wgconfig_snippet(self) -> list[str]:
-        conf = [
-            "\n[Peer]",
-            f"PublicKey = {self.public_key}",
-        ]
+        conf = ["\n[Peer]"]
+        if self.friendly_name:
+            conf.append(f"# friendly_name = {self.friendly_name}")
+        if self.friendly_json is not None:
+            value = json.dumps(self.friendly_json)
+            conf.append(f"# friendly_json = {value}")
+        conf.append(f"PublicKey = {self.public_key}")
         if self.preshared_key:
             conf.append(f"PresharedKey = {self.preshared_key}")
         if self.endpoint_host:
@@ -206,8 +218,8 @@ class WireguardConfig:
         config = cls()
         for section, content in zip(sections, parts[1::2]):
             key_value = [
-                (match.group(1), match.group(2))
-                for match in re.finditer(r"^(\w+)\s*=\s*(.+)$", content, re.M)
+                (match.group(1), match.group(3))
+                for match in re.finditer(r"^((# )?\w+)\s*=\s*(.+)$", content, re.M)
             ]
             if section == "interface":
                 config._update_from_conf(key_value)

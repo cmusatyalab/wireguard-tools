@@ -84,6 +84,20 @@ with open("wg0.conf") as fh:
     config = WireguardConfig.from_wgconfig(fh)
 ```
 
+Also supported are the "Friendly Tags" comments as introduced by
+prometheus-wireguard-exporter, where a `[Peer]` section can contain
+comments which add a user friendly description and/or additional attributes.
+
+```
+[Peer]
+# friendly_name = Peer description for end users
+# friendly_json = {"flat"="json", "dictionary"=1, "attribute"=2}
+...
+```
+
+These will show up as additional `friendly_name` and `friendly_json` attributes
+on the WireguardPeer object.
+
 We can also serialize and deserialize from a simple dict-based format which
 uses only basic JSON datatypes and, as such, can be used to convert to various
 formats (i.e. json, yaml, toml, pickle) either to disk or to pass over a
@@ -103,6 +117,7 @@ dict_config = dict(
             endpoint_port=5120,
             persistent_keepalive=30,
             allowed_ips=["0.0.0.0/0"],
+            friendly_name="Awesome Peer",
         ),
     ],
 )
