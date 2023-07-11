@@ -389,7 +389,6 @@ files = [
 [package.dependencies]
 cfgv = ">=2.0.0"
 identify = ">=1.0.0"
-importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
 nodeenv = ">=0.11.1"
 pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
@@ -702,7 +701,6 @@ files = [
 [package.dependencies]
 distlib = ">=0.3.6,<1"
 filelock = ">=3.12,<4"
-importlib-metadata = {version = ">=6.6", markers = "python_version < \"3.8\""}
 platformdirs = ">=3.5.1,<4"
 
 [package.extras]
@@ -738,4 +736,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "16a7a29b850435ba7030b9b1010e0b4d247f2bdc6124df3cac0b558a226052e6"
+content-hash = "45218f291364d638f26963045fa4fd4a6be20451f90592c42296701ed20bcf2e"
