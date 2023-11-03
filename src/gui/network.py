@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 bp = Blueprint("networks", __name__, url_prefix="/networks")
 # For testing purposes
@@ -9,6 +9,9 @@ network_list = [
 ]
 
 
-@bp.route("/")
+@bp.route("/", methods=["GET", "POST"])
 def networks():
-    return render_template("networks.html", network_list=network_list)
+    if request.method == "POST":
+        print("POSTED to networks")
+    else:
+        return render_template("networks.html", network_list=network_list)

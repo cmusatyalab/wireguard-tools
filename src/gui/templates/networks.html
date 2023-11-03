@@ -3,22 +3,30 @@
 {% block title %} About {% endblock %}
 
 {% block content %}
-<h1>Wireguard GUI</h1>
-<h2>Networks</h2>
-
+<!-- Title -->
+<div class="p-2 bg-white">
+    <h2>Networks</h2>
+</div>
+<!-- Title -->
 <h3>{{ utc_dt }}</h3>
 
-{% for network in network_list %}
+<div class="row">
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ network.name }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
-        <p class="card-text">{{ network.description }}</p>
-        <a href="{{ url_for('networks.networks', network_id=network.id) }}" class="card-link">Details</a>
+    {% for network in network_list %}
+    <div class="col-md">
+
+        <!-- Card -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ network.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
+                <p class="card-text">{{ network.description }}</p>
+                <a href="{{ url_for('networks.networks', network_id=network.id) }}" class="card-link">Details</a>
+            </div>
+        </div>
+        <!-- Card -->
     </div>
+    {% endfor %}
 
 </div>
-
-{% endfor %}
 {% endblock %}

@@ -3,9 +3,20 @@
 {% block title %} About {% endblock %}
 
 {% block content %}
-<h1>Wireguard GUI</h1>
 <h2>Peers</h2>
 
+{% for peer in peer_list %}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ peer.name }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ peer.address }}</h6>
+        <p class="card-text">{{ peer.description }}</p>
+        <a href="{{ url_for('peers.peers', peer_id=peer.id) }}" class="card-link">Details</a>
+    </div>
+</div>
+
+{% endfor %}
 
 <h3>{{ utc_dt }}</h3>
 {% endblock %}

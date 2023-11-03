@@ -26,3 +26,7 @@ def create_app():
     app.register_blueprint(setting.bp)
 
     return app
+
+if __name__ == 'main':
+    #app.run(debug = True)
+    pass
