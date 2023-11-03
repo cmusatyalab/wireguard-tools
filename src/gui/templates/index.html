@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-    <title>Index</title>
-</head>
+{% block title %} Dashboard {% endblock %}
 
-<body>
-    <h1>Index</h1>
-    <p>Index page</p>
-</body>
+{% block content %}
+<h1>Wireguard GUI</h1>
+<h2>Dashboard</h2>
 
-</html>
+
+<h3>{{ utc_dt }}</h3>
+{% endblock %}
