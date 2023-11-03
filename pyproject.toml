@@ -31,10 +31,11 @@ include = [
 wg-py = "wireguard_tools.cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 attrs = ">=22.1.0"
 pyroute2 = "^0.7.3"
 segno = "^1.5.2"
+flask = "^3.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
