@@ -1,6 +1,14 @@
 import sqlite3
 
-connection = sqlite3.connect("database.db")
+try:
+    print("Connecting to database...")
+
+    connection = sqlite3.connect("database.db")
+except Exception as e:
+    print(e)
+    exit(1)
+else:
+    print("Connected to database successfully!")
 
 
 with open("schema.sql") as f:

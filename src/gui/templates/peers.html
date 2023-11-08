@@ -15,6 +15,9 @@
         <a href="{{ url_for('peers.peers', peer_id=peer.id) }}" class="card-link">Details</a>
     </div>
 </div>
+<div class="container-fluid">
+    <p>Note: All clients configurations are stored in the database until they are deleted. Inactive clients configurations are essentially in an unknown state.</p>
+</div>
 
 {% endfor %}
 
