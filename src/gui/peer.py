@@ -1,5 +1,9 @@
 from flask import Blueprint, render_template, request
 
+# Testing wg input
+import wireguard_tools as wgt
+devices = wgt.WireguardDevice.list()
+
 bp = Blueprint("peers", __name__, url_prefix="/peers")
 peer_list = [
     {
@@ -15,6 +19,7 @@ peer_list = [
             "PersistentKeepalive": 25,
             "Endpoint": "myserver.dyndns.org:51820",
         },
+        "network": 1,
         "description": "description 1",
         "id": 1,
     },
