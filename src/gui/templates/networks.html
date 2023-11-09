@@ -14,7 +14,6 @@
 
     {% for network in network_list %}
     <div class="col-md">
-
         <!-- Card -->
         <div class="card">
             <div class="card-body">
@@ -22,11 +21,17 @@
                 <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
                 <p class="card-text">{{ network.description }}</p>
                 <a href="{{ url_for('networks.networks', network_id=network.id) }}" class="card-link">Details</a>
+                <a href="{{ url_for('peers.peers', network_id=network.id) }}" class="card-link">Peers</a>
             </div>
         </div>
         <!-- Card -->
     </div>
     {% endfor %}
 
+</div>
+<br>
+<div class="container-fluid">
+    <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
+        configurations are essentially in an unknown state.</p>
 </div>
 {% endblock %}
