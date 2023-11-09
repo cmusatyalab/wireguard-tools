@@ -5,6 +5,8 @@ import wireguard_tools as wgt
 devices = wgt.WireguardDevice.list()
 
 bp = Blueprint("peers", __name__, url_prefix="/peers")
+
+# Dummy list for testing
 peer_list = [
     {
         "name": "peer 1",
