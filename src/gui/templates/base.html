@@ -40,13 +40,13 @@
                         <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('networks.networks') }}">Networks</a>
+                        <a class="nav-link" href="{{ url_for('networks.networks_all') }}">Networks</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('peers.peers') }}">Peers</a>
+                        <a class="nav-link" href="{{ url_for('peers.peers_all') }}">Peers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('settings.settings') }}">Settings</a>
+                        <a class="nav-link" href="{{ url_for('settings.settings_detail') }}">Settings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('about') }}">About</a>
@@ -81,6 +81,8 @@
                         </li>
                     </ul>
                 </div>
+                <!-- Live time and date -->
+                <div id="liveDateTime" class="navbar-text"></div>
             </div>
             <!-- Right elements -->
         </div>
@@ -165,9 +167,18 @@
     </footer>
     <!-- Footer -->
     <!-- MDB -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/mdb.min.js')}}"></script>
     <!-- Custom scripts -->
-    <script type="text/javascript"></script>
+    <script>
+        function updateDateTime() {
+            let now = new Date();
+            let date = now.toLocaleDateString();
+            let time = now.toLocaleTimeString();
+            document.getElementById('liveDateTime').textContent = date + ' ' + time;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+    </script>
 </body>
 
 </html>

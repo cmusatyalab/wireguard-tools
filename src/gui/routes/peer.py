@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request
+import json
 
 # Testing wg input
 import wireguard_tools as wgt
 
 devices = wgt.WireguardDevice.list()
 
-bp = Blueprint("peers", __name__, url_prefix="/peers")
+peers = Blueprint("peers", __name__, url_prefix="/peers")
 
 # Dummy list for testing
 peer_list = [
@@ -51,19 +52,27 @@ peer_list = [
 # print(peer_list)
 
 
-@bp.route("/", methods=["GET", "POST"])
-def peers():
+@peers.route("/", methods=["GET", "POST"])
+def peers_all():
     if request.method == "POST":
         print("POSTED to peers")
     else:
         return render_template("peers.html", peer_list=peer_list)
 
 
-@bp.route("/<peer_id>", methods=["GET", "POST"])
-def peer(peer_id):
+@peers.route("/<peer_id>", methods=["GET", "POST"])
+def peer_detail(peer_id):
     if request.method == "POST":
         print("POSTED to peers")
     else:
         peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
         print(f"Found: {peer}")
-        return render_template("peer_detail.html", peer=peer)
+        return render_template(
+            "peer_detail.html",
+            peer=peer,
+            config=(
+                json.dumps(
+                    peer["config"], sort_keys=True, indent=4, separators=(",", ": ")
+                )
+            ),
+        )

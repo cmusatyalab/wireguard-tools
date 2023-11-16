@@ -20,8 +20,8 @@
                 <h5 class="card-title">{{ network.name }}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
                 <p class="card-text">{{ network.description }}</p>
-                <a href="{{ url_for('networks.networks', network_id=network.id) }}" class="card-link">Details</a>
-                <a href="{{ url_for('peers.peers', network_id=network.id) }}" class="card-link">Peers</a>
+                <a href="{{ url_for('networks.networks_all', network_id=network.id) }}" class="card-link">Details</a>
+                <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers</a>
             </div>
         </div>
         <!-- Card -->

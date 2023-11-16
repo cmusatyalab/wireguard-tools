@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 
-bp = Blueprint("networks", __name__, url_prefix="/networks")
+networks = Blueprint("networks", __name__, url_prefix="/networks")
 # For testing purposes
 network_list = [
     {"name": "network 1", "address": "10.10.10.0", "description": "description 1", "id": 1},
@@ -9,8 +9,8 @@ network_list = [
 ]
 
 
-@bp.route("/", methods=["GET", "POST"])
-def networks():
+@networks.route("/", methods=["GET", "POST"])
+def networks_all():
     if request.method == "POST":
         print("POSTED to networks")
     else:

@@ -1,8 +1,6 @@
-from gui import create_app
+from gui import app
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-
-app = create_app()
 
 # sqlalchemy instance
 db = SQLAlchemy(app)
@@ -12,7 +10,7 @@ ma = Marshmallow(app)
 # Create models
 class Config(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    public_key = db.Column(db.String(50))
+    public_key = db.Column(db.String(50), nullable=False)
     preshared_key = db.Column(db.String(50))
     endpoint_host = db.Column(db.String(50))
     endpoint_port = db.Column(db.Integer)
@@ -24,11 +22,14 @@ class Config(db.Model):
     rx_bytes = db.Column(db.Integer)
     tx_bytes = db.Column(db.Integer)
     description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime)
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 
 class Peer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    private_key = db.Column(db.String(50))
     config = db.Column(db.String(50))
     network = db.Column(db.Integer)
     description = db.Column(db.Text)
@@ -97,5 +98,9 @@ if __name__ == "__main__":
             },
         }
     )
-    db.session.add_all([conf1, conf2])
+
+    peer1 = Peer(name="peer 1", config=conf1, network=1, description="description 1")
+    peer2 = Peer(name="peer 2", config=conf2, network=1, description="description 2")
+
+    db.session.add_all([conf1, conf2, peer1, peer2])
     db.session.commit()

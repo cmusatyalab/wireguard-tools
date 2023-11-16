@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} About {% endblock %}
+{% block title %} Peers {% endblock %}
 
 {% block content %}
 <h2>Peers</h2>
@@ -14,7 +14,7 @@
                 <h5 class="card-title">{{ peer.name }}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{ peer.address }}</h6>
                 <p class="card-text">{{ peer.description }}</p>
-                <a href="{{ url_for('peers.peer', peer_id=peer.id) }}" class="card-link">Details</a>
+                <a href="{{ url_for('peers.peer_detail', peer_id=peer.id) }}" class="card-link">Details</a>
             </div>
         </div>
     </div>

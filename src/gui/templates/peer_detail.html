@@ -12,9 +12,11 @@
             <h6 class="card-subtitle mb-2 text-muted">{{ peer.config.interface.private_key }}</h6>
             <p class="card-text">{{ peer.description }}</p>
             <div class="form-outline">
-                <textarea class="form-control" id="config" rows="4">{{ peer.config }}</textarea>
+                <textarea class="form-control" id="config" rows="10">{{ config }}</textarea>
                 <label class="form-label" for="config">Config</label>
             </div>
+            <button type="button" class="btn btn-success">Update</button>
+            <button type="button" class="btn btn-danger">Delete</button>
         </div>
     </div>
 </div>
