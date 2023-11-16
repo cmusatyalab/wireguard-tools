@@ -89,17 +89,20 @@
         <!-- Container wrapper -->
     </nav>
     <!-- Navbar -->
-    <div class="container">
-        <div class="content">
-            <!-- Title -->
-            <div class="p-2 bg-light">
-                <h2></h2>
+    <!--Main layout-->
+    <main>
+        <div class="container">
+            <div class="content">
+                <!-- Title -->
+                <div class="p-2 bg-light">
+                    <h2></h2>
+                </div>
+                <!-- Title -->
+                {% block content %} {% endblock %}
             </div>
-            <!-- Title -->
-            {% block content %} {% endblock %}
         </div>
-    </div>
-
+    </main>
+    <!--Main layout-->
     <!-- Footer -->
     <footer class="p-1 text-center text-lg-start bg-light text-muted fixed-bottom">
 
@@ -178,6 +181,14 @@
         }
         setInterval(updateDateTime, 1000);
         updateDateTime();
+    </script>
+    <script>
+        window.onload = function () {
+            let message = "{{ message }}";
+            if (message) {
+                alert(message);
+            }
+        };
     </script>
 </body>
 

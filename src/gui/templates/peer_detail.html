@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} About {% endblock %}
+{% block title %} Peer Details {% endblock %}
 
 {% block content %}
 <h2>Peer Details</h2>
@@ -9,13 +9,13 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ peer.friendly_name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ peer.config.interface.private_key }}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{ peer.public_key }}</h6>
             <p class="card-text">{{ peer.description }}</p>
             <div class="form-outline">
                 <textarea class="form-control" id="config" rows="10">{{ config }}</textarea>
                 <label class="form-label" for="config">Config</label>
             </div>
-            <button type="button" class="btn btn-success">Update</button>
+            <button type="button" class="btn btn-success">{{s_button}}</button>
             <button type="button" class="btn btn-danger">Delete</button>
         </div>
     </div>
@@ -26,6 +26,4 @@
         configurations are essentially in an unknown state.</p>
 </div>
 
-
-<h3>{{ utc_dt }}</h3>
 {% endblock %}
