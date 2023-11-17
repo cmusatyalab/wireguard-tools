@@ -112,9 +112,7 @@ def peers_all():
 def peers_add():
     new_peer = {}
     new_peer["config"] = sample_config
-    new_peer["public_key"] = wgt.WireguardKey(
-        new_peer["config"]["interface"]["private_key"]
-    ).public_key()
+    new_peer["public_key"] = ""
 
     return render_template(
         "peer_detail.html",

@@ -71,6 +71,9 @@
         let privateKey = document.getElementById('private_key').value;
         // Use the generatePublicKey function from wireguard.js
         let publicKey = wireguard.getPublicKey(privateKey);
+        if (privateKey == "") {
+            publicKey = "No Private Key";
+        }
         document.getElementById('publicKey').innerText = publicKey;
     }
 
