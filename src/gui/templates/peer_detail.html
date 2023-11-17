@@ -9,14 +9,52 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ peer.friendly_name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ peer.public_key }}</h6>
+            <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
             <p class="card-text">{{ peer.description }}</p>
             <div class="form-outline">
-                <textarea class="form-control" id="config" rows="10">{{ config }}</textarea>
-                <label class="form-label" for="config">Config</label>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="friendly_name" class="form-label">Friendly Name</label>
+                        <input type="text" class="form-control" id="friendly_name" name="friendly_name"
+                            value="{{ peer.friendly_name }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="private_key" class="form-label">Private Key</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="private_key" name="private_key"
+                                value="{{ peer.private_key }}" oninput="updatePublicKey()">
+                            <button class="btn btn-secondary" type="button" id="generatePrivateKey"
+                                onclick="generateAndSetPrivateKey()">Generate</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description"
+                            value="{{ peer.description }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="endpoint" class="form-label">Endpoint</label>
+                        <input type="text" class="form-control" id="endpoint" name="endpoint"
+                            value="{{ peer.endpoint }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="allowed_ips" class="form-label">Allowed IPs</label>
+                        <input type="text" class="form-control" id="allowed_ips" name="allowed_ips"
+                            value="{{ peer.allowed_ips }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="persistent_keepalive" class="form-label">Persistent Keepalive</label>
+                        <input type="text" class="form-control" id="persistent_keepalive" name="persistent_keepalive"
+                            value="{{ peer.persistent_keepalive }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="dns" class="form-label">DNS</label>
+                        <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
+                    </div>
+                    <button type="submit" class="btn btn-success">{{s_button}}</button>
+                    <button type="button" class="btn btn-danger">Delete</button>
+                </form>
             </div>
-            <button type="button" class="btn btn-success">{{s_button}}</button>
-            <button type="button" class="btn btn-danger">Delete</button>
         </div>
     </div>
 </div>
@@ -25,5 +63,23 @@
     <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
         configurations are essentially in an unknown state.</p>
 </div>
+<script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
 
+<script>
+    var keypair = wireguard.generateKeypair();
+    function updatePublicKey() {
+        let privateKey = document.getElementById('private_key').value;
+        // Use the generatePublicKey function from wireguard.js
+        let publicKey = wireguard.getPublicKey(privateKey);
+        document.getElementById('publicKey').innerText = publicKey;
+    }
+
+    function generateAndSetPrivateKey() {
+        var keypair = wireguard.generateKeypair();
+        // Use the generatePrivateKey function from wireguard.js
+        let privateKey = keypair.privateKey;
+        document.getElementById('private_key').value = privateKey;
+        updatePublicKey();
+    }
+</script>
 {% endblock %}
