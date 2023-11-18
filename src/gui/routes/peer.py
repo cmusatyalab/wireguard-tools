@@ -81,22 +81,8 @@ def query_all_peers():
 @peers.route("/", methods=["GET", "POST" "DELETE", "PUT"])
 def peers_all():
     if request.method == "POST":
-        name = request.form["name"]
-        private_key = request.form["private_key"]
-        config = request.form["config"]
-        network = request.form["network"]
-        description = request.form["description"]
-        new_peer = Peer(
-            name=name,
-            private_key=private_key,
-            config=config,
-            network=network,
-            description=description,
-        )
-        db.session.add(new_peer)
-        db.session.commit()
 
-        message = "Peer added successfully"
+        message = "Bulk peers added successfully"
         peer_list = query_all_peers()
         return render_template("peers.html", message=message, peer_list=peer_list)
 
@@ -122,6 +108,7 @@ def peers_add():
                 new_peer["config"], sort_keys=True, indent=4, separators=(",", ": ")
             )
         ),
+        method="'POST'",
         s_button = "Add"
     )
 
@@ -129,7 +116,24 @@ def peers_add():
 @peers.route("/<peer_id>", methods=["GET", "POST"])
 def peer_detail(peer_id):
     if request.method == "POST":
-        print("POSTED to peers")
+        name = request.form["name"]
+        private_key = request.form["private_key"]
+        config = request.form["config"]
+        network = request.form["network"]
+        description = request.form["description"]
+        new_peer = Peer(
+            name=name,
+            private_key=private_key,
+            config=config,
+            network=network,
+            description=description,
+        )
+        db.session.add(new_peer)
+        db.session.commit()
+        message = "Peer added successfully"
+        peer_list = query_all_peers()
+        return render_template("peers.html", message=message, peer_list=peer_list)
+    
     elif request.method == "GET":
         # peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
         peer = Peer.query.filter_by(id=peer_id).first()

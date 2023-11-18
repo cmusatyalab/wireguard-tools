@@ -10,14 +10,21 @@
         <div class="card-body">
             <h5 class="card-title">{{ peer.friendly_name }}</h5>
             <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
-            <p class="card-text">{{ peer.description }}</p>
             <div class="form-outline">
                 <form method="POST">
                     <div class="mb-3">
-                        <label for="friendly_name" class="form-label">Friendly Name</label>
+                        <label for="friendly_name" class="form-label">Node Name</label>
                         <input type="text" class="form-control" id="friendly_name" name="friendly_name"
                             value="{{ peer.friendly_name }}">
                     </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description"
+                            value="{{ peer.description }}">
+                    </div>
+                    <div class="card">
+                        <h6 class="card-header">Peer Configuration</h6>
+                        [Interface]
                     <div class="mb-3">
                         <label for="private_key" class="form-label">Private Key</label>
                         <div class="input-group">
@@ -27,11 +34,7 @@
                                 onclick="generateAndSetPrivateKey()">Generate</button>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" name="description"
-                            value="{{ peer.description }}">
-                    </div>
+
                     <div class="mb-3">
                         <label for="endpoint" class="form-label">Endpoint</label>
                         <input type="text" class="form-control" id="endpoint" name="endpoint"
@@ -43,14 +46,16 @@
                             value="{{ peer.allowed_ips }}">
                     </div>
                     <div class="mb-3">
+                        <label for="dns" class="form-label">DNS</label>
+                        <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
+                    </div>
+                    <div class="mb-3">
                         <label for="persistent_keepalive" class="form-label">Persistent Keepalive</label>
                         <input type="text" class="form-control" id="persistent_keepalive" name="persistent_keepalive"
                             value="{{ peer.persistent_keepalive }}">
                     </div>
-                    <div class="mb-3">
-                        <label for="dns" class="form-label">DNS</label>
-                        <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
-                    </div>
+                    </div>  
+
                     <button type="submit" class="btn btn-success">{{s_button}}</button>
                     <button type="button" class="btn btn-danger">Delete</button>
                 </form>
