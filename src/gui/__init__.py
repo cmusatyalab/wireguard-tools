@@ -9,6 +9,8 @@ basedir = os.getcwd()
 def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
+    # Automatically reload templates when they are changed
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
     # Disable track modifications for SQLAlchemy
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     # Set the database URI for SQLAlchemy

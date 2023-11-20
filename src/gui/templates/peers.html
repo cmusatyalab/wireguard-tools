@@ -3,13 +3,17 @@
 {% block title %} Peers {% endblock %}
 
 {% block content %}
-<h2>Peers</h2>
 <div class="container-fluid">
-    <div class="form-group">
-        <div class="col-md float-right">
-            <a href="{{ url_for('peers.peers_add') }}" class="btn btn-primary">Add Peer</a>
+    <div class="row">
+        <h2>Peers</h2>
+
+        <div class="form-group">
+            <div class="col-md float-right">
+                <a href="{{ url_for('peers.peers_add') }}" class="btn btn-primary">Add Peer</a>
+            </div>
         </div>
     </div>
+    <hr class="hr" />
     <div class="row">
 
         {% for peer in peer_list %}
@@ -20,7 +24,7 @@
                     <h5 class="card-title">{{ peer.name }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ peer.public_key }}</h6>
                     <p class="card-text">{{ peer.description }}</p>
-                    <a href="{{ url_for('peers.peer_detail', peer_id=peer.id) }}" class="card-link">Details</a>
+                    <a href="{{ url_for('peers.peers_all')}}/{{peer.id}}" class="card-link">Details</a>
                 </div>
             </div>
         </div>
@@ -34,5 +38,4 @@
         configurations are essentially in an unknown state.</p>
 </div>
 
-<h3>{{ utc_dt }}</h3>
 {% endblock %}

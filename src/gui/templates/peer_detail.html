@@ -25,37 +25,54 @@
                     <div class="card">
                         <h6 class="card-header">Peer Configuration</h6>
                         [Interface]
-                    <div class="mb-3">
-                        <label for="private_key" class="form-label">Private Key</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="private_key" name="private_key"
-                                value="{{ peer.private_key }}" oninput="updatePublicKey()">
-                            <button class="btn btn-secondary" type="button" id="generatePrivateKey"
-                                onclick="generateAndSetPrivateKey()">Generate</button>
+                        <div class="mb-3">
+                            <label for="private_key" class="form-label">PrivateKey</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="private_key" name="private_key"
+                                    value="{{ peer.private_key }}" oninput="updatePublicKey()">
+                                <button class="btn btn-secondary" type="button" id="generatePrivateKey"
+                                    onclick="generateAndSetPrivateKey()">Generate</button>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" name="address"
+                                    value="{{ peer.address }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dns" class="form-label">DNS</label>
+                                <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="endpoint" class="form-label">Endpoint</label>
-                        <input type="text" class="form-control" id="endpoint" name="endpoint"
-                            value="{{ peer.endpoint }}">
+                        <!-- [Peer]
+                        {% for peer in peers %}
+                        <div class="mb-3">
+                            <label for="public_key" class="form-label">PublicKey</label>
+                            <input type="text" class="form-control" id="public_key" name="public_key"
+                                value="{{ peer.allowed_ips }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="endpoint" class="form-label">Endpoint</label>
+                            <input type="text" class="form-control" id="endpoint" name="endpoint"
+                                value="{{ peer.endpoint }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="allowed_ips" class="form-label">Allowed IPs</label>
+                            <input type="text" class="form-control" id="allowed_ips" name="allowed_ips"
+                                value="{{ peer.allowed_ips }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="dns" class="form-label">Preshared Key</label>
+                            <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="persistent_keepalive" class="form-label">PersistentKeepalive</label>
+                            <input type="text" class="form-control" id="persistent_keepalive"
+                                name="persistent_keepalive" value="{{ peer.persistent_keepalive }}">
+                        </div>
+                        {% endfor %} -->
                     </div>
-                    <div class="mb-3">
-                        <label for="allowed_ips" class="form-label">Allowed IPs</label>
-                        <input type="text" class="form-control" id="allowed_ips" name="allowed_ips"
-                            value="{{ peer.allowed_ips }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="dns" class="form-label">DNS</label>
-                        <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="persistent_keepalive" class="form-label">Persistent Keepalive</label>
-                        <input type="text" class="form-control" id="persistent_keepalive" name="persistent_keepalive"
-                            value="{{ peer.persistent_keepalive }}">
-                    </div>
-                    </div>  
-
+    
                     <button type="submit" class="btn btn-success">{{s_button}}</button>
                     <button type="button" class="btn btn-danger">Delete</button>
                 </form>
@@ -68,10 +85,15 @@
     <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
         configurations are essentially in an unknown state.</p>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
 <script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
 
 <script>
-    var keypair = wireguard.generateKeypair();
+    window.onload = function () { updatePublicKey(); };
+
     function updatePublicKey() {
         let privateKey = document.getElementById('private_key').value;
         // Use the generatePublicKey function from wireguard.js
@@ -83,7 +105,7 @@
     }
 
     function generateAndSetPrivateKey() {
-        var keypair = wireguard.generateKeypair();
+        let keypair = wireguard.generateKeypair();
         // Use the generatePrivateKey function from wireguard.js
         let privateKey = keypair.privateKey;
         document.getElementById('private_key').value = privateKey;

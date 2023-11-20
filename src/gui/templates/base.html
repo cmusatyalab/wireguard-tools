@@ -17,7 +17,7 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
         <!-- Container wrapper -->
         <div class="container-fluid">
             <!-- Toggle button -->
@@ -58,7 +58,7 @@
             <!-- Right elements -->
             <div class="d-flex align-items-center">
                 <!-- Icon -->
-                <a class="text-reset me-3" href="#">
+                <a class="text-reset me-3" data-mdb-tooltip-init title="Refresh Page" onclick="refresh_page()">
                     <i class="fas fa-refresh"></i>
                 </a>
 
@@ -173,6 +173,10 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/mdb.min.js')}}"></script>
     <!-- Custom scripts -->
     <script>
+        function refresh_page() {
+            window.location.reload(true);
+        }
+
         function updateDateTime() {
             let now = new Date();
             let date = now.toLocaleDateString();
@@ -190,6 +194,7 @@
             }
         };
     </script>
+    {% block scripts %} {% endblock %}
 </body>
 
 </html>

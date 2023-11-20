@@ -66,22 +66,26 @@ peer_list = [
     },
 ]
 
+## FUNCTIONS ##
+
 
 # print(peer_list)
 def query_all_peers():
     peer_query = Peer.query.all()
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(
-            peer.config["interface"]["private_key"]
+            peer.private_key
         ).public_key()
     print(peer_query)
     return peer_query
 
 
-@peers.route("/", methods=["GET", "POST" "DELETE", "PUT"])
+## ROUTES ##
+
+
+@peers.route("/", methods=["GET", "POST", "DELETE", "PATCH"])
 def peers_all():
     if request.method == "POST":
-
         message = "Bulk peers added successfully"
         peer_list = query_all_peers()
         return render_template("peers.html", message=message, peer_list=peer_list)
@@ -99,33 +103,23 @@ def peers_add():
     new_peer = {}
     new_peer["config"] = sample_config
     new_peer["public_key"] = ""
-
-    return render_template(
-        "peer_detail.html",
-        peer=new_peer,
-        config=(
-            json.dumps(
-                new_peer["config"], sort_keys=True, indent=4, separators=(",", ": ")
-            )
-        ),
-        method="'POST'",
-        s_button = "Add"
-    )
-
-
-@peers.route("/<peer_id>", methods=["GET", "POST"])
-def peer_detail(peer_id):
+    new_peer["network"] = 1
     if request.method == "POST":
-        name = request.form["name"]
-        private_key = request.form["private_key"]
-        config = request.form["config"]
-        network = request.form["network"]
+        name = request.form["friendly_name"]
         description = request.form["description"]
+        private_key = request.form["private_key"]
+        address = request.form["address"]
+        dns = request.form["dns"]
+        #peer_config = request.form["peer_config"]
+        #network = request.form["network"]
+
         new_peer = Peer(
             name=name,
             private_key=private_key,
-            config=config,
-            network=network,
+            address=address,
+            dns=dns,
+            #peer_config=peer_config,
+            #network=network,
             description=description,
         )
         db.session.add(new_peer)
@@ -133,21 +127,41 @@ def peer_detail(peer_id):
         message = "Peer added successfully"
         peer_list = query_all_peers()
         return render_template("peers.html", message=message, peer_list=peer_list)
-    
-    elif request.method == "GET":
-        # peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
-        peer = Peer.query.filter_by(id=peer_id).first()
-        print(f"Found: {peer}")
-
+    else:
         return render_template(
             "peer_detail.html",
+            peer=new_peer,
+            s_button="Add",
+        )
+
+
+@peers.route("/<int:peer_id>", methods=["GET", "POST"])
+def peer_detail(peer_id):
+    print(peer_id)
+    #peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
+    peer = Peer.query.filter_by(id=peer_id).first()
+    print(f"Found: {peer}")
+
+    if request.method == "POST":
+        peer.name = request.form["friendly_name"]
+        peer.description = request.form["description"]
+        peer.private_key = request.form["private_key"]
+        peer.address = request.form["address"]
+        peer.dns = request.form["dns"]
+        #peer_config = request.form["peer_config"]
+        #network = request.form["network"]
+      
+        db.session.commit()
+        message = "Peer updated successfully"
+        peer_list = query_all_peers()
+        return render_template("peers.html", message=message, peer_list=peer_list)
+
+    elif request.method == "GET":
+            return render_template(
+            "peer_detail.html",
             peer=peer,
-            config=(
-                json.dumps(
-                    peer["config"], sort_keys=True, indent=4, separators=(",", ": ")
-                )
-            ),
-            s_button = "Update"
+  
+            s_button="Update",
         )
     else:
         message = "Invalid request method"
