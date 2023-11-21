@@ -9,75 +9,34 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ network.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
+            <h6 class="card-subtitle mb-2 text-muted" id="baseIP">{{ network.base_ip }}</h6>
             <div class="form-outline">
                 <form method="POST">
                     <div class="mb-3">
-                        <label for="friendly_name" class="form-label">Node Name</label>
-                        <input type="text" class="form-control" id="friendly_name" name="friendly_name"
-                            value="{{ peer.friendly_name }}">
+                        <label for="name" class="form-label">Node Name</label>
+                        <input type="text" class="form-control" id="name" name="name"
+                            value="{{ network.name }}">
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <input type="text" class="form-control" id="description" name="description"
-                            value="{{ peer.description }}">
+                            value="{{ network.description }}">
                     </div>
                     <div class="card">
                         <h6 class="card-header">Configuration</h6>
-                        [Interface]
+                        
                         <div class="mb-3">
-                            <label for="private_key" class="form-label">PrivateKey</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="private_key" name="private_key"
-                                    value="{{ peer.private_key }}" oninput="updatePublicKey()">
-                                <button class="btn btn-secondary" type="button" id="generatePrivateKey"
-                                    onclick="generateAndSetPrivateKey()">Generate</button>
-                            </div>
                             <div class="mb-3">
                                 <label for="address" class="form-label">Address</label>
                                 <input type="text" class="form-control" id="address" name="address"
-                                    value="{{ peer.address }}">
+                                    value="{{ network.address }}">
                             </div>
                             <div class="mb-3">
                                 <label for="dns" class="form-label">DNS</label>
-                                <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
+                                <input type="text" class="form-control" id="dns" name="dns" value="{{ network.dns }}">
                             </div>
-                            <div class="mb-3">
-                                <label for="network" class="form-label">Network</label>
-                                <select data-mdb-select-init id="network" name="network" value="{{ peer.network }}">
-                                    {% for network in networks %}
-                                    <option value="{{ network.id }}">{{ network.name }}</option>
-                                    {% endfor %}
-                            </div>
-                        </div>
 
-                        <!-- [Peer]
-                        {% for peer in peers %}
-                        <div class="mb-3">
-                            <label for="public_key" class="form-label">PublicKey</label>
-                            <input type="text" class="form-control" id="public_key" name="public_key"
-                                value="{{ peer.allowed_ips }}">
                         </div>
-                        <div class="mb-3">
-                            <label for="endpoint" class="form-label">Endpoint</label>
-                            <input type="text" class="form-control" id="endpoint" name="endpoint"
-                                value="{{ peer.endpoint }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="allowed_ips" class="form-label">Allowed IPs</label>
-                            <input type="text" class="form-control" id="allowed_ips" name="allowed_ips"
-                                value="{{ peer.allowed_ips }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="dns" class="form-label">Preshared Key</label>
-                            <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="persistent_keepalive" class="form-label">PersistentKeepalive</label>
-                            <input type="text" class="form-control" id="persistent_keepalive"
-                                name="persistent_keepalive" value="{{ peer.persistent_keepalive }}">
-                        </div>
-                        {% endfor %} -->
                     </div>
     
                     <button type="submit" class="btn btn-success">{{s_button}}</button>
@@ -89,7 +48,7 @@
 </div>
 <br>
 <div class="container-fluid">
-    <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
+    <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
         configurations are essentially in an unknown state.</p>
 </div>
 
@@ -97,26 +56,4 @@
 
 {% block scripts %}
 <script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
-
-<script>
-    window.onload = function () { updatePublicKey(); };
-
-    function updatePublicKey() {
-        let privateKey = document.getElementById('private_key').value;
-        // Use the generatePublicKey function from wireguard.js
-        let publicKey = wireguard.getPublicKey(privateKey);
-        if (privateKey == "") {
-            publicKey = "No Private Key";
-        }
-        document.getElementById('publicKey').innerText = publicKey;
-    }
-
-    function generateAndSetPrivateKey() {
-        let keypair = wireguard.generateKeypair();
-        // Use the generatePrivateKey function from wireguard.js
-        let privateKey = keypair.privateKey;
-        document.getElementById('private_key').value = privateKey;
-        updatePublicKey();
-    }
-</script>
 {% endblock %}

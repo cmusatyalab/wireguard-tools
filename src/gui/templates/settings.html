@@ -3,6 +3,50 @@
 {% block title %} Settings {% endblock %}
 
 {% block content %}
-<h2>Settings</h2>
+<div class="container-fluid">
+    <h2>Settings</h2>
+    <hr class="hr" />
+    <div class="row form-group align-items-center">
+        <div class="col-sm-2">
+            <a href="{{url_for ('settings.test_db_entries')}}" type="button" class="btn btn-primary" id="btn_load_db">Test
+                Database</a>
+        </div>
+        <div class="col-sm-10">
+            <label for="btn_load_db">Add test entries to the database </label>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-2">
+            <a type="button" class="btn btn-danger" data-mdb-toggle="modal" data-mdb-target="#confirmModal"
+                id="btn_purge_db">Purge Database</a>
+        </div>
+        <div class="col-sm-10">
+            <label for="btn_purge_db">Purge all entries from the database </label>
+        </div>
+    </div>
+</div>
 
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Purge</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to purge all entries from the database?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">No</button>
+                <form action="{{ url_for('settings.purge_db') }}" method="post">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 {% endblock %}

@@ -43,3 +43,6 @@ class ConfigSchema(ma.Schema):
 
 config_schema = ConfigSchema()
 configs_schema = ConfigSchema(many=True)
+
+def config_load_test_db():
+    pass

@@ -24,49 +24,6 @@ sample_config = {
     },
 }
 
-
-# Dummy list for testing
-peer_list = [
-    {
-        "name": "peer 1",
-        "config": {
-            "interface": {
-                "address": "10.10.10.11/32",
-                "listern_port": "51820",
-                "private_key": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
-            },
-            "peer": {
-                "AllowedIPs": ["0.0.0.0/0", "::/0"],
-                "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
-                "PersistentKeepalive": 25,
-                "Endpoint": "myserver.dyndns.org:51820",
-            },
-        },
-        "network": 1,
-        "description": "description 1",
-        "id": 1,
-    },
-    {
-        "name": "peer 2",
-        "config": {
-            "interface": {
-                "address": "10.10.10.14/32",
-                "listern_port": "51820",
-                "private_key": "iISiPlI8UHSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
-            },
-            "peer": {
-                "AllowedIPs": ["0.0.0.0/0", "::/0"],
-                "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
-                "PersistentKeepalive": 25,
-                "Endpoint": "myserver.dyndns.org:51820",
-            },
-        },
-        "network": 1,
-        "description": "description 2",
-        "id": 2,
-    },
-]
-
 ## FUNCTIONS ##
 
 # print(peer_list)
@@ -99,9 +56,6 @@ def peers_all():
             peer_list = Peer.query.filter_by(network=network_id).all()
         else:
             peer_list = query_all_peers()
-        if len(peer_list) == 0:
-            message = "No peers found"
-            return render_template("peers.html", message=message, peer_list=[{"name":"No peers found"}])
         return render_template("peers.html", peer_list=peer_list)
     else:
         message = "Invalid request method"
@@ -116,7 +70,7 @@ def peers_add():
     new_peer["public_key"] = ""
     new_peer["network"] = 1
     if request.method == "POST":
-        name = request.form["friendly_name"]
+        name = request.form["name"]
         description = request.form["description"]
         private_key = request.form["private_key"]
         address = request.form["address"]
@@ -149,19 +103,19 @@ def peers_add():
 
 @peers.route("/<int:peer_id>", methods=["GET", "POST"])
 def peer_detail(peer_id):
-    print(peer_id)
     #peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
     peer = Peer.query.filter_by(id=peer_id).first()
     print(f"Found: {peer}")
 
     if request.method == "POST":
-        peer.name = request.form["friendly_name"]
+        peer.name = request.form["name"]
         peer.description = request.form["description"]
         peer.private_key = request.form["private_key"]
         peer.address = request.form["address"]
         peer.dns = request.form["dns"]
         #peer_config = request.form["peer_config"]
-        network = request.form["network"]
+        peer.network = request.form["network"]
+        print(f"Peer network ID {peer.network}")
       
         db.session.commit()
         message = "Peer updated successfully"

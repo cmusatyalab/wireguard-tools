@@ -10,6 +10,16 @@
     </div>
     <hr class="hr" />
     <div class="row">
+        {% if peer_list|length == 0 %}
+        <div class="col-md">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">No Peers Found</h5>
+                    <p class="card-text">No peers have been configured. Click the button above to add peers.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
         {% for peer in peer_list %}
 

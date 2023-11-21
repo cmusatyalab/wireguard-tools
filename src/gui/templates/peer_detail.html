@@ -3,103 +3,114 @@
 {% block title %} Peer Details {% endblock %}
 
 {% block content %}
-<h2>Peer Details</h2>
+<div class="container-fluid">
+    <h2>Peer Details</h2>
 
-<div class="row">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ peer.friendly_name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
-            <div class="form-outline">
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="friendly_name" class="form-label">Node Name</label>
-                        <input type="text" class="form-control" id="friendly_name" name="friendly_name"
-                            value="{{ peer.friendly_name }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" name="description"
-                            value="{{ peer.description }}">
-                    </div>
-                    <div class="card">
-                        <h6 class="card-header">Configuration</h6>
-                        [Interface]
-                        <div class="mb-3">
-                            <label for="private_key" class="form-label">PrivateKey</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="private_key" name="private_key"
-                                    value="{{ peer.private_key }}" oninput="updatePublicKey()">
-                                <button class="btn btn-secondary" type="button" id="generatePrivateKey"
-                                    onclick="generateAndSetPrivateKey()">Generate</button>
+    <hr class="hr" />
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ peer.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
+                    <div class="form-outline">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Node Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ peer.name }}">
                             </div>
                             <div class="mb-3">
-                                <label for="address" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="address" name="address"
-                                    value="{{ peer.address }}">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description" name="description"
+                                    value="{{ peer.description }}">
                             </div>
-                            <div class="mb-3">
-                                <label for="dns" class="form-label">DNS</label>
-                                <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="network" class="form-label">Network</label>
-                                <select data-mdb-select-init id="network" name="network" value="{{ peer.network }}">
-                                    {% for network in networks %}
-                                    <option value="{{ network.id }}">{{ network.name }}</option>
-                                    {% endfor %}
-                            </div>
-                        </div>
 
-                        <!-- [Peer]
-                        {% for peer in peers %}
-                        <div class="mb-3">
-                            <label for="public_key" class="form-label">PublicKey</label>
-                            <input type="text" class="form-control" id="public_key" name="public_key"
-                                value="{{ peer.allowed_ips }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="endpoint" class="form-label">Endpoint</label>
-                            <input type="text" class="form-control" id="endpoint" name="endpoint"
-                                value="{{ peer.endpoint }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="allowed_ips" class="form-label">Allowed IPs</label>
-                            <input type="text" class="form-control" id="allowed_ips" name="allowed_ips"
-                                value="{{ peer.allowed_ips }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="dns" class="form-label">Preshared Key</label>
-                            <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="persistent_keepalive" class="form-label">PersistentKeepalive</label>
-                            <input type="text" class="form-control" id="persistent_keepalive"
-                                name="persistent_keepalive" value="{{ peer.persistent_keepalive }}">
-                        </div>
-                        {% endfor %} -->
+                            <div class="card">
+                                <h6 class="card-header">Configuration</h6>
+
+                                <div class="mb-3">
+                                    <label for="private_key" class="form-label">PrivateKey</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="private_key" name="private_key"
+                                            value="{{ peer.private_key }}" oninput="updatePublicKey()">
+                                        <button class="btn btn-secondary" type="button" id="generatePrivateKey"
+                                            onclick="generateAndSetPrivateKey()">Generate</button>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">Address</label>
+                                        <input type="text" class="form-control" id="address" name="address"
+                                            value="{{ peer.address }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dns" class="form-label">DNS</label>
+                                        <input type="text" class="form-control" id="dns" name="dns"
+                                            value="{{ peer.dns }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="network" class="form-label">Network</label>
+                                        <select data-mdb-select-init id="network" name="network"
+                                            onchange="updateConfigCard()">
+                                            {% for network in networks %}
+                                            <option value="{{ network.id }}" {% if network.id==peer.network %}selected{%
+                                                endif %}>{{ network.name }}: {{network.base_ip}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">{{s_button}}</button>
+                            <button type="button" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
-    
-                    <button type="submit" class="btn btn-success">{{s_button}}</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" id="configCard">
+                <div class="card-body">
+                <h5 class="card-title">Generated Configuration</h5>
+                <p class="card-text p-0">[Interface]</p>
+                <p class="card-text p-0">PrivateKey = {{ peer.private_key }}</p>
+                <p class="card-text p-0">Address = {{ peer.address }}</p>
+                {% if peer.dns != "" %}
+                <p class="card-text">DNS = {{ peer.dns }}</p>
+                {% endif %}
+                <p class="card-text">[Peer]</p>
+                <p class="card-text">PublicKey = {{ peer.public_key }}</p>
+                {% if peer.preshared_key != "" %}
+                <p class="card-text">PresharedKey = {{ peer.preshared_key }}</p>
+                {% endif %}
+                <p class="card-text">AllowedIPs = {{ peer.allowed_ips }}</p>
+                <p class="card-text">Endpoint = {{ peer.endpoint }}</p>
+                <p class="card-text">PersistentKeepalive = {{ peer.persistent_keepalive }}</p>
             </div>
         </div>
     </div>
 </div>
-<br>
 <div class="container-fluid">
     <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
         configurations are essentially in an unknown state.</p>
 </div>
 
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
 
 <script>
-    window.onload = function () { updatePublicKey(); };
+    window.onload = function () {
+        updatePublicKey();
+    };
+
+    function updateConfigCard() {
+        let selectedNetworkId = document.getElementById('network').value;
+        let selectedNetwork = networks.find(network => network.id == selectedNetworkId);
+        let config = selectedNetwork.config;
+        console.log(config);
+        document.getElementById('configCard').innerText = config;
+    }
 
     function updatePublicKey() {
         let privateKey = document.getElementById('private_key').value;

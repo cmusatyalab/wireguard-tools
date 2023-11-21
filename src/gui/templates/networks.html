@@ -10,28 +10,41 @@
     </div>
     <hr class="hr" />
 
-<div class="row">
+    <div class="row">
 
-    {% for network in networks %}
-    <div class="col-md">
-        <!-- Card -->
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{ network.name }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
-                <p class="card-text">{{ network.description }}</p>
-                <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
-                <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers</a>
+        {% if networks|length == 0 %}
+        <div class="col-md">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">No Networks Found</h5>
+                    <p class="card-text">No networks have been configured. Click the button above to create a new
+                        network
+                        configuration.</p>
+                </div>
             </div>
         </div>
-        <!-- Card -->
-    </div>
-    {% endfor %}
+        {% endif %}
 
-</div>
-<br>
-<div class="container-fluid">
-    <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
-        configurations are essentially in an unknown state.</p>
-</div>
-{% endblock %}
+        {% for network in networks %}
+        <div class="col-md">
+            <!-- Card -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ network.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
+                    <p class="card-text">{{ network.description }}</p>
+                    <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
+                    <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers</a>
+                </div>
+            </div>
+            <!-- Card -->
+        </div>
+        {% endfor %}
+
+    </div>
+    <br>
+    <div class="container-fluid">
+        <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
+            configurations are essentially in an unknown state.</p>
+    </div>
+    {% endblock %}
