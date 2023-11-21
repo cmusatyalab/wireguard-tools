@@ -4,6 +4,8 @@ import datetime
 import os
 from .routes import networks, peers, settings
 
+__version__ = "0.1.0dev0"
+
 basedir = os.getcwd()
 
 def create_app():

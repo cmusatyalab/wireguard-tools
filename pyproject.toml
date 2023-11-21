@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "Wireguard-gui"
+dynamic = ["version"]
+authors = [
+  { name="Rick Dawson", email="dawsora@gmail.com" },
+]
+description = "A package for setting up and managing WireGuard VPN networks through a web-based GUI"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/radawson/wireguard-gui"
+Issues = "https://github.com/radawson/wireguard-gui/issues"
+
+[tool.hatch.version]
+path = "wireguard_gui/__init__.py:__version__"
