@@ -22,4 +22,4 @@ Homepage = "https://github.com/radawson/wireguard-gui"
 Issues = "https://github.com/radawson/wireguard-gui/issues"
 
 [tool.hatch.version]
-path = "wireguard_gui/__init__.py:__version__"
+path = "wireguard_gui/src/gui/__init__.py:__version__"

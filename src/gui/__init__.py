@@ -39,7 +39,7 @@ def create_app():
     @app.route('/about')
     def about():
         # Render the about page with the current UTC time
-        return render_template('about.html', version=app.version)
+        return render_template('about.html', version=__version__)
 
     # Route for the dashboard page
     @app.route('/dashboard')
