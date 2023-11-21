@@ -16,6 +16,21 @@ class Network(db.Model):
     description = db.Column(db.Text)
     config = db.Column(db.Text)
 
+    def get_config(self):
+        j_config = json.loads(self.config)
+        wg_config = f"[Peer]\nPublicKey = {j_config['public_key']}\n"
+        allowed_ips = j_config["allowed_ips"]
+        if len(allowed_ips) > 0:
+            wg_config += f"AllowedIPs = {j_config['allowed_ips']}\n"
+        if j_config["endpoint_host"]:
+            wg_config += f"Endpoint = {j_config['endpoint_host']}:{j_config['endpoint_port']}\n"
+        if j_config["persistent_keepalive"]:
+            wg_config += f"PersistentKeepalive = {j_config['persistent_keepalive']}\n"
+        if j_config["preshared_key"]:
+            wg_config += f"PresharedKey = {j_config['preshared_key']}\n"
+        
+        return wg_config
+
 class Network_Config(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_key = db.Column(db.String(50), nullable=False)

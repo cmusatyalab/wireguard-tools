@@ -69,36 +69,31 @@
         <div class="col-md-4">
             <div class="card" id="configCard">
                 <div class="card-body">
-                <h5 class="card-title">Generated Configuration</h5>
-                <p class="card-text p-0">[Interface]</p>
-                <p class="card-text p-0">PrivateKey = {{ peer.private_key }}</p>
-                <p class="card-text p-0">Address = {{ peer.address }}</p>
-                {% if peer.dns != "" %}
-                <p class="card-text">DNS = {{ peer.dns }}</p>
-                {% endif %}
-                <p class="card-text">[Peer]</p>
-                <p class="card-text">PublicKey = {{ peer.public_key }}</p>
-                {% if peer.preshared_key != "" %}
-                <p class="card-text">PresharedKey = {{ peer.preshared_key }}</p>
-                {% endif %}
-                <p class="card-text">AllowedIPs = {{ peer.allowed_ips }}</p>
-                <p class="card-text">Endpoint = {{ peer.endpoint }}</p>
-                <p class="card-text">PersistentKeepalive = {{ peer.persistent_keepalive }}</p>
+                    <h5 class="card-title">Generated Configuration</h5>
+                    <p class="card-text">[Interface]</p>
+                    <p class="card-text">PrivateKey = {{peer.private_key}}</p>
+                    <p class="card-text">Address = {{ peer.address }}</p>
+                    {% if peer.dns != "" %}
+                    <p class="card-text">DNS = {{ peer.dns }}</p>
+                    {% endif %}
+                    <textarea rows="8" cols="32" class="card-text" id="network_config">{{network}}</textarea> 
+                    <button class="btn btn-secondary" type="button" id="updateConfig" onclick="updateConfigCard()">Update</button>
+                    <!-- QR Code -->
+                    <div id="qrcode"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="container-fluid">
-    <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
-        configurations are essentially in an unknown state.</p>
-</div>
-
+    <div class="container-fluid">
+        <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
+            configurations are essentially in an unknown state.</p>
+    </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
-
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script>
     window.onload = function () {
         updatePublicKey();
@@ -106,10 +101,11 @@
 
     function updateConfigCard() {
         let selectedNetworkId = document.getElementById('network').value;
-        let selectedNetwork = networks.find(network => network.id == selectedNetworkId);
-        let config = selectedNetwork.config;
-        console.log(config);
-        document.getElementById('configCard').innerText = config;
+        //let config = selectedNetwork.config;
+        var text = document.getElementById('network_config').value;
+        console.log(text);
+        generateQRCode(text)
+        // document.getElementById('configCard').innerText = config;
     }
 
     function updatePublicKey() {
@@ -129,5 +125,15 @@
         document.getElementById('private_key').value = privateKey;
         updatePublicKey();
     }
+
+    function generateQRCode(peer_config) {
+    
+    let qrcode = new QRCode(document.getElementById('qrcode'), {
+        text: peer_config,
+        width: 128,
+        height: 128
+    }); // generate a QR code
+}
+
 </script>
 {% endblock %}
