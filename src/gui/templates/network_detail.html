@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %} Peer Details {% endblock %}
+{% block title %} Network Details {% endblock %}
 
 {% block content %}
-<h2>Peer Details</h2>
+<h2>Network Details</h2>
 
 <div class="row">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{ peer.friendly_name }}</h5>
+            <h5 class="card-title">{{ network.name }}</h5>
             <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
             <div class="form-outline">
                 <form method="POST">

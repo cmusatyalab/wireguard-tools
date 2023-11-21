@@ -4,14 +4,9 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <h2>Peers</h2>
-
-        <div class="form-group">
-            <div class="col-md float-right">
-                <a href="{{ url_for('peers.peers_add') }}" class="btn btn-primary">Add Peer</a>
-            </div>
-        </div>
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Peers</h2>
+        <a href="{{ url_for('peers.peers_add') }}" class="btn btn-primary">Add Peer</a>
     </div>
     <hr class="hr" />
     <div class="row">
@@ -22,8 +17,10 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ peer.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ peer.public_key }}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ peer.address }}</h6>
+                    <p class="card-text">{{ peer.public_key }}</p>
                     <p class="card-text">{{ peer.description }}</p>
+
                     <a href="{{ url_for('peers.peers_all')}}/{{peer.id}}" class="card-link">Details</a>
                 </div>
             </div>

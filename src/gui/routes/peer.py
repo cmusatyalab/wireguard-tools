@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from gui.models import db, Peer
+from gui.models import db, Peer, Network
 import json
 
 # Testing wg input
@@ -8,6 +8,7 @@ import wireguard_tools as wgt
 devices = wgt.WireguardDevice.list()
 
 peers = Blueprint("peers", __name__, url_prefix="/peers")
+
 
 sample_config = {
     "interface": {
@@ -68,7 +69,6 @@ peer_list = [
 
 ## FUNCTIONS ##
 
-
 # print(peer_list)
 def query_all_peers():
     peer_query = Peer.query.all()
@@ -76,8 +76,11 @@ def query_all_peers():
         peer.public_key = wgt.WireguardKey(
             peer.private_key
         ).public_key()
-    print(peer_query)
     return peer_query
+
+def query_all_networks():
+    network_query = Network.query.all()
+    return network_query
 
 
 ## ROUTES ##
@@ -91,7 +94,14 @@ def peers_all():
         return render_template("peers.html", message=message, peer_list=peer_list)
 
     elif request.method == "GET":
-        peer_list = query_all_peers()
+        network_id = request.args.get('network_id')
+        if network_id:
+            peer_list = Peer.query.filter_by(network=network_id).all()
+        else:
+            peer_list = query_all_peers()
+        if len(peer_list) == 0:
+            message = "No peers found"
+            return render_template("peers.html", message=message, peer_list=[{"name":"No peers found"}])
         return render_template("peers.html", peer_list=peer_list)
     else:
         message = "Invalid request method"
@@ -100,6 +110,7 @@ def peers_all():
 
 @peers.route("/add", methods=["GET", "POST"])
 def peers_add():
+    network_list = query_all_networks()
     new_peer = {}
     new_peer["config"] = sample_config
     new_peer["public_key"] = ""
@@ -111,7 +122,7 @@ def peers_add():
         address = request.form["address"]
         dns = request.form["dns"]
         #peer_config = request.form["peer_config"]
-        #network = request.form["network"]
+        network = request.form["network"]
 
         new_peer = Peer(
             name=name,
@@ -119,7 +130,7 @@ def peers_add():
             address=address,
             dns=dns,
             #peer_config=peer_config,
-            #network=network,
+            network=network,
             description=description,
         )
         db.session.add(new_peer)
@@ -130,6 +141,7 @@ def peers_add():
     else:
         return render_template(
             "peer_detail.html",
+            networks=network_list,
             peer=new_peer,
             s_button="Add",
         )
@@ -149,7 +161,7 @@ def peer_detail(peer_id):
         peer.address = request.form["address"]
         peer.dns = request.form["dns"]
         #peer_config = request.form["peer_config"]
-        #network = request.form["network"]
+        network = request.form["network"]
       
         db.session.commit()
         message = "Peer updated successfully"
@@ -159,8 +171,8 @@ def peer_detail(peer_id):
     elif request.method == "GET":
             return render_template(
             "peer_detail.html",
+            networks=query_all_networks(),
             peer=peer,
-  
             s_button="Update",
         )
     else:

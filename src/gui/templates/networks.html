@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %} About {% endblock %}
+{% block title %} Networks {% endblock %}
 
 {% block content %}
-<!-- Title -->
-<div class="p-2 bg-white">
-    <h2>Networks</h2>
-</div>
-<!-- Title -->
-<h3>{{ utc_dt }}</h3>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Networks</h2>
+        <a href="{{ url_for('networks.networks_add') }}" class="btn btn-primary">Create Network</a>
+    </div>
+    <hr class="hr" />
 
 <div class="row">
 
@@ -20,7 +20,7 @@
                 <h5 class="card-title">{{ network.name }}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
                 <p class="card-text">{{ network.description }}</p>
-                <a href="{{ url_for('networks.networks_all', network_id=network.id) }}" class="card-link">Details</a>
+                <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
                 <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers</a>
             </div>
         </div>
