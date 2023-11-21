@@ -13,22 +13,21 @@ networks = Blueprint("networks", __name__, url_prefix="/networks")
 
 ## FUNCTIONS ##
 def query_all_networks():
-    networks = Network.query.all()
-    for network in networks:
+    network_query = Network.query.all()
+    for network in network_query:
         network.peers = json.loads(network.peers)
-    return networks
+        network.config = json.loads(network.config)
+    return network_query
 
 
 ## ROUTES ##
-network_list = query_all_networks()
-
-
 @networks.route("/", methods=["GET", "POST"])
 def networks_all():
     if request.method == "POST":
         print("POSTED to networks")
     else:
-        return render_template("networks.html", network_list=network_list)
+        network_list = query_all_networks()
+        return render_template("networks.html", networks=network_list)
 
 
 @networks.route("/<int:network_id>", methods=["GET", "POST"])
@@ -99,6 +98,7 @@ def networks_add():
         db.session.add(new_network)
         db.session.commit()
         message = "network added successfully"
+        network_list = query_all_networks()
         return render_template("networks.html", message=message, networks=network_list)
     else:
         return render_template(
