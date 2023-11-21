@@ -9,6 +9,7 @@ basedir = os.getcwd()
 def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
+    app.version = "0.0.1"
     # Automatically reload templates when they are changed
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     # Disable track modifications for SQLAlchemy
@@ -36,7 +37,7 @@ def create_app():
     @app.route('/about')
     def about():
         # Render the about page with the current UTC time
-        return render_template('about.html', utc_dt=datetime.datetime.utcnow())
+        return render_template('about.html', version=app.version)
 
     # Route for the dashboard page
     @app.route('/dashboard')
@@ -50,3 +51,6 @@ def create_app():
     app.register_blueprint(settings)
 
     return app
+
+
+    
