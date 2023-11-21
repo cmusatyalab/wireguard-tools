@@ -9,7 +9,7 @@ venv
 
 # Database file
 src/database.db
-#src/wg.db
+src/wg.db
 
 # SQLAlchemy migrations
 src/migrations/
