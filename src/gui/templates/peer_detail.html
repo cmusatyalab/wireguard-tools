@@ -55,6 +55,11 @@
                                                 endif %}>{{ network.name }}: {{network.base_ip}}</option>
                                             {% endfor %}
                                         </select>
+                                        <div class="mb-3">
+                                            <label for="network_peer" class="form-label">Lighthouse</label>
+                                            <input type="text" class="form-control" id="network_peer"
+                                                name="network.peer" value="{{ network.config }}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -76,8 +81,9 @@
                     {% if peer.dns != "" %}
                     <p class="card-text">DNS = {{ peer.dns }}</p>
                     {% endif %}
-                    <textarea rows="8" cols="32" class="card-text" id="network_config">{{network}}</textarea> 
-                    <button class="btn btn-secondary" type="button" id="updateConfig" onclick="updateConfigCard()">Update</button>
+                    <textarea rows="8" cols="32" class="card-text" id="network_config">{{network}}</textarea>
+                    <button class="btn btn-secondary" type="button" id="updateConfig"
+                        onclick="updateConfigCard()">Update</button>
                     <!-- QR Code -->
                     <div id="qrcode"></div>
                 </div>
@@ -100,11 +106,11 @@
     };
 
     function updateConfigCard() {
+        let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('address').value + "\nDNS = " + document.getElementById('dns').value + "\n\n"
         let selectedNetworkId = document.getElementById('network').value;
         //let config = selectedNetwork.config;
-        var text = document.getElementById('network_config').value;
-        console.log(text);
-        generateQRCode(text)
+        config = config + document.getElementById('network_config').value;
+        generateQRCode(config);
         // document.getElementById('configCard').innerText = config;
     }
 
@@ -127,13 +133,21 @@
     }
 
     function generateQRCode(peer_config) {
-    
-    let qrcode = new QRCode(document.getElementById('qrcode'), {
-        text: peer_config,
-        width: 128,
-        height: 128
-    }); // generate a QR code
-}
+        console.log(peer_config);
+        console.log(peer_config.length);
+        // Clear the previous QR codes
+        document.getElementById('qrcode').innerHTML = '';
+
+        let qrcode = new QRCode(document.getElementById('qrcode'), {
+            text: peer_config,
+            width: 256,
+            height: 256,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M // Use Level L for maximum capacity
+        });
+
+    }
 
 </script>
 {% endblock %}

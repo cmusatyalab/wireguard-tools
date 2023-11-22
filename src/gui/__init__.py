@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_migrate import Migrate
+from flask_qrcode import QRcode
 import datetime
 import os
 from .routes import networks, peers, settings, wizard
@@ -11,7 +12,10 @@ basedir = os.getcwd()
 def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
-    app.version = "0.0.1"
+
+    QRcode(app)
+
+    ## CONFIGURATION ##
     # Automatically reload templates when they are changed
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     # Disable track modifications for SQLAlchemy
