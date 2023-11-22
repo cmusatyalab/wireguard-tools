@@ -123,12 +123,9 @@ def peer_detail(peer_id):
         return render_template("peers.html", message=message, peer_list=peer_list)
 
     elif request.method == "GET":
-            network = Network.query.filter_by(id=peer.network).first()  
-            print(f"Network: {network.get_config()}")    
             return render_template(
             "peer_detail.html",
             networks=query_all_networks(),
-            network=network.get_config(),
             peer=peer,
             s_button="Update",
         )

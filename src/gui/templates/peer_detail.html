@@ -7,8 +7,8 @@
     <h2>Peer Details</h2>
 
     <hr class="hr" />
-    <div class="row">
-        <div class="col-md-8">
+    <div class="row ">
+        <div class="col-md-7 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ peer.name }}</h5>
@@ -33,8 +33,11 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="private_key" name="private_key"
                                             value="{{ peer.private_key }}" oninput="updatePublicKey()">
-                                        <button class="btn btn-secondary" type="button" id="generatePrivateKey"
-                                            onclick="generateAndSetPrivateKey()">Generate</button>
+                                        <button class="btn btn-primary " data-mdb-ripple-init type="button"
+                                            id="generatePrivateKey" onclick="generateAndSetPrivateKey()"
+                                            data-mdb-tooltip-init title="Generate Private Key">
+                                            <i class="fas fa-key"></i>
+                                        </button>
                                     </div>
                                     <div class="mb-3">
                                         <label for="address" class="form-label">Address</label>
@@ -55,45 +58,42 @@
                                                 endif %}>{{ network.name }}: {{network.base_ip}}</option>
                                             {% endfor %}
                                         </select>
-                                        <div class="mb-3">
-                                            <label for="network_peer" class="form-label">Lighthouse</label>
-                                            <input type="text" class="form-control" id="network_peer"
-                                                name="network.peer" value="{{ network.config }}">
-                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        {% for network in networks %}
+                                        <textarea rows="6" cols="32" class="card-text" id="nc-{{network.id}}"
+                                            name="nc-{{network.id}}" disabled
+                                            hidden>{{ network.get_config()}}</textarea>
+                                        {% endfor %}
                                     </div>
                                 </div>
-                            </div>
 
-                            <button type="submit" class="btn btn-success">{{s_button}}</button>
-                            <button type="button" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-success">{{s_button}}</button>
+                                <button type="button" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card" id="configCard">
-                <div class="card-body">
-                    <h5 class="card-title">Generated Configuration</h5>
-                    <p class="card-text">[Interface]</p>
-                    <p class="card-text">PrivateKey = {{peer.private_key}}</p>
-                    <p class="card-text">Address = {{ peer.address }}</p>
-                    {% if peer.dns != "" %}
-                    <p class="card-text">DNS = {{ peer.dns }}</p>
-                    {% endif %}
-                    <textarea rows="8" cols="32" class="card-text" id="network_config">{{network}}</textarea>
-                    <button class="btn btn-secondary" type="button" id="updateConfig"
-                        onclick="updateConfigCard()">Update</button>
-                    <!-- QR Code -->
-                    <div id="qrcode"></div>
-                </div>
+    </div>
+    <div class="col-md-5 col-sm-12">
+        <div class="card" id="configCard">
+            <div class="card-body">
+                <h5 class="card-title">Generated Configuration</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Copy the config below or scan the QR code to import the
+                    peer
+                    configuration.</h6>
+                <textarea rows="16" cols="50" class="card-text" id="peer_config"></textarea>
+                <!-- QR Code -->
+                <div id="qrcode"></div>
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-        <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
-            configurations are essentially in an unknown state.</p>
-    </div>
+</div>
+<div class="container-fluid">
+    <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
+        configurations are essentially in an unknown state.</p>
+</div>
 </div>
 {% endblock %}
 
@@ -103,13 +103,23 @@
 <script>
     window.onload = function () {
         updatePublicKey();
+        updateConfigCard();
+        // Add event listener for the 'change' event on the #network select element
+        document.getElementById('network').addEventListener('change', updateConfigCard);
     };
 
     function updateConfigCard() {
-        let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('address').value + "\nDNS = " + document.getElementById('dns').value + "\n\n"
+        let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('address').value
+        if (document.getElementById('dns').value != "") {
+            config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
+        } else {
+            config += "\n\n";
+        }
         let selectedNetworkId = document.getElementById('network').value;
-        //let config = selectedNetwork.config;
-        config = config + document.getElementById('network_config').value;
+        document.getElementById('network').value = selectedNetworkId;
+        let network_peer = document.getElementById("nc-" + selectedNetworkId).value;
+        config += network_peer + "\n";
+        document.getElementById('peer_config').value = config;
         generateQRCode(config);
         // document.getElementById('configCard').innerText = config;
     }
@@ -130,11 +140,10 @@
         let privateKey = keypair.privateKey;
         document.getElementById('private_key').value = privateKey;
         updatePublicKey();
+        updateConfigCard();
     }
 
     function generateQRCode(peer_config) {
-        console.log(peer_config);
-        console.log(peer_config.length);
         // Clear the previous QR codes
         document.getElementById('qrcode').innerHTML = '';
 
