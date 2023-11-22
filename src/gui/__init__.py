@@ -4,7 +4,7 @@ import datetime
 import os
 from .routes import networks, peers, settings, wizard
 
-__version__ = "0.1.0dev0"
+__version__ = "0.1.0dev1"
 
 basedir = os.getcwd()
 

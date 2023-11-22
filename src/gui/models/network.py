@@ -7,14 +7,15 @@ ma = Marshmallow()
 # Create models
 class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))         # Network friendly name
-    lighthouse = db.Column(db.String(50))      #
+    name = db.Column(db.String(50))         
+    lighthouse = db.Column(db.String(50))     
     lh_ip = db.Column(db.String(50))
     public_key = db.Column(db.String(50))
     peers = db.Column(db.Text)
     base_ip = db.Column(db.String(50))
     description = db.Column(db.Text)
     config = db.Column(db.Text)
+    active = db.Column(db.Boolean, default=False)
 
     def get_config(self):
         j_config = json.loads(self.config)
@@ -43,7 +44,7 @@ class Network_Config(db.Model):
 # JSON Schema
 class NetworkSchema(ma.Schema):
     class Meta:
-        fields = ("id","name", "lighthouse", "lh_ip",  "public_key", "peers", "base_ip", "description","config")
+        fields = ("id","name", "lighthouse", "lh_ip",  "public_key", "peers", "base_ip", "description","config", "active")
 
 class NetworkConfigSchema(ma.Schema):
     class Meta:
