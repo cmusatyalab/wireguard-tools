@@ -54,9 +54,10 @@ def peers_all():
         network_id = request.args.get('network_id')
         if network_id:
             peer_list = Peer.query.filter_by(network=network_id).all()
+            return render_template("peers.html", peer_list=peer_list, network_id=network_id)
         else:
             peer_list = query_all_peers()
-        return render_template("peers.html", peer_list=peer_list)
+            return render_template("peers.html", peer_list=peer_list)
     else:
         message = "Invalid request method"
         return render_template("peers.html", message=message, peer_list=peer_list)

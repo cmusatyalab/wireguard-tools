@@ -14,7 +14,8 @@
         <div class="col-md">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">No Peers Found</h5>
+                    <h5 class="card-title">No Peers Found{% if network_id %} for network {{network_id}} {% endif %}
+                    </h5>
                     <p class="card-text">No peers have been configured. Click the button above to add peers.</p>
                 </div>
             </div>
@@ -23,15 +24,26 @@
 
         {% for peer in peer_list %}
 
-        <div class="col-md">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ peer.name }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ peer.address }}</h6>
-                    <p class="card-text">{{ peer.public_key }}</p>
+                    <p class="card-text">{{ peer.get_public_key() }}</p>
                     <p class="card-text">{{ peer.description }}</p>
-
-                    <a href="{{ url_for('peers.peers_all')}}/{{peer.id}}" class="card-link">Details</a>
+                    <div class="card-footer row">
+                        <div class="col-md-8">
+                            <a href="{{ url_for('peers.peers_all')}}/{{peer.id}}" class="card-link">
+                                Details</a>
+                        </div>
+                        <div class="col-md-4 d-flex justify-content-end">
+                            {% if peer.active %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-danger">Inactive</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,4 +57,13 @@
         configurations are essentially in an unknown state.</p>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
+<script>
+    window.onload = function () {
+
+    }
+</script>
 {% endblock %}

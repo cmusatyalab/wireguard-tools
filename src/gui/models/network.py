@@ -11,7 +11,7 @@ class Network(db.Model):
     lighthouse = db.Column(db.String(50))     
     lh_ip = db.Column(db.String(50))
     public_key = db.Column(db.String(50))
-    peers = db.Column(db.Text)
+    peers_list = db.Column(db.Text)
     base_ip = db.Column(db.String(50))
     description = db.Column(db.Text)
     config = db.Column(db.Text)
@@ -44,7 +44,7 @@ class Network_Config(db.Model):
 # JSON Schema
 class NetworkSchema(ma.Schema):
     class Meta:
-        fields = ("id","name", "lighthouse", "lh_ip",  "public_key", "peers", "base_ip", "description","config", "active")
+        fields = ("id","name", "lighthouse", "lh_ip",  "public_key", "peers_list", "base_ip", "description","config", "active")
 
 class NetworkConfigSchema(ma.Schema):
     class Meta:
@@ -63,35 +63,29 @@ def network_load_test_db():
         lighthouse="lighthouse 1",
         lh_ip="10.10.11.1",
         public_key="public_key 1",
-        peers=json.dumps({
-            "public_key" : "",
-            "preshared_key" : None,
-            "endpoint_host" : "12.13.14.15",
-            "endpoint_port":51820,
-            "persistent_keepalive" : 30,
-            "allowed_ips": "10.10.11.1/32"
-        }),
+        peers_list=json.dumps(["kHuDnIycdQYOVpSSMLqZwfe8D9eQSElSoIdWBFz8+jo=",]),
         base_ip="10.10.11.0",
         description="Abasic /24 network",
         config=json.dumps({
-            "public_key" : "",
+            "public_key" : "m1cSyM6Veev3vQIMYQ23gr22Qn/Vu3vg5d8xBTu43gE=",
             "preshared_key" : None,
             "endpoint_host" : "12.13.14.15",
             "endpoint_port": 51820,
             "persistent_keepalive" : 30,
             "allowed_ips": "10.10.11.0/24"
-        })
+        }),
+        active=True
     )
     network2 = Network(
         name="network 2",
         lighthouse="lighthouse 2",
         lh_ip="172.122.88.1",
         public_key="public_key 1",
-        peers="",
+        peers_list="",
         base_ip="172.122.88.0",
         description="Another network that could be slightly larger",
         config=json.dumps({
-            "public_key" : "",
+            "public_key" : "Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y=",
             "preshared_key" : None,
             "endpoint_host" : "140.13.214.15",
             "endpoint_port": 51820,

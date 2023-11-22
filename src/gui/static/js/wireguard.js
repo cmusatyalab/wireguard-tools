@@ -171,6 +171,15 @@
 		return String.fromCharCode.apply(null, base64);
 	}
 
+	function base64ToKey(base64) {
+		var binaryString = window.atob(base64);
+		var byteArray = new Uint8Array(binaryString.length);
+		for (var i = 0; i < binaryString.length; i++) {
+			byteArray[i] = binaryString.charCodeAt(i);
+		}
+		return byteArray;
+	}
+
 	window.wireguard = {
 		generateKeypair: function () {
 			var privateKey = generatePrivateKey();
@@ -181,7 +190,8 @@
 			};
 		},
 		getPublicKey: function (privateKey) {
-			var publicKey = generatePublicKey(privateKey);
+			var privateKeyBytes = base64ToKey(privateKey);
+			var publicKey = generatePublicKey(privateKeyBytes);
 			return keyToBase64(publicKey);
 		}
 	};
