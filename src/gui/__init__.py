@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 from flask_migrate import Migrate
-from flask_qrcode import QRcode
 import datetime
 import os
 from .routes import networks, peers, settings, wizard
@@ -12,8 +11,6 @@ basedir = os.getcwd()
 def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
-
-    QRcode(app)
 
     ## CONFIGURATION ##
     # Automatically reload templates when they are changed
