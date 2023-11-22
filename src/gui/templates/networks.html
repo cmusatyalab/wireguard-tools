@@ -10,7 +10,7 @@
     </div>
     <hr class="hr" />
 
-    <div class="row">
+    <div class="card-group">
 
         {% if networks|length == 0 %}
         <div class="col-md">
@@ -26,15 +26,23 @@
         {% endif %}
 
         {% for network in networks %}
-        <div class="col-md">
+        <div class="col-md-4">
             <!-- Card -->
             <div class="card">
+                <h5 class="card-header">{{ network.name }}</h5>
                 <div class="card-body">
-                    <h5 class="card-title">{{ network.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
+                    <h6 class="card-title mb-2">{{ network.address }}</h6>
+                    <p class="card-text">Base IP: {{network.base_ip}}</p>
                     <p class="card-text">{{ network.description }}</p>
-                    <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
-                    <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers</a>
+                    <div class="card-footer row">
+                        <div class="col-md-6">
+                            <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('peers.peers_all', network_id=network.id) }}"
+                                class="card-link">Peers</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- Card -->

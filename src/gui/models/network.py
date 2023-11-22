@@ -64,8 +64,8 @@ def network_load_test_db():
         lh_ip="10.10.11.1",
         public_key="public_key 1",
         peers_list=json.dumps(["kHuDnIycdQYOVpSSMLqZwfe8D9eQSElSoIdWBFz8+jo=",]),
-        base_ip="10.10.11.0",
-        description="Abasic /24 network",
+        base_ip="10.10.11.0/24",
+        description="A basic /24 network",
         config=json.dumps({
             "public_key" : "m1cSyM6Veev3vQIMYQ23gr22Qn/Vu3vg5d8xBTu43gE=",
             "preshared_key" : None,
@@ -82,7 +82,7 @@ def network_load_test_db():
         lh_ip="172.122.88.1",
         public_key="public_key 1",
         peers_list="",
-        base_ip="172.122.88.0",
+        base_ip="172.122.88.0/16",
         description="Another network that could be slightly larger",
         config=json.dumps({
             "public_key" : "Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y=",

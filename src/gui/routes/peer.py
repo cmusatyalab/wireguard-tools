@@ -101,6 +101,14 @@ def peers_add():
             s_button="Add",
         )
 
+@peers.route("/delete/<int:peer_id>", methods=["POST"])
+def peer_delete(peer_id):
+    peer = Peer.query.filter_by(id=peer_id).first()
+    db.session.delete(peer)
+    db.session.commit()
+    message = "Peer deleted successfully"
+    peer_list = query_all_peers()
+    return render_template("peers.html", message=message, peer_list=peer_list)
 
 @peers.route("/<int:peer_id>", methods=["GET", "POST"])
 def peer_detail(peer_id):

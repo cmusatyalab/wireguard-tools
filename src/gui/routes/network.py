@@ -7,7 +7,7 @@ networks = Blueprint("networks", __name__, url_prefix="/networks")
 ## FUNCTIONS ##
 def query_all_networks():
     network_query = Network.query.all()
-    #TODO: ate a more robust error handling system
+    #TODO: create a more robust error handling system
     for network in network_query:
         try:
             network.peers = json.loads(network.peers)

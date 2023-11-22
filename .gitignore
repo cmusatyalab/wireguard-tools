@@ -3,6 +3,8 @@ __pycache__/
 *~
 *.swp
 
+.reuse
+
 # Virtual Environments
 .venv
 venv
