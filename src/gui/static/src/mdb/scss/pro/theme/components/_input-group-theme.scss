@@ -1,0 +1,36 @@
+@mixin mdb-input-group-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+
+  .input-group {
+    > .form-control {
+      &:focus {
+        border-color: $primary;
+        box-shadow: inset 0 0 0 1px $primary;
+      }
+    }
+  }
+
+  .input-group-text {
+    background-color: transparent;
+    color: rgba($onSurface, 0.7);
+  }
+
+  .input-group {
+    &.form-outline {
+      input + .input-group-text {
+        border-left-color: rgba($onSurface, 0.7);
+      }
+    }
+  }
+}

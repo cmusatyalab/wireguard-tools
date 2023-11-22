@@ -1,0 +1,120 @@
+$transfer-text-color: var(--mdb-surface-color) !default;
+$transfer-container-bg: var(--mdb-surface-bg) !default;
+$transfer-divider-color: var(--mdb-divider-color) !default;
+$transfer-text-disabled-color: rgba(var(--mdb-surface-color-rgb), 0.5) !default;
+$transfer-box-shadow-color-rgb: var(--mdb-box-shadow-color-rgb) !default;
+
+.transfer {
+  --mdb-transfer-text-color: #{$transfer-text-color};
+  --mdb-transfer-container-bg: #{$transfer-container-bg};
+  --mdb-transfer-divider-color: #{$transfer-divider-color};
+  --mdb-transfer-text-disabled-color: #{$transfer-text-disabled-color};
+  --mdb-transfer-box-shadow-color-rgb: #{$transfer-box-shadow-color-rgb};
+
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  color: var(--mdb-transfer-text-color);
+
+  &-arrows-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 20%;
+  }
+
+  &-arrows-arrow {
+    margin: 0 0.6rem;
+  }
+
+  &-source-container,
+  &-target-container {
+    box-shadow: 0 2px 10px 0 rgba(var(--mdb-transfer-box-shadow-color-rgb), 0.05);
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 30%;
+    background-color: var(--mdb-transfer-container-bg);
+  }
+
+  &-container-header {
+    padding: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: var(--mdb-transfer-divider-color) 1px solid;
+  }
+
+  &-header-select-all {
+    margin-right: 0.4rem;
+  }
+
+  &-body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+  }
+
+  &-body-item {
+    list-style: none;
+    padding: 0.4rem 0.6rem;
+  }
+
+  &-body-item-checkbox {
+    margin-right: 0.4rem;
+  }
+
+  &-body-item-text-disabled {
+    color: var(--mdb-transfer-text-disabled-color);
+    text-decoration: line-through;
+  }
+
+  &-body-item-checkbox-disabled {
+    pointer-events: none;
+  }
+
+  &-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: rgba(160, 160, 160, 0.425) 1px solid;
+    padding: 0.4rem 0;
+  }
+
+  &-footer-current-page {
+    padding: 0 0.6rem;
+  }
+
+  &-body-no-data {
+    height: 100%;
+  }
+
+  &-body-no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  &-no-data-icon {
+    font-size: 2rem;
+  }
+
+  &-search-outline {
+    margin: 0.4rem 0.6rem;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .transfer-source-container,
+  .transfer-target-container {
+    flex: 0 0 80%;
+  }
+
+  .transfer-arrows-container {
+    margin: 1.2rem;
+    flex: 0 0 80%;
+  }
+}

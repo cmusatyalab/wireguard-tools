@@ -1,0 +1,57 @@
+@mixin mdb-nav-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $onBackground: map-get($theme, onBackground);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $dropdownText: map-get($theme, dropdownText);
+  $onLink: map-get($theme, onLink);
+  $onHover: map-get($theme, onHover);
+  $pillBackground: map-get($theme, pillBackground);
+  $pillText: map-get($theme, pillText);
+  $onHover: map-get($theme, onHover);
+
+  .nav-tabs {
+    .nav-link {
+      border-color: transparent;
+      color: $dropdownText;
+
+      &:hover {
+        background-color: transparent;
+        border-color: transparent;
+      }
+
+      &:focus {
+        border-color: transparent;
+      }
+    }
+
+    .nav-link.active,
+    .nav-item.show .nav-link {
+      color: $primary;
+      border-color: $primary;
+      background-color: transparent;
+    }
+  }
+
+  .nav-pills:not(.menu-sidebar) {
+    .nav-link {
+      background-color: $pillBackground;
+      color: $pillText;
+    }
+
+    .nav-link.active,
+    .show > .nav-link {
+      color: $onPrimary;
+      background-color: $primary;
+    }
+  }
+}

@@ -1,0 +1,145 @@
+// Modal pro styles
+
+.modal {
+  // scss-docs-start modal-css-vars
+  --#{$prefix}modal-top-left-top: #{$modal-top-left-top};
+  --#{$prefix}modal-top-left-left: #{$modal-top-left-left};
+  --#{$prefix}modal-top-right-top: #{$modal-top-right-top};
+  --#{$prefix}modal-top-right-right: #{$modal-top-right-right};
+  --#{$prefix}modal-bottom-left-bottom: #{$modal-bottom-left-bottom};
+  --#{$prefix}modal-bottom-left-left: #{$modal-bottom-left-left};
+  --#{$prefix}modal-bottom-right-bottom: #{$modal-bottom-right-bottom};
+  --#{$prefix}modal-bottom-right-right: #{$modal-bottom-right-right};
+  --#{$prefix}modal-fade-top-transform: #{$modal-fade-top-transform};
+  --#{$prefix}modal-fade-right-transform: #{$modal-fade-right-transform};
+  --#{$prefix}modal-fade-bottom-transform: #{$modal-fade-bottom-transform};
+  --#{$prefix}modal-fade-left-transform: #{$modal-fade-left-transform};
+  --#{$prefix}modal-side-right: #{$modal-side-right};
+  --#{$prefix}modal-side-bottom: #{$modal-side-bottom};
+  --#{$prefix}modal-non-invasive-box-shadow: #{$modal-non-invasive-box-shadow};
+  --#{$prefix}modal-non-invasive-box-shadow-top: #{$modal-non-invasive-box-shadow-top};
+  // scss-docs-end modal-css-vars
+
+  .modal-dialog {
+    @media (min-width: 768px) {
+      &.modal-top {
+        top: 0;
+      }
+      &.modal-left {
+        left: 0;
+      }
+      &.modal-right {
+        right: 0;
+      }
+      &.modal-top-left {
+        top: var(--#{$prefix}modal-top-left-top);
+        left: var(--#{$prefix}modal-top-left-left);
+      }
+      &.modal-top-right {
+        top: var(--#{$prefix}modal-top-right-top);
+        right: var(--#{$prefix}modal-top-right-right);
+      }
+      &.modal-bottom-left {
+        bottom: var(--#{$prefix}modal-bottom-left-bottom);
+        left: var(--#{$prefix}modal-bottom-left-left);
+      }
+      &.modal-bottom-right {
+        right: var(--#{$prefix}modal-bottom-right-right);
+        bottom: var(--#{$prefix}modal-bottom-right-bottom);
+      }
+    }
+    &.modal-bottom {
+      bottom: 0;
+    }
+  }
+  &.fade {
+    &.top:not(.show) .modal-dialog {
+      transform: var(--#{$prefix}modal-fade-top-transform);
+    }
+    &.right:not(.show) .modal-dialog {
+      transform: var(--#{$prefix}modal-fade-right-transform);
+    }
+    &.bottom:not(.show) .modal-dialog {
+      transform: var(--#{$prefix}modal-fade-bottom-transform);
+    }
+    &.left:not(.show) .modal-dialog {
+      transform: var(--#{$prefix}modal-fade-left-transform);
+    }
+  }
+  @media (min-width: 992px) {
+    .modal-side {
+      position: absolute;
+      width: 100%;
+      right: var(--#{$prefix}modal-side-right);
+      bottom: var(--#{$prefix}modal-side-bottom);
+      margin: 0;
+    }
+  }
+  .modal-frame {
+    position: absolute;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+  }
+}
+
+.modal-open {
+  .modal {
+    &.frame {
+      overflow-y: hidden;
+    }
+  }
+}
+
+.modal-non-invasive-open {
+  overflow-y: auto;
+  .modal.modal-non-invasive-show {
+    display: table;
+    @media (min-width: 992px) {
+      .modal-dialog.modal-bottom-right {
+        bottom: 0;
+      }
+      .modal-dialog.modal-bottom-left {
+        bottom: 0;
+      }
+      .modal-side {
+        bottom: 0;
+      }
+      &.modal.frame {
+        &.bottom {
+          box-shadow: var(--#{$prefix}modal-non-invasive-box-shadow-top);
+          .modal-content {
+            box-shadow: var(--#{$prefix}modal-non-invasive-box-shadow-top);
+          }
+        }
+        &.top {
+          box-shadow: var(--#{$prefix}modal-non-invasive-box-shadow);
+        }
+      }
+      .modal-side {
+        &.modal-bottom-right {
+          .modal-content {
+            box-shadow: var(--#{$prefix}modal-non-invasive-box-shadow-top);
+          }
+        }
+        &.modal-bottom-left {
+          .modal-content {
+            box-shadow: var(--#{$prefix}modal-non-invasive-box-shadow-top);
+          }
+        }
+      }
+    }
+    .modal-dialog.modal-bottom-right {
+      right: 0;
+    }
+    .modal-dialog.modal-bottom-left {
+      left: 0;
+    }
+    .modal-dialog.modal-top-left {
+      left: 0;
+    }
+    .modal-side {
+      right: 0;
+    }
+  }
+}

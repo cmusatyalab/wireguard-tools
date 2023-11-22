@@ -1,0 +1,434 @@
+// fix for checkbox checked styles in FireFox, resolves problem
+// with check mark position
+.select-dropdown .form-check-input label {
+  display: block;
+}
+
+select.select-initialized {
+  display: none !important;
+}
+
+.select-wrapper {
+  --#{$prefix}form-outline-select-arrow-color: #{$form-outline-select-arrow-color};
+  --#{$prefix}form-outline-select-arrow-font-size: #{$form-outline-select-arrow-font-size};
+  --#{$prefix}form-outline-select-arrow-top: #{$form-outline-select-arrow-top};
+  --#{$prefix}form-outline-select-arrow-right: #{$form-outline-select-arrow-right};
+  --#{$prefix}form-outline-select-valid-color: #{$form-outline-select-valid-color};
+  --#{$prefix}form-outline-select-invalid-color: #{$form-outline-select-invalid-color};
+  --#{$prefix}form-outline-select-clear-btn-color: #{$form-outline-select-clear-btn-color};
+  --#{$prefix}form-outline-select-clear-btn-font-size: #{$form-outline-select-clear-btn-font-size};
+  --#{$prefix}form-outline-select-clear-btn-top: #{$form-outline-select-clear-btn-top};
+  --#{$prefix}form-outline-select-clear-btn-right: #{$form-outline-select-clear-btn-right};
+  --#{$prefix}form-outline-select-clear-btn-focus-color: #{$form-outline-select-clear-btn-focus-color};
+  --#{$prefix}form-outline-select-sm-clear-btn-font-size: #{$form-outline-select-sm-clear-btn-font-size};
+  --#{$prefix}form-outline-select-sm-clear-btn-top: #{$form-outline-select-sm-clear-btn-top};
+  --#{$prefix}form-outline-select-lg-clear-btn-top: #{$form-outline-select-lg-clear-btn-top};
+  --#{$prefix}form-outline-select-label-max-width: #{$form-outline-select-label-max-width};
+  --#{$prefix}form-outline-select-label-active-transform: #{$form-outline-select-label-active-transform};
+  --#{$prefix}form-outline-select-lg-label-active-transform: #{$form-outline-select-lg-label-active-transform};
+  --#{$prefix}form-outline-select-sm-label-active-transform: #{$form-outline-select-sm-label-active-transform};
+  --#{$prefix}form-outline-select-input-focused-color: #{$form-outline-select-input-focused-color};
+  --#{$prefix}form-outline-select-label-color: #{$form-outline-select-label-color};
+  --#{$prefix}form-outline-select-notch-border-color: #{$form-outline-select-notch-border-color};
+  --#{$prefix}form-outline-select-white-notch-border-color: #{$form-outline-select-white-notch-border-color};
+  --#{$prefix}form-outline-select-input-focused-arrow-color: #{$form-outline-select-input-focused-arrow-color};
+  --#{$prefix}form-outline-select-white-focus-arrow-color: #{$form-outline-select-white-focus-arrow-color};
+  --#{$prefix}form-outline-select-white-arrow-color: #{$form-outline-select-white-arrow-color};
+  --#{$prefix}form-outline-select-white-clear-btn: #{$form-outline-select-white-clear-btn};
+  --#{$prefix}form-outline-select-sm-arrow-top: #{$form-outline-select-sm-arrow-top};
+  --#{$prefix}form-outline-select-lg-arrow-top: #{$form-outline-select-lg-arrow-top};
+  --#{$prefix}form-outline-form-notch-border-top: #{$form-outline-form-notch-border-top};
+}
+
+.select-arrow {
+  @include caret(down);
+
+  color: var(--#{$prefix}form-outline-select-arrow-color);
+  text-align: center;
+  font-size: var(--#{$prefix}form-outline-select-arrow-font-size);
+  position: absolute;
+  top: var(--#{$prefix}form-outline-select-arrow-top);
+  right: var(--#{$prefix}form-outline-select-arrow-right);
+}
+
+.was-validated .form-control:valid ~ .select-arrow {
+  color: var(--#{$prefix}form-outline-select-valid-color);
+}
+
+.was-validated .form-control:invalid ~ .select-arrow {
+  color: var(--#{$prefix}form-outline-select-invalid-color);
+}
+
+.select-clear-btn {
+  color: var(--#{$prefix}form-outline-select-clear-btn-color);
+  font-size: var(--#{$prefix}form-outline-select-clear-btn-font-size);
+  position: absolute;
+  top: var(--#{$prefix}form-outline-select-clear-btn-top);
+  right: var(--#{$prefix}form-outline-select-clear-btn-right);
+  cursor: pointer;
+
+  &:focus {
+    color: var(--#{$prefix}form-outline-select-clear-btn-focus-color);
+    outline: none;
+  }
+}
+
+.form-control-sm ~ .select-clear-btn {
+  font-size: var(--#{$prefix}form-outline-select-sm-clear-btn-font-size);
+  top: var(--#{$prefix}form-outline-select-sm-clear-btn-top);
+}
+
+.form-control-lg ~ .select-clear-btn {
+  top: var(--#{$prefix}form-outline-select-lg-clear-btn-top);
+}
+
+.select-dropdown-container {
+  --#{$prefix}form-outline-select-dropdown-container-z-index: #{$form-outline-select-dropdown-container-z-index};
+  --#{$prefix}form-outline-select-dropdown-bg: #{$form-outline-select-dropdown-bg};
+  --#{$prefix}form-outline-select-dropdown-box-shadow: #{$form-outline-select-dropdown-box-shadow};
+  --#{$prefix}form-outline-select-dropdown-min-width: #{$form-outline-select-dropdown-min-width};
+  --#{$prefix}form-outline-select-dropdown-transform: #{$form-outline-select-dropdown-transform};
+  --#{$prefix}form-outline-select-dropdown-transition: #{$form-outline-select-dropdown-transition};
+  --#{$prefix}form-outline-select-dropdown-open-transform: #{$form-outline-select-dropdown-open-transform};
+  --#{$prefix}form-outline-select-dropdown-input-group-padding: #{$form-outline-select-dropdown-input-group-padding};
+  --#{$prefix}form-outline-select-options-wrapper-scrollbar-width: #{$form-outline-select-options-wrapper-scrollbar-width};
+  --#{$prefix}form-outline-select-options-wrapper-scrollbar-height: #{$form-outline-select-options-wrapper-scrollbar-height};
+  --#{$prefix}form-outline-select-options-wrapper-scrollbar-border-bottom-right-radius: #{$form-outline-select-options-wrapper-scrollbar-border-bottom-right-radius};
+  --#{$prefix}form-outline-select-options-wrapper-scrollbar-border-bottom-left-radius: #{$form-outline-select-options-wrapper-scrollbar-border-bottom-left-radius};
+  --#{$prefix}form-outline-select-options-wrapper-scrollbar-thumb-height: #{$form-outline-select-options-wrapper-scrollbar-thumb-height};
+  --#{$prefix}form-outline-select-options-wrapper-scrollbar-thumb-bg: #{$form-outline-select-options-wrapper-scrollbar-thumb-bg};
+  --#{$prefix}form-outline-select-options-wrapper-scrollbar-thumb-border-radius: #{$form-outline-select-options-wrapper-scrollbar-thumb-border-radius};
+  --#{$prefix}form-outline-select-no-results-padding-left: #{$form-outline-select-no-results-padding-left};
+  --#{$prefix}form-outline-select-no-results-padding-right: #{$form-outline-select-no-results-padding-right};
+
+  z-index: var(--#{$prefix}form-outline-select-dropdown-container-z-index);
+}
+
+.select-dropdown {
+  background-color: var(--#{$prefix}form-outline-select-dropdown-bg);
+  box-shadow: var(--#{$prefix}form-outline-select-dropdown-box-shadow);
+  margin: 0;
+  min-width: var(--#{$prefix}form-outline-select-dropdown-min-width);
+  outline: 0;
+  position: relative;
+  transform: var(--#{$prefix}form-outline-select-dropdown-transform);
+  opacity: 0;
+  transition: var(--#{$prefix}form-outline-select-dropdown-transition);
+
+  &.open {
+    transform: var(--#{$prefix}form-outline-select-dropdown-open-transform);
+    opacity: 1;
+  }
+}
+
+.select-dropdown > .input-group {
+  padding: var(--#{$prefix}form-outline-select-dropdown-input-group-padding);
+}
+
+.select-label {
+  max-width: var(--#{$prefix}form-outline-select-label-max-width);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &.active {
+    transform: var(--#{$prefix}form-outline-select-label-active-transform);
+  }
+}
+
+.form-control-lg ~ .select-label.active {
+  transform: var(--#{$prefix}form-outline-select-lg-label-active-transform);
+}
+
+.form-control-sm ~ .select-label.active {
+  transform: var(--#{$prefix}form-outline-select-sm-label-active-transform);
+}
+
+.form-outline .select-label.active ~ .form-notch .form-notch-middle {
+  border-right: none;
+  border-left: none;
+  border-top: var(--#{$prefix}form-outline-form-notch-border-top);
+}
+
+.select-input {
+  cursor: pointer;
+
+  &[disabled] {
+    cursor: default;
+  }
+}
+
+.select-input.focused,
+.form-outline .form-control.select-input:focus {
+  color: var(--#{$prefix}form-outline-select-input-focused-color);
+  outline: 0;
+
+  & ~ .select-label {
+    color: var(--#{$prefix}form-outline-select-label-color);
+  }
+
+  &::placeholder {
+    opacity: 1;
+  }
+
+  & ~ .form-notch .form-notch-leading {
+    border-color: var(--#{$prefix}form-outline-select-notch-border-color);
+    box-shadow: -1px 0 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 -1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color);
+  }
+
+  & ~ .form-notch .form-notch-trailing {
+    border-color: var(--#{$prefix}form-outline-select-notch-border-color);
+    box-shadow: 1px 0 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 -1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color);
+  }
+}
+
+.select-input.focused {
+  & ~ .form-notch .form-notch-middle {
+    border-top: var(--#{$prefix}form-outline-form-notch-border-top);
+    border-color: var(--#{$prefix}form-outline-select-notch-border-color);
+    box-shadow: 0 1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color);
+  }
+}
+
+.select-input.focused ~ .select-arrow {
+  color: var(--#{$prefix}form-outline-select-input-focused-arrow-color);
+}
+
+.form-control-sm ~ .select-arrow {
+  top: var(--#{$prefix}form-outline-select-sm-arrow-top);
+}
+
+.form-control-lg ~ .select-arrow {
+  top: var(--#{$prefix}form-outline-select-lg-arrow-top);
+}
+
+.select-options-wrapper {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: var(--#{$prefix}form-outline-select-options-wrapper-scrollbar-width);
+    height: var(--#{$prefix}form-outline-select-options-wrapper-scrollbar-height);
+  }
+
+  &::-webkit-scrollbar-button {
+    &:start:decrement,
+    &:end:increment {
+      display: block;
+      height: 0;
+      background-color: transparent;
+    }
+  }
+
+  &::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+    border-radius: 0;
+    border-bottom-right-radius: var(
+      --#{$prefix}form-outline-select-options-wrapper-scrollbar-border-bottom-right-radius
+    );
+    border-bottom-left-radius: var(
+      --#{$prefix}form-outline-select-options-wrapper-scrollbar-border-bottom-left-radius
+    );
+  }
+
+  &::-webkit-scrollbar-thumb:vertical {
+    height: var(--#{$prefix}form-outline-select-options-wrapper-scrollbar-thumb-height);
+    background-color: var(--#{$prefix}form-outline-select-options-wrapper-scrollbar-thumb-bg);
+    border-radius: var(
+      --#{$prefix}form-outline-select-options-wrapper-scrollbar-thumb-border-radius
+    );
+  }
+}
+
+.select-options-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.select-option-group-label {
+  --#{$prefix}form-outline-select-option-group-label-padding-left: #{$form-outline-select-option-group-label-padding-left};
+  --#{$prefix}form-outline-select-option-group-label-padding-right: #{$form-outline-select-option-group-label-padding-right};
+  --#{$prefix}form-outline-select-option-group-label-font-size: #{$form-outline-select-option-group-label-font-size};
+  --#{$prefix}form-outline-select-option-group-label-font-weight: #{$form-outline-select-option-group-label-font-weight};
+  --#{$prefix}form-outline-select-option-group-label-color: #{$form-outline-select-option-group-label-color};
+
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: var(--#{$prefix}form-outline-select-option-group-label-padding-left);
+  padding-right: var(--#{$prefix}form-outline-select-option-group-label-padding-right);
+  font-size: var(--#{$prefix}form-outline-select-option-group-label-font-size);
+  font-weight: var(--#{$prefix}form-outline-select-option-group-label-font-weight);
+  background-color: transparent;
+  color: var(--#{$prefix}form-outline-select-option-group-label-color);
+  user-select: none;
+}
+
+.select-option-group > .select-option {
+  --#{$prefix}form-outline-select-option-group-select-option-padding-left: #{$form-outline-select-option-group-select-option-padding-left};
+
+  padding-left: var(--#{$prefix}form-outline-select-option-group-select-option-padding-left);
+}
+
+.select-option {
+  --#{$prefix}form-outline-select-option-color: #{$form-outline-select-option-color};
+  --#{$prefix}form-outline-select-option-padding-left: #{$form-outline-select-option-padding-left};
+  --#{$prefix}form-outline-select-option-padding-right: #{$form-outline-select-option-padding-right};
+  --#{$prefix}form-outline-select-option-font-size: #{$form-outline-select-option-font-size};
+  --#{$prefix}form-outline-select-option-font-weight: #{$form-outline-select-option-font-weight};
+  --#{$prefix}form-outline-select-option-hover-not-disabled-bg: #{$form-outline-select-option-hover-not-disabled-bg};
+  --#{$prefix}form-outline-select-option-active-bg: #{$form-outline-select-option-active-bg};
+  --#{$prefix}form-outline-select-option-selected-active-bg: #{$form-outline-select-option-selected-active-bg};
+  --#{$prefix}form-outline-select-option-selected-disabled-color: #{$form-outline-select-option-selected-disabled-color};
+  --#{$prefix}form-outline-select-option-disabled-color: #{$form-outline-select-option-disabled-color};
+  --#{$prefix}form-outline-select-option-text-form-check-input-margin-right: #{$form-outline-select-option-text-form-check-input-margin-right};
+  --#{$prefix}form-outline-select-option-secondary-text-font-size: #{$form-outline-select-option-secondary-text-font-size};
+  --#{$prefix}form-outline-select-option-secondary-text-color: #{$form-outline-select-option-secondary-text-color};
+  --#{$prefix}form-outline-select-option-icon-width: #{$form-outline-select-option-icon-width};
+  --#{$prefix}form-outline-select-option-icon-height: #{$form-outline-select-option-icon-height};
+  --#{$prefix}form-outline-select-white-arrow: #{$form-outline-select-white-arrow};
+  --#{$prefix}form-outline-select-option-disabled-secondary-text-color: #{$form-outline-select-option-disabled-secondary-text-color};
+  --#{$prefix}form-outline-select-option-selected-bg: #{$form-outline-select-option-selected-bg};
+  --#{$prefix}form-outline-select-option-selected-hover-bg: #{$form-outline-select-option-selected-hover-bg};
+
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--#{$prefix}form-outline-select-option-color);
+  padding-left: var(--#{$prefix}form-outline-select-option-padding-left);
+  padding-right: var(--#{$prefix}form-outline-select-option-padding-right);
+  font-size: var(--#{$prefix}form-outline-select-option-font-size);
+  font-weight: var(--#{$prefix}form-outline-select-option-font-weight);
+  background-color: transparent;
+  user-select: none;
+
+  &:hover:not(.disabled) {
+    background-color: var(--#{$prefix}form-outline-select-option-hover-not-disabled-bg);
+  }
+
+  &.active {
+    background-color: var(--#{$prefix}form-outline-select-option-active-bg);
+  }
+
+  &.selected.active {
+    background-color: var(--#{$prefix}form-outline-select-option-selected-active-bg);
+  }
+
+  &.selected:hover:not(.disabled) {
+    background-color: var(--#{$prefix}form-outline-select-option-selected-hover-bg);
+  }
+
+  &.selected {
+    background-color: var(--#{$prefix}form-outline-select-option-selected-bg);
+  }
+
+  &.selected.disabled {
+    cursor: default;
+    color: var(--#{$prefix}form-outline-select-option-selected-disabled-color);
+    background-color: transparent;
+  }
+
+  &.disabled {
+    cursor: default;
+    color: var(--#{$prefix}form-outline-select-option-disabled-color);
+
+    .select-option-secondary-text {
+      color: var(--#{$prefix}form-outline-select-option-disabled-secondary-text-color);
+    }
+  }
+}
+
+.select-option-text {
+  & .form-check-input {
+    margin-right: var(--#{$prefix}form-outline-select-option-text-form-check-input-margin-right);
+  }
+}
+
+.select-option-secondary-text {
+  font-size: var(--#{$prefix}form-outline-select-option-secondary-text-font-size);
+  color: var(--#{$prefix}form-outline-select-option-secondary-text-color);
+  display: block;
+  line-height: normal;
+}
+
+.select-option-icon {
+  width: var(--#{$prefix}form-outline-select-option-icon-width);
+  height: var(--#{$prefix}form-outline-select-option-icon-height);
+}
+
+.select-custom-content {
+  --#{$prefix}form-outline-select-custom-content-padding: #{$form-outline-select-custom-content-padding};
+
+  padding: var(--#{$prefix}form-outline-select-custom-content-padding);
+}
+
+.select-no-results {
+  padding-left: var(--#{$prefix}form-outline-select-no-results-padding-left);
+  padding-right: var(--#{$prefix}form-outline-select-no-results-padding-right);
+  display: flex;
+  align-items: center;
+}
+
+// Select white
+.form-white .select-input.focused ~ .select-arrow {
+  color: var(--#{$prefix}form-outline-select-white-arrow-color);
+}
+
+.form-white .select-input:focus ~ .select-arrow {
+  color: var(--#{$prefix}form-outline-select-white-focus-arrow-color);
+}
+
+.form-white .select-arrow {
+  color: var(--#{$prefix}form-outline-select-white-arrow-color);
+}
+
+.form-white .select-clear-btn {
+  color: var(--#{$prefix}form-outline-select-white-clear-btn);
+}
+
+.form-white .select-input.focused,
+.form-white .form-control.select-input:focus {
+  color: $white;
+
+  & ~ .select-label {
+    color: $white;
+  }
+
+  & ~ .form-notch .form-notch-leading {
+    border-color: var(--#{$prefix}form-outline-select-white-notch-border-color);
+    box-shadow: -1px 0 0 0 var(--#{$prefix}form-outline-select-white-notch-border-color),
+      0 1px 0 0 var(--#{$prefix}form-outline-select-white-notch-border-color),
+      0 -1px 0 0 var(--#{$prefix}form-outline-select-white-notch-border-color);
+  }
+
+  & ~ .form-notch .form-notch-trailing {
+    border-color: var(--#{$prefix}form-outline-select-white-notch-border-color);
+    box-shadow: 1px 0 0 0 var(--#{$prefix}form-outline-select-white-notch-border-color),
+      0 -1px 0 0 var(--#{$prefix}form-outline-select-white-notch-border-color),
+      0 1px 0 0 var(--#{$prefix}form-outline-select-white-notch-border-color);
+  }
+}
+
+// Fake label
+.form-outline .form-control ~ .form-label.select-fake-value,
+.form-outline .form-control:focus ~ .form-label.select-fake-value,
+.form-outline .form-control.active ~ .form-label.select-fake-value {
+  transform: none;
+  display: none;
+  &.active {
+    display: block;
+  }
+}

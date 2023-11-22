@@ -1,0 +1,14 @@
+.onboarding-backdrop {
+  position: absolute;
+  display: block;
+  z-index: 1075;
+  pointer-events: none;
+}
+
+.popover {
+  min-width: 320px;
+
+  &:focus {
+    outline: none;
+  }
+}

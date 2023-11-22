@@ -1,0 +1,181 @@
+.autocomplete-label {
+  --#{$prefix}autocomplete-label-max-width: #{$autocomplete-label-max-width};
+  --#{$prefix}autocomplete-label-active-transform: #{$autocomplete-label-active-transform};
+  --#{$prefix}autocomplete-label-color: #{$autocomplete-label-color};
+
+  max-width: var(--#{$prefix}autocomplete-label-max-width);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.active {
+    transform: var(--#{$prefix}autocomplete-label-active-transform);
+  }
+}
+
+.form-outline .autocomplete-label.active ~ .form-notch .form-notch-middle {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+
+.select-input {
+  cursor: pointer;
+
+  &[disabled] {
+    cursor: default;
+  }
+}
+
+.form-outline {
+  --#{$prefix}form-outline-select-notch-border-color: #{$form-outline-select-notch-border-color};
+}
+
+.autocomplete-input.focused {
+  --#{$prefix}autocomplete-input-focused-color: #{$autocomplete-input-focused-color};
+
+  color: var(--#{$prefix}autocomplete-input-focused-color);
+  outline: 0;
+
+  & ~ .autocomplete-label {
+    color: var(--#{$prefix}autocomplete-label-color);
+  }
+
+  &::placeholder {
+    opacity: 1;
+  }
+
+  & ~ .form-notch .form-notch-leading {
+    border-color: var(--#{$prefix}form-outline-select-notch-border-color);
+    box-shadow: -1px 0 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 -1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color);
+  }
+
+  & ~ .form-notch .form-notch-middle {
+    border-color: var(--#{$prefix}form-outline-select-notch-border-color);
+    box-shadow: 0 1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color);
+    border-top: 1px solid transparent;
+  }
+
+  & ~ .form-notch .form-notch-trailing {
+    border-color: var(--#{$prefix}form-outline-select-notch-border-color);
+    box-shadow: 1px 0 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 -1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color),
+      0 1px 0 0 var(--#{$prefix}form-outline-select-notch-border-color);
+  }
+}
+
+.autocomplete-dropdown-container {
+  --#{$prefix}autocomplete-dropdown-container-zindex: #{$autocomplete-dropdown-container-zindex};
+  --#{$prefix}autocomplete-dropdown-background-color: #{$autocomplete-dropdown-background-color};
+  --#{$prefix}autocomplete-dropdown-box-shadow: #{$autocomplete-dropdown-box-shadow};
+  --#{$prefix}autocomplete-dropdown-margin: #{$autocomplete-dropdown-margin};
+  --#{$prefix}autocomplete-dropdown-transform: #{$autocomplete-dropdown-transform};
+  --#{$prefix}autocomplete-dropdown-transition: #{$autocomplete-dropdown-transition};
+  --#{$prefix}autocomplete-dropdown-open-transform: #{$autocomplete-dropdown-open-transform};
+  --#{$prefix}autocomplete-item-color: #{$autocomplete-item-color};
+  --#{$prefix}autocomplete-item-padding: #{$autocomplete-item-padding};
+  --#{$prefix}autocomplete-item-font-size: #{$autocomplete-item-font-size};
+  --#{$prefix}autocomplete-item-font-weight: #{$autocomplete-item-font-weight};
+  --#{$prefix}autocomplete-item-hover-background-color: #{$autocomplete-item-hover-background-color};
+  --#{$prefix}autocomplete-item-disabled-color: #{$autocomplete-item-disabled-color};
+  --#{$prefix}autocomplete-scrollbar-thumb-background-color: #{$autocomplete-scrollbar-thumb-background-color};
+
+  z-index: var(--#{$prefix}autocomplete-dropdown-container-zindex);
+}
+
+.autocomplete-dropdown {
+  background-color: var(--#{$prefix}autocomplete-dropdown-background-color);
+  box-shadow: var(--#{$prefix}autocomplete-dropdown-box-shadow);
+  margin: var(--#{$prefix}autocomplete-dropdown-margin);
+  outline: 0;
+  position: relative;
+  transform: var(--#{$prefix}autocomplete-dropdown-transform);
+  opacity: 0;
+  transition: var(--#{$prefix}autocomplete-dropdown-transition);
+
+  &.open {
+    transform: var(--#{$prefix}autocomplete-dropdown-open-transform);
+    opacity: 1;
+  }
+}
+
+.autocomplete-items-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-button {
+    &:start:decrement,
+    &:end:increment {
+      display: block;
+      height: 0;
+      background-color: transparent;
+    }
+  }
+
+  &::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+    border-radius: 0;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:vertical {
+    height: 50px;
+    background-color: var(--#{$prefix}autocomplete-scrollbar-thumb-background-color);
+    border-radius: 4px;
+  }
+}
+
+.autocomplete-item {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--#{$prefix}autocomplete-item-color);
+  padding: var(--#{$prefix}autocomplete-item-padding);
+  font-size: var(--#{$prefix}autocomplete-item-font-size);
+  font-weight: var(--#{$prefix}autocomplete-item-font-weight);
+  background-color: transparent;
+  user-select: none;
+
+  &:hover:not(.disabled) {
+    background-color: var(--#{$prefix}autocomplete-item-hover-background-color);
+  }
+
+  &.active {
+    background-color: var(--#{$prefix}autocomplete-item-hover-background-color);
+  }
+
+  &.disabled {
+    cursor: default;
+    color: var(--#{$prefix}autocomplete-item-disabled-color);
+  }
+}
+
+.autocomplete-loader {
+  position: absolute;
+  right: 5px;
+  top: 8px;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-width: 0.15em;
+}
+
+.form-outline .autocomplete-input.form-control.focusing ~ .form-notch .form-notch-middle {
+  transition: none;
+}

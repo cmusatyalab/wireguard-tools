@@ -1,0 +1,57 @@
+@mixin mdb-tables-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $divider: map-get($theme, divider);
+  $dropdownText: map-get($theme, dropdownText);
+  $tooltipBackground: map-get($theme, tooltipBackground);
+
+  .table {
+    background: $surface;
+    color: $onSurface;
+    border-color: $divider;
+
+    > :not(:last-child) > :last-child > * {
+      border-bottom-color: $divider;
+    }
+  }
+
+  .text-muted {
+    color: lighten($tooltipBackground, 18%) !important;
+  }
+
+  th,
+  td {
+    border-color: $divider;
+  }
+
+  .table-active {
+    color: $onSurface;
+  }
+
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    color: $onSurface;
+  }
+
+  .table-hover > tbody > tr:hover {
+    color: $onSurface;
+  }
+
+  .table-light {
+    background-color: $pickerHeader;
+    color: $onSurface;
+  }
+
+  caption {
+    color: $dropdownText;
+  }
+}

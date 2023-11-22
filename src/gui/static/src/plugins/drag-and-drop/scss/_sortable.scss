@@ -1,0 +1,11 @@
+.sortable-slide-animation {
+  transition: transform 0.2s;
+}
+
+.sortable-item-dragging {
+  pointer-events: none;
+}
+
+.cursor-drag {
+  cursor: move;
+}

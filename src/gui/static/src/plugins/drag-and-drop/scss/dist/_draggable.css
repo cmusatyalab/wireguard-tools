@@ -1,0 +1,5 @@
+.draggable-element {
+  cursor: grab;
+  user-select: none;
+  transition: box-shadow .2s;
+}

@@ -67,9 +67,14 @@
                                         {% endfor %}
                                     </div>
                                 </div>
-
-                                <button type="submit" class="btn btn-success">{{s_button}}</button>
-                                <button type="button" class="btn btn-danger">Delete</button>
+                                <div class="row ">
+                                    <div class="col-6 text-center">
+                                        <button type="submit" class="btn btn-success">{{s_button}}</button>
+                                    </div>
+                                    <div class="col-6 text-center">
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -99,7 +104,7 @@
 
 {% block scripts %}
 <script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="{{url_for('static',filename='js/qrcode.min.js')}}"></script>
 <script>
     window.onload = function () {
         updatePublicKey();

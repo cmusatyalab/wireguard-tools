@@ -1,0 +1,18 @@
+@mixin mdb-toasts-theme($theme) {
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $divider: map-get($theme, divider);
+  $toastShadow: map-get($theme, toastShadow);
+
+  .toast {
+    background: $surface;
+    color: $onSurface;
+    box-shadow: $toastShadow;
+  }
+
+  .toast-header {
+    background: $surface;
+    color: $onSurface;
+    border-bottom-color: $divider;
+  }
+}

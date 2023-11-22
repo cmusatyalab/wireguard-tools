@@ -1,0 +1,37 @@
+$treetable-icon-color: var(--mdb-body-color) !default;
+
+.treetable > table {
+  --mdb-table-bg: transparent;
+  border-collapse: collapse;
+}
+
+.treetable {
+  --mdb-treetable-icon-color: #{$treetable-icon-color};
+
+  tr.hidden td div {
+    max-height: 0px;
+    box-sizing: border-box;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  tr.hidden td {
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: padding 1s ease;
+    border: 0;
+  }
+  tr.hidden {
+    border: 0;
+  }
+  tr.hidden button {
+    display: none;
+  }
+  tr div {
+    max-height: 100px;
+    transition: max-height 0.6s ease, padding 0.6s ease;
+  }
+  td i {
+    color: var(--mdb-treetable-icon-color);
+  }
+}

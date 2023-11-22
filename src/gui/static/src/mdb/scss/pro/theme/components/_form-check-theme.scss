@@ -1,0 +1,160 @@
+@mixin mdb-form-check-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $onSurfaceVariant: map-get($theme, onSurfaceVariant);
+  $dropdownText: map-get($theme, dropdownText);
+  $onHover: map-get($theme, onHover);
+  $inputBackground: map-get($theme, inputBackground);
+  $background: map-get($theme, background);
+
+  .form-check-input {
+    background-color: transparent;
+    border-color: rgba($onSurface, 0.7);
+
+    &:before {
+      background-color: transparent;
+      box-shadow: 0px 0px 0px 13px transparent;
+    }
+
+    &:hover {
+      &:before {
+        box-shadow: transparent;
+      }
+    }
+
+    &:focus {
+      border-color: rgba($onSurface, 0.7);
+
+      &:before {
+        box-shadow: 0px 0px 0px 13px rgba($inputBackground, 0.6);
+      }
+    }
+
+    &:checked {
+      border-color: $primary;
+
+      &:focus {
+        border-color: $primary;
+
+        &:before {
+          box-shadow: 0px 0px 0px 13px $primary;
+        }
+      }
+    }
+
+    &:indeterminate {
+      &:focus {
+        &:before {
+          box-shadow: 0px 0px 0px 13px $primary;
+        }
+      }
+    }
+
+    &[type='checkbox'] {
+      &:focus {
+        &:after {
+          background-color: $background;
+        }
+      }
+
+      &:checked {
+        background-color: $primary;
+
+        &:after {
+          border-color: $onPrimary;
+          background-color: transparent;
+        }
+
+        &:focus {
+          background-color: $primary;
+        }
+      }
+
+      &:indeterminate {
+        background-color: transparent;
+        border-color: rgba($onSurface, 0.7);
+
+        &:after {
+          border-color: $onPrimary;
+        }
+
+        &:focus {
+          background-color: $primary;
+          border-color: $primary;
+        }
+      }
+    }
+
+    &[type='radio'] {
+      &:after {
+        background-color: transparent;
+      }
+
+      &:checked {
+        background-color: transparent;
+
+        &:after {
+          border-color: $primary;
+          background-color: $primary;
+        }
+
+        &:focus {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  .form-switch {
+    .form-check-input {
+      background-color: rgba($inputBackground, 0.38);
+
+      &:after {
+        background-color: #dee2e6;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+          0 1px 5px 0 rgba(0, 0, 0, 0.12);
+      }
+
+      &:focus {
+        &:before {
+          box-shadow: 3px -1px 0px 13px rgba(0, 0, 0, 0.6);
+        }
+      }
+
+      &[type='checkbox'] {
+        &:focus {
+          &:after {
+            background-color: #dee2e6;
+          }
+        }
+      }
+
+      &:checked {
+        background-color: $primary;
+        &:focus {
+          &:before {
+            box-shadow: 3px -1px 0px 13px $primary;
+          }
+        }
+
+        &[type='checkbox'] {
+          &:after {
+            background-color: $primary;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+              0 1px 5px 0 rgba(0, 0, 0, 0.12);
+          }
+        }
+      }
+    }
+  }
+}
