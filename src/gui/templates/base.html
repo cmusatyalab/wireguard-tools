@@ -93,7 +93,7 @@
             <div class="toast fade mx-auto" id="basic-primary-example" role="alert" aria-live="assertive"
                 aria-atomic="true" data-mdb-toast-init data-mdb-autohide="true" data-mdb-delay="2000"
                 data-mdb-position="top-right" data-mdb-append-to-body="true" data-mdb-stacking="true"
-                data-mdb-width="350px" data-mdb-color="primary">
+                data-mdb-width="350px" data-mdb-offset="50" data-mdb-color="primary">
                 <div class="toast-header">
                     <strong class="me-auto">Notification</strong>
                     <small>{{message}}</small>
@@ -179,14 +179,6 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/mdb.min.js')}}"></script>
     <!-- Custom scripts -->
     <script>
-        window.onload = function () {
-            let message = "{{ message }}";
-            console.log(message);
-            if (message) {
-                alert(message);
-            }
-        };
-
         document.addEventListener('DOMContentLoaded', function () {
             var toastElement = document.getElementById('basic-primary-example');
             var toastInstance = new mdb.Toast(toastElement);
