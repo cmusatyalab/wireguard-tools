@@ -75,12 +75,14 @@
                                         <a href="{{url_for('peers.peers_all')}}" type="button"
                                             class="btn btn-secondary">Back</a>
                                     </div>
+                                    {% if peer.id %}
                                     <div class="col-4 text-center">
                                         <button type="button" class="btn btn-danger" data-mdb-toggle="modal"
                                             data-mdb-target="#deleteModal">
                                             Delete
                                         </button>
                                     </div>
+                                    {% endif %}
                                 </div>
                         </form>
                     </div>
@@ -102,6 +104,7 @@
         </div>
     </div>
     <!-- Modal -->
+    {% if peer.id %}
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -125,6 +128,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 <div class="container-fluid">
     <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer

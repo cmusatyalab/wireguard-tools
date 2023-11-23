@@ -89,12 +89,21 @@
     <!--Main layout-->
     <main>
         <div class="container">
-            <div class="content">
-                <!-- Title -->
-                <div class="p-2 bg-light">
-                    <h2></h2>
+            {% if message %}
+            <div class="toast fade mx-auto" id="basic-primary-example" role="alert" aria-live="assertive"
+                aria-atomic="true" data-mdb-toast-init data-mdb-autohide="true" data-mdb-delay="2000"
+                data-mdb-position="top-right" data-mdb-append-to-body="true" data-mdb-stacking="true"
+                data-mdb-width="350px" data-mdb-color="primary">
+                <div class="toast-header">
+                    <strong class="me-auto">Notification</strong>
+                    <small>{{message}}</small>
+                    <button type="button" class="btn-close" data-mdb-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <!-- Title -->
+                <div class="toast-body">{{message}}</div>
+            </div>
+            {% endif %}
+
+            <div class="content">
                 {% block content %} {% endblock %}
             </div>
         </div>
@@ -170,6 +179,20 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/mdb.min.js')}}"></script>
     <!-- Custom scripts -->
     <script>
+        window.onload = function () {
+            let message = "{{ message }}";
+            console.log(message);
+            if (message) {
+                alert(message);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastElement = document.getElementById('basic-primary-example');
+            var toastInstance = new mdb.Toast(toastElement);
+            toastInstance.show();
+        });
+
         function refresh_page() {
             window.location.reload(true);
         }
@@ -182,13 +205,6 @@
         }
         setInterval(updateDateTime, 1000);
         updateDateTime();
-
-        window.onload = function () {
-            let message = "{{ message }}";
-            if (message) {
-                alert(message);
-            }
-        };
     </script>
     {% block scripts %} {% endblock %}
 </body>
