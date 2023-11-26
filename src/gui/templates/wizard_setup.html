@@ -4,15 +4,60 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h2>Setup Wizard</h2>
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Setup Wizard</h2>
+    </div>
     <hr class="hr" />
+    <div class="row ">
+        <div class="col-md-8 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="submit">
+
+                        Generate Server Keys
+                        <br>
+                        <label for="private_key" class="form-label">Private Key</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="private_key" name="private_key"
+                                value="" oninput="updatePublicKey()">
+                            <button class="btn btn-primary " data-mdb-ripple-init type="button" id="generatePrivateKey"
+                                onclick="generateAndSetPrivateKey()" data-mdb-tooltip-init title="Generate Private Key">
+                                <i class="fas fa-key"></i>
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="public_key" class="form-label">Public Key</label>
+                            <input type="text" class="form-control" id="public_key" name="public_key"
+                                value="">
+                        </div>
 
 
-
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
 
 {%endblock%}
 
 {% block scripts %}
+<script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
+<script>
+    function generateAndSetPrivateKey() {
+        let keypair = wireguard.generateKeypair();
+        let privateKey = keypair.privateKey;
+        document.getElementById('private_key').value = privateKey;
+        updatePublicKey();
+    }
+
+function updatePublicKey() {
+    let privateKey = document.getElementById('private_key').value;
+    let publicKey = wireguard.getPublicKey(privateKey);
+    if (privateKey == "") {
+        publicKey = "No Private Key";
+    }
+    document.getElementById('public_key').value = publicKey;
+}
+</script>
 {% endblock %}
