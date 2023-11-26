@@ -2,23 +2,28 @@ from flask import Flask, render_template, request
 from flask_migrate import Migrate
 import datetime
 import os
+import yaml
 from .routes import networks, peers, settings, wizard
 
-__version__ = "0.1.0dev1"
+__version__ = "0.1.1dev0"
 
 basedir = os.getcwd()
 
 def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
-
+    
     ## CONFIGURATION ##
-    # Automatically reload templates when they are changed
-    app.config['TEMPLATES_AUTO_RELOAD'] = True
-    # Disable track modifications for SQLAlchemy
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    # Set the database URI for SQLAlchemy
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{basedir}/wg.db"
+
+    # Read config.yaml
+    with open('config.yaml') as f:
+        config = yaml.safe_load(f)
+  
+    # Set the configuration from config.yaml
+    app.config.update(config)
+    # Replace {basedir} in SQLALCHEMY_DATABASE_URI
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].format(basedir=basedir)
+
 
     # Initialize the database with the app
     from .models import db  # Move the import here
@@ -30,6 +35,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    ## ROUTES ##
     # Route for the index page
     @app.route('/')
     def index():
