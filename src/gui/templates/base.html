@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %}</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Google Fonts Roboto -->
@@ -31,7 +31,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Navbar brand -->
                 <a class="navbar-brand mt-2 mt-lg-0" href="/">
-                    <img src="{{ url_for('static', filename='assets/wgglogo.png') }}" height="15" alt="WGGLogo"
+                    <img src="{{ url_for('static', filename='img/wgglogo.png') }}" height="15" alt="WGGLogo"
                         loading="lazy" />
                 </a>
                 <!-- Left links -->
@@ -90,7 +90,7 @@
     <main>
         <div class="container">
             {% if message %}
-            <div class="toast fade mx-auto" id="basic-primary-example" role="alert" aria-live="assertive"
+            <div class="toast fade mx-auto" id="basic-toast" role="alert" aria-live="assertive"
                 aria-atomic="true" data-mdb-toast-init data-mdb-autohide="true" data-mdb-delay="2000"
                 data-mdb-position="top-right" data-mdb-append-to-body="true" data-mdb-stacking="true"
                 data-mdb-width="350px" data-mdb-offset="50" data-mdb-color="primary">
@@ -180,9 +180,13 @@
     <!-- Custom scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var toastElement = document.getElementById('basic-primary-example');
-            var toastInstance = new mdb.Toast(toastElement);
-            toastInstance.show();
+            var toastElement = document.getElementById('basic-toast');
+            if (toastElement) {
+                var toastInstance = new mdb.Toast(toastElement);
+                toastInstance.show();
+            } else {
+                console.log('No toast message received');
+            }
         });
 
         function refresh_page() {

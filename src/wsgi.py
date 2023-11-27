@@ -9,5 +9,5 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
     # Start the Flask application using host_ip and port from config.yaml
     host_ip = config['HOST_IP']
-    port = config['PORT']
+    port = config['HOST_PORT']
     app.run(host=host_ip, port=port)
