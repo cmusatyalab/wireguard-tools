@@ -12,6 +12,18 @@ We welcome contributions from the community. If you're interested in contributin
 
 At present, the development roadmap is here [ROADMAP.md](ROADMAP.md)
 
+## Installation
+
+At present, simply clone this repository
+    git clone https://github.com/radawson/wireguard-gui
+
+Next, install the requirements with
+    pip install -r requirements.txt
+
+Finally, move to the src/ directory and run the program
+    cd src
+    python run.py
+
 ## Acknowledgements
 
 We would like to thank Carnegie Mellon University for the WireGuard-Tools code that this project is based on. Their work has been invaluable in helping us get this project off the ground.
