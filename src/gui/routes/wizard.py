@@ -57,7 +57,7 @@ def wizard_basic():
         return render_template(
             "wizard_setup.html", defaults=defaults, subnets=subnets, message=message
         )
-    listen_port = current_app.config["BASE_PORT"]
+    listen_port = defaults.base_port
 
     # Append CIDR subnet to base_ip
     print(subnets)
@@ -106,6 +106,7 @@ def wizard_basic():
         name=f"Server for {name}",
         private_key=private_key,
         address=lh_address,
+        listen_port=listen_port,
         network=new_network.id,
         description="Auto-generated peer for the lighthouse",
     )

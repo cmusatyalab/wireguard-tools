@@ -42,7 +42,7 @@
 
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="address" name="address"
-                                            value="{{ peer.address }} onchange=" updateConfigCard()">
+                                            value="{{ peer.address }}" onchange="updateConfigCard()">
                                         <label for="address" class="form-label">Address</label>
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
@@ -103,11 +103,15 @@
             <div class="card-body">
                 <h5 class="card-title">Generated Configuration</h5>
                 <h6 class="card-subtitle mb-2 text-muted">Copy the config below or scan the QR code to import the
-                    peer
-                    configuration.</h6>
-                <textarea rows="16" cols="55" class="card-text" id="peer_config"></textarea>
+                    peer configuration.</h6>
+                <div class="form-outline full-width mb-2">
+                    <textarea rows="16" class="card-text" id="peer_config"></textarea>
+                </div>
                 <!-- QR Code -->
                 <div id="qrcode"></div>
+                <button class="btn btn-primary" data-mdb-ripple-init type="button" id="copyConfig" data-mdb-tooltip-init
+                    title="Download Config">
+                    <i class="fas fa-download"></i>
             </div>
         </div>
     </div>
@@ -143,9 +147,6 @@
         configurations are essentially in an unknown state.</p>
 </div>
 
-
-
-
 {% endblock %}
 
 {% block scripts %}
@@ -158,9 +159,6 @@
         // Add event listener for the 'change' event on the #network select element
         document.getElementById('network').addEventListener('change', updateConfigCard);
     };
-
-    function delete_peer() {
-    }
 
     function generateAndSetPrivateKey() {
         let keypair = wireguard.generateKeypair();
@@ -183,16 +181,15 @@
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.M // Use Level L for maximum capacity
         });
-
     }
 
     function updateConfigCard() {
         let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('address').value
-        console.log(typeof document.getElementById('listen_port').value)
-        if (document.getElementById('listen_port').value != "" || document.getElementById('listen_port').value != None) {
+        console.log(document.getElementById('listen_port').value)
+        if (document.getElementById('listen_port').value != "None") {
             config += "\nListenPort = " + document.getElementById('listen_port').value;
         }
-        if (document.getElementById('dns').value != "" || document.getElementById('dns').value != None) {
+        if (document.getElementById('dns').value != "None") {
             config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
         } else {
             config += "\n\n";
