@@ -105,4 +105,30 @@ def networks_add():
             s_button="Add",
         )
 
+@networks.route("/delete/<int:network_id>", methods=["POST"])
+def network_delete(network_id):
+    network = Network.query.filter_by(id=network_id).first()
+    db.session.delete(network)
+    db.session.commit()
+    message = "Network deleted successfully"
+    network_list = query_all_networks()
+    return render_template("networks.html", message=message, networks=network_list)
+
+@networks.route("/activate/<int:network_id>", methods=["GET"])
+def network_activate(network_id):
+    network = Network.query.filter_by(id=network_id).first()
+    network.active = True
+    db.session.commit()
+    message = "Network activated successfully"
+    network_list = query_all_networks()
+    return render_template("networks.html", message=message, networks=network_list)
+
+@networks.route("/deactivate/<int:network_id>", methods=["GET"])
+def network_deactivate(network_id):
+    network = Network.query.filter_by(id=network_id).first()
+    network.active = False
+    db.session.commit()
+    message = "Network deactivated successfully"
+    network_list = query_all_networks()
+    return render_template("networks.html", message=message, networks=network_list)
 

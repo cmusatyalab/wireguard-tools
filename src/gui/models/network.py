@@ -1,4 +1,5 @@
 import json
+import ipaddress
 from .database import db
 from flask_marshmallow import Marshmallow
 
@@ -13,9 +14,21 @@ class Network(db.Model):
     public_key = db.Column(db.String(50))
     peers_list = db.Column(db.Text)
     base_ip = db.Column(db.String(50))
+    subnet = db.Column(db.Integer)
     description = db.Column(db.Text)
     config = db.Column(db.Text)
     active = db.Column(db.Boolean, default=False)
+
+    @classmethod
+    def append_ip(self, ip, host):
+        try:
+            ipaddress.ip_address(ip)
+        except ValueError:
+            return "Please enter a valid IP address"
+        base_ip = ip.split('.')[:3]
+        base_ip.append(str(host))
+        result = '.'.join(base_ip)
+        return result
 
     def get_config(self):
         j_config = json.loads(self.config)
@@ -31,6 +44,7 @@ class Network(db.Model):
             wg_config += f"PresharedKey = {j_config['preshared_key']}\n"
         
         return wg_config
+    
 
 class Network_Config(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,7 +78,8 @@ def network_load_test_db():
         lh_ip="10.10.11.1",
         public_key="public_key 1",
         peers_list=json.dumps(["kHuDnIycdQYOVpSSMLqZwfe8D9eQSElSoIdWBFz8+jo=",]),
-        base_ip="10.10.11.0/24",
+        base_ip="10.10.11.0",
+        subnet="24",
         description="A basic /24 network",
         config=json.dumps({
             "public_key" : "m1cSyM6Veev3vQIMYQ23gr22Qn/Vu3vg5d8xBTu43gE=",
@@ -82,7 +97,8 @@ def network_load_test_db():
         lh_ip="172.122.88.1",
         public_key="public_key 1",
         peers_list="",
-        base_ip="172.122.88.0/16",
+        base_ip="172.122.88.0",
+        subnet="16",
         description="Another network that could be slightly larger",
         config=json.dumps({
             "public_key" : "Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y=",

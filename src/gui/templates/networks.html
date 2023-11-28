@@ -35,12 +35,19 @@
                     <p class="card-text">Base IP: {{network.base_ip}}</p>
                     <p class="card-text">{{ network.description }}</p>
                     <div class="card-footer row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <a href="{{ url_for('peers.peers_all', network_id=network.id) }}"
                                 class="card-link">Peers</a>
+                        </div>
+                        <div class="col-md-4">
+                            {% if network.active %}
+                            <a href="{{url_for('networks.network_deactivate',network_id=network.id)}}" class="btn btn-danger">Deactivate</a>
+                            {% else %}
+                            <a href="{{url_for('networks.network_activate',network_id=network.id)}}" class="btn btn-success">Activate</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

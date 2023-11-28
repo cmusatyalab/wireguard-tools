@@ -15,51 +15,59 @@
                     <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
                     <div class="form-outline">
                         <form method="POST">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Node Name</label>
+                            <div class="mb-3 form-outline" data-mdb-input-init>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ peer.name }}">
+                                <label for="name" class="form-label">Node Name</label>
                             </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
+                            <div class="mb-3 form-outline" data-mdb-input-init>
                                 <input type="text" class="form-control" id="description" name="description"
                                     value="{{ peer.description }}">
+                                <label for="description" class="form-label">Description</label>
                             </div>
 
                             <div class="card">
                                 <h6 class="card-header">Configuration</h6>
 
-                                <div class="mb-3">
-                                    <label for="private_key" class="form-label">PrivateKey</label>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="private_key" name="private_key"
                                             value="{{ peer.private_key }}" oninput="updatePublicKey()">
+                                        <label for="private_key" class="form-label">PrivateKey</label>
                                         <button class="btn btn-primary " data-mdb-ripple-init type="button"
                                             id="generatePrivateKey" onclick="generateAndSetPrivateKey()"
                                             data-mdb-tooltip-init title="Generate Private Key">
                                             <i class="fas fa-key"></i>
                                         </button>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="address" class="form-label">Address</label>
+
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="address" name="address"
-                                            value="{{ peer.address }}">
+                                            value="{{ peer.address }} onchange=" updateConfigCard()">
+                                        <label for="address" class="form-label">Address</label>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="dns" class="form-label">DNS</label>
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="listen_port" name="listen_port"
+                                            value="{{ peer.listen_port }}" onchange="updateConfigCard()">
+                                        <label for="listen_port" class="form-label">Listen Port</label>
+                                    </div>
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="dns" name="dns"
                                             value="{{ peer.dns }}">
+                                        <label for="dns" class="form-label">DNS</label>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="network" class="form-label">Network</label>
-                                        <select data-mdb-select-init id="network" name="network"
+                                    <div class="form-outline">
+                                        <select class="form-select" data-mdb-select-init name="network" id="network"
                                             onchange="updateConfigCard()">
                                             {% for network in networks %}
                                             <option value="{{ network.id }}" {% if network.id==peer.network %}selected{%
-                                                endif %}>{{ network.name }}: {{network.base_ip}}</option>
+                                                endif %}>
+                                                {{ network.name }}: {{network.base_ip}}
+                                            </option>
                                             {% endfor %}
                                         </select>
+                                        <label for="network" class="form-label select-label">Network</label>
                                     </div>
-                                    <div class="mb-3">
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
                                         {% for network in networks %}
                                         <textarea rows="6" cols="32" class="card-text" id="nc-{{network.id}}"
                                             name="nc-{{network.id}}" disabled
@@ -180,7 +188,11 @@
 
     function updateConfigCard() {
         let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('address').value
-        if (document.getElementById('dns').value != "") {
+        console.log(typeof document.getElementById('listen_port').value)
+        if (document.getElementById('listen_port').value != "" || document.getElementById('listen_port').value != None) {
+            config += "\nListenPort = " + document.getElementById('listen_port').value;
+        }
+        if (document.getElementById('dns').value != "" || document.getElementById('dns').value != None) {
             config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
         } else {
             config += "\n\n";

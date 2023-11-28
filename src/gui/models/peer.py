@@ -13,9 +13,12 @@ class Peer(db.Model):
     name = db.Column(db.String(50))
     private_key = db.Column(db.String(50))
     address = db.Column(db.String(50))
+    listen_port = db.Column(db.Integer)
     dns = db.Column(db.String(50))
     peers_list = db.Column(db.Text)
     network = db.Column(db.Integer)
+    post_up = db.Column(db.Text)
+    post_down = db.Column(db.Text)
     description = db.Column(db.Text)
     active = db.Column(db.Boolean, default=False)
 
@@ -56,12 +59,12 @@ def peer_load_test_db():
     peer_list = [
         {
             "name": "peer 1",
-            "address": "10.10.10.11/32",
+            "address": "10.10.11.11/32",
             "private_key": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
-            "dns": "10.10.10.53",
+            "dns": "10.10.11.53",
             "peers_list": [{
                 "Endpoint": "myserver.dyndns.org:51820",
-                "AllowedIPs": ["10.10.10.0/24", "::/24"],
+                "AllowedIPs": ["10.10.11.0/24"],
                 "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
                 "PersistentKeepalive": 25,
                 "Endpoint": "myserver.dyndns.org:51820",
@@ -72,9 +75,9 @@ def peer_load_test_db():
         },
         {
             "name": "peer 2",
-            "address": "10.10.10.18/32",
+            "address": "10.10.11.18/32",
             "private_key": "iISiPl0n4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
-            "dns": "10.10.10.53",
+            "dns": "10.10.11.53",
             "peers_list": [{
                     "AllowedIPs": ["0.0.0.0/0", "::/0"],
                     "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
@@ -86,9 +89,9 @@ def peer_load_test_db():
         },
         {
             "name": "peer 3",
-            "address": "10.10.10.19/32",
+            "address": "10.10.11.19/32",
             "private_key": "YHmRePvK5Eay19KJe7QYcgNUgKEL4ky5X1xql+UhEGo=",
-            "dns": "10.10.10.53",
+            "dns": "10.10.11.53",
             "peers_list": {
                     "AllowedIPs": ["0.0.0.0/0", "::/0"],
                     "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
@@ -97,6 +100,36 @@ def peer_load_test_db():
                 },
             "network": 1,
             "description": "RasPi honeypot",
+        },
+        {
+            "name": "server 1",
+            "address": "10.10.11.1/32",
+            "private_key": "wBIQfi2Z+DFhAW7Z57tqVTyG/z1MQpzNwGlWrAcF2F4=",
+            "listen_port": 51820,
+            "dns": "10.10.11.53",
+            "peers_list": {
+                    "AllowedIPs": ["0.0.0.0/0", "::/0"],
+                    "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
+                    "PersistentKeepalive": 25,
+                    "Endpoint": "myserver.dyndns.org:51820",
+                },
+            "network": 1,
+            "description": "Auto-generated peer for the lighthouse",
+        },
+        {
+            "name": "server 2",
+            "address": "172.122.88.1/32",
+            "private_key": "KIy+vrfZDJ5KqHm0qrLK58Mqy5iV2OKx+l/vKXfTaXI=",
+            "listen_port": 51820,
+            "dns": "172.122.88.53",
+            "peers_list": {
+                    "AllowedIPs": ["0.0.0.0/0", "::/0"],
+                    "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
+                    "PersistentKeepalive": 25,
+                    "Endpoint": "myserver.dyndns.org:51820",
+                },
+            "network": 2,
+            "description": "Auto-generated peer for the lighthouse",
         },
     ]
     for peer in peer_list:

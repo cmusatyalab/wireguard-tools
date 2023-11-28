@@ -53,6 +53,11 @@ def create_app():
     def dashboard():
         # Render the dashboard page with the current UTC time
         return render_template('dashboard.html', utc_dt=datetime.datetime.utcnow())
+    
+    # Route for testing purposes - Delete when dev work completed
+    @app.route('/test')
+    def test():
+        return render_template('test.html')
 
     # Import the blueprints
     app.register_blueprint(networks)
