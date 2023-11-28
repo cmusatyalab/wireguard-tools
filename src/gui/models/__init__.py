@@ -4,15 +4,13 @@ from .network import Network, network_schema, networks_schema, network_load_test
 from .peer import Peer, peer_schema, peers_schema, peer_load_test_db
 import ipaddress
 
-subnets = {}
+subnets = []
 
 for i in range(32, 15, -1):
-    net = ipaddress.ip_network(f'0.0.0.0/{i}')
-    subnets[i] = {
-        'CIDR': str(i),
-        'clients': net.num_addresses,
-        'mask': net.netmask.compressed
-    }
+    net = ipaddress.ip_network(f"0.0.0.0/{i}")
+    subnets.append(
+        {"CIDR": i, "clients": net.num_addresses, "mask": net.netmask.compressed}
+    )
 
 if __name__ == "__main__":
     print(subnets)

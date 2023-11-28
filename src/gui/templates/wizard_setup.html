@@ -49,7 +49,7 @@
                     <div class="form-outline">
                         <select class="my-2 form-select" data-mdb-select-init id="subnet" name="subnet">
                             {% for subnet in subnets %}
-                            <option value="{{ subnet }}">{{subnet}}</option>
+                            <option value="{{ subnet['CIDR'] }}">{{ subnet['clients'] }}</option>
                             {% endfor %}
                         </select>
                         <label for="subnet" class="form-label select-label">Total Clients</label>
@@ -96,6 +96,7 @@
                 <p>The default server listen port is {{defaults.base_port}}.</p>
                 <p>Additional peers can be added <a href="{{url_for('peers.peers_all')}}">here</a>.</p>
                 <h4>Advanced Instructions</h4>
+                <strong class="text-danger">Currently Disabled</strong>
                 <p>The wizard will automatically generate a server and network based on the IP address of the machine it
                     is specified.</p>
 

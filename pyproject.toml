@@ -17,9 +17,22 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+  "Flask~=3.0.0",
+  "flask-marshmallow~=0.15.0",
+  "Flask-Migrate~=4.0.5",
+  "Flask-SQLAlchemy~=3.1.1",
+  "marshmallow-sqlalchemy~=0.29.0",
+  "marshmallow~=3.20.1",
+  "PyYAML~=6.0.1",
+  "requests~=2.31.0",
+  "SQLAlchemy~=2.0.23",
+  "wheel~=0.41.3"
+]
+
 [project.urls]
 Homepage = "https://github.com/radawson/wireguard-gui"
 Issues = "https://github.com/radawson/wireguard-gui/issues"
 
 [tool.hatch.version]
-path = "wireguard_gui/src/gui/__init__.py:__version__"
+path = "src/gui/__init__.py"
