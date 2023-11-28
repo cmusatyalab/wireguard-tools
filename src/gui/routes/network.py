@@ -114,7 +114,7 @@ def network_delete(network_id):
     network_list = query_all_networks()
     return render_template("networks.html", message=message, networks=network_list)
 
-@networks.route("/activate/<int:network_id>", methods=["GET"])
+@networks.route("/activate/<int:network_id>", methods=["GET", "POST"])
 def network_activate(network_id):
     network = Network.query.filter_by(id=network_id).first()
     network.active = True
@@ -123,7 +123,7 @@ def network_activate(network_id):
     network_list = query_all_networks()
     return render_template("networks.html", message=message, networks=network_list)
 
-@networks.route("/deactivate/<int:network_id>", methods=["GET"])
+@networks.route("/deactivate/<int:network_id>", methods=["GET","POST"])
 def network_deactivate(network_id):
     network = Network.query.filter_by(id=network_id).first()
     network.active = False

@@ -1,9 +1,12 @@
+import ipaddress
 import json
+import os
+import psutil
 import socket
 from flask import Blueprint, current_app, render_template, redirect, url_for, request
 from ..models import db, Config, Network, Peer, subnets
 from wireguard_tools.wireguard_key import WireguardKey
-import ipaddress
+
 
 wizard = Blueprint("wizard", __name__, url_prefix="/wizard")
 
@@ -57,7 +60,7 @@ def wizard_basic():
         return render_template(
             "wizard_setup.html", defaults=defaults, subnets=subnets, message=message
         )
-    listen_port = defaults.base_port
+    listen_port = defaults['base_port']
 
     # Append CIDR subnet to base_ip
     print(subnets)
@@ -102,11 +105,16 @@ def wizard_basic():
 
     # Create a new peer object
     lh_address = Network.append_ip(base_ip, 1)+"/32"
+
+    post_up_string = f"iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE"
+    post_down_string = f"iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE"
     new_peer = Peer(
         name=f"Server for {name}",
         private_key=private_key,
         address=lh_address,
         listen_port=listen_port,
+        post_up=post_up_string,
+        post_down=post_down_string,
         network=new_network.id,
         description="Auto-generated peer for the lighthouse",
     )
@@ -118,11 +126,22 @@ def wizard_basic():
     db.session.commit()
 
     # Create the adapter configuration file
-    adapter_string = (
-        "[Interface]\nPrivateKey = {private_key}\nAddress = {lh_address}\nListenPort = {listen_port}\n"
+    adapter_string = f"[Interface]\nPrivateKey = {private_key}\nAddress = {lh_address}\nListenPort = {listen_port}\nSaveConfig = true\n"
+    if dns:
+        adapter_string += f"DNS = {dns}\n"
+    # adapter_string += "\n[Peer]\nPublicKey = {public_key}\nAllowedIPs = {allowed_ips}\nEndpoint = {endpoint_host}:{endpoint_port}\n"
+    # if preshared_key:
+    #     adapter_string += "PresharedKey = {preshared_key}\n"
 
+    # Save the adapter configuration file to the output directory
+    os.makedirs(f"{current_app.config['OUTPUT_DIR']}/server", exist_ok=True)
+    server_config_file = open(
+        f"{current_app.config['OUTPUT_DIR']}/server/wg0.conf", "w"
     )
-
+    server_config_file.write(
+        adapter_string
+    )
+    
     # Redirect to the peers page
     return redirect(url_for("networks.networks_all"))
 
@@ -130,7 +149,7 @@ def wizard_basic():
 ## FUNCTIONS ##
 def get_public_ip():
     try:
-        # Connect to a random server
+        # Connect to a known server
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
