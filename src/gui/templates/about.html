@@ -3,9 +3,16 @@
 {% block title %} About {% endblock %}
 
 {% block content %}
-<h1>Wireguard GUI</h1>
-<h2>About</h2>
+<div class="container-fluid">
+    <h2>About</h2>
 
+    <p>WireGuard Manager is a web-based GUI for WireGuard, designed for small networks and fast installation with
+        minimal dependencies.</p>
 
-<h3>{{ utc_dt }}</h3>
+    <p>WireGuard Manager is written in Python and uses the Flask framework. The GUI is built with Bootstrap 5 and MDB.
+    </p>
+
+    <p>WireGuard Manager is licensed under the MIT license.</p>
+    <p>Version {{ version }} </p>
+</div>
 {% endblock %}

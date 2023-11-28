@@ -1,0 +1,58 @@
+@mixin mdb-dropdown-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $surfaceHighlight: map-get($theme, surfaceHighlight);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $divider: map-get($theme, divider);
+  $surfaceDisabled: map-get($theme, dropdownDisabled);
+  $dropdownText: map-get($theme, dropdownText);
+  $toastShadow: map-get($theme, toastShadow);
+
+  .dropdown-menu {
+    color: $onSurface;
+    background-color: $surface;
+    box-shadow: $toastShadow;
+  }
+
+  .dropdown-item {
+    color: $onSurface;
+
+    &:hover,
+    &:focus {
+      color: $onSurface;
+      background: $surfaceHighlight;
+    }
+
+    &.active,
+    &:active {
+      color: $onSurface;
+      background: $surfaceHighlight;
+    }
+
+    &.disabled,
+    &:disabled {
+      color: $surfaceDisabled;
+    }
+  }
+
+  .dropdown-divider {
+    border-color: $divider;
+  }
+
+  .dropdown-item-text {
+    color: $dropdownText;
+  }
+
+  .dropdown-header {
+    color: $dropdownText;
+  }
+}

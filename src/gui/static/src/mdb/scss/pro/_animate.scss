@@ -1,0 +1,511 @@
+//
+// Animation styles
+//
+
+.animation {
+  // scss-docs-start animation-css-vars
+  --#{$prefix}animation-delay-1s: #{$animation-delay-1s};
+  --#{$prefix}animation-delay-2s: #{$animation-delay-3s};
+  --#{$prefix}animation-delay-3s: #{$animation-delay-3s};
+  --#{$prefix}animation-delay-4s: #{$animation-delay-4s};
+  --#{$prefix}animation-delay-5s: #{$animation-delay-5s};
+  --#{$prefix}animation-fast-duration: #{$animation-fast-duration};
+  --#{$prefix}animation-faster-duration: #{$animation-faster-duration};
+  --#{$prefix}animation-slow-duration: #{$animation-slow-duration};
+  --#{$prefix}animation-slower-duration: #{$animation-slower-duration};
+  // scss-docs-end animation-css-vars
+
+  &.infinite {
+    animation-iteration-count: infinite;
+  }
+
+  &.delay-1s {
+    animation-delay: var(--#{$prefix}animation-delay-1s);
+  }
+
+  &.delay-2s {
+    animation-delay: var(--#{$prefix}animation-delay-2s);
+  }
+
+  &.delay-3s {
+    animation-delay: var(--#{$prefix}animation-delay-3s);
+  }
+
+  &.delay-4s {
+    animation-delay: var(--#{$prefix}animation-delay-4s);
+  }
+
+  &.delay-5s {
+    animation-delay: var(--#{$prefix}animation-delay-5s);
+  }
+
+  &.fast {
+    animation-duration: var(--#{$prefix}animation-fast-duration);
+  }
+
+  &.faster {
+    animation-duration: var(--#{$prefix}animation-faster-duration);
+  }
+
+  &.slow {
+    animation-duration: var(--#{$prefix}animation-slow-duration);
+  }
+
+  &.slower {
+    animation-duration: var(--#{$prefix}animation-slower-duration);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-in-down-transform-from);
+  }
+
+  to {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fade-in-down-transform-to);
+  }
+}
+
+.fade-in-down {
+  --#{$prefix}animation-fade-in-down-transform-from: #{$animation-fade-in-down-transform-from};
+  --#{$prefix}animation-fade-in-down-transform-to: #{$animation-fade-in-down-transform-to};
+
+  animation-name: fade-in-down;
+}
+
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-in-left-transform-from);
+  }
+
+  to {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fade-in-left-transform-to);
+  }
+}
+
+.fade-in-left {
+  --#{$prefix}animation-fade-in-left-transform-from: #{$animation-fade-in-left-transform-from};
+  --#{$prefix}animation-fade-in-left-transform-to: #{$animation-fade-in-left-transform-to};
+
+  animation-name: fade-in-left;
+}
+
+@keyframes fade-in-right {
+  from {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-in-right-transform-from);
+  }
+
+  to {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fade-in-right-transform-to);
+  }
+}
+
+.fade-in-right {
+  --#{$prefix}animation-fade-in-right-transform-from: #{$animation-fade-in-right-transform-from};
+  --#{$prefix}animation-fade-in-right-transform-to: #{$animation-fade-in-right-transform-to};
+
+  animation-name: fade-in-right;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-in-up-transform-from);
+  }
+
+  to {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fade-in-up-transform-to);
+  }
+}
+
+.fade-in-up {
+  --#{$prefix}animation-fade-in-up-transform-from: #{$animation-fade-in-up-transform-from};
+  --#{$prefix}animation-fade-in-up-transform-to: #{$animation-fade-in-up-transform-to};
+
+  animation-name: fade-in-up;
+}
+
+@keyframes fade-out-down {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-out-down-transform-to);
+  }
+}
+
+.fade-out-down {
+  --#{$prefix}animation-fade-out-down-transform-to: #{$animation-fade-out-down-transform-to};
+
+  animation-name: fade-out-down;
+}
+
+@keyframes fade-out-left {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-out-left-transform-to);
+  }
+}
+
+.fade-out-left {
+  --#{$prefix}animation-fade-out-left-transform-to: #{$animation-fade-out-left-transform-to};
+
+  animation-name: fade-out-left;
+}
+
+@keyframes fade-out-right {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-out-right-transform-to);
+  }
+}
+
+.fade-out-right {
+  --#{$prefix}animation-fade-out-right-transform-to: #{$animation-fade-out-right-transform-to};
+
+  animation-name: fade-out-right;
+}
+
+@keyframes fade-out-up {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fade-out-up-transform-to);
+  }
+}
+
+.fade-out-up {
+  --#{$prefix}animation-fade-out-up-transform-to: #{$animation-fade-out-up-transform-to};
+
+  animation-name: fade-out-up;
+}
+
+@keyframes slide-in-down {
+  from {
+    visibility: visible;
+    transform: var(--#{$prefix}animation-slide-in-down-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-in-down-transform-to);
+  }
+}
+
+.slide-in-down {
+  --#{$prefix}animation-slide-in-down-transform-from: #{$animation-slide-in-down-transform-from};
+  --#{$prefix}animation-slide-in-down-transform-to: #{$animation-slide-in-down-transform-to};
+
+  animation-name: slide-in-down;
+}
+
+@keyframes slide-in-left {
+  from {
+    visibility: visible;
+    transform: var(--#{$prefix}animation-slide-in-left-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-in-left-transform-to);
+  }
+}
+
+.slide-in-left {
+  --#{$prefix}animation-slide-in-left-transform-from: #{$animation-slide-in-left-transform-from};
+  --#{$prefix}animation-slide-in-left-transform-to: #{$animation-slide-in-left-transform-to};
+
+  animation-name: slide-in-left;
+}
+
+@keyframes slide-in-right {
+  from {
+    visibility: visible;
+    transform: var(--#{$prefix}animation-slide-in-right-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-in-right-transform-to);
+  }
+}
+
+.slide-in-right {
+  --#{$prefix}animation-slide-in-right-transform-from: #{$animation-slide-in-right-transform-from};
+  --#{$prefix}animation-slide-in-right-transform-to: #{$animation-slide-in-right-transform-to};
+
+  animation-name: slide-in-right;
+}
+
+@keyframes slide-in-up {
+  from {
+    visibility: visible;
+    transform: var(--#{$prefix}animation-slide-in-up-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-in-up-transform-to);
+  }
+}
+
+.slide-in-up {
+  --#{$prefix}animation-slide-in-up-transform-from: #{$animation-slide-in-up-transform-from};
+  --#{$prefix}animation-slide-in-up-transform-to: #{$animation-slide-in-up-transform-to};
+
+  animation-name: slide-in-up;
+}
+
+@keyframes slide-out-down {
+  from {
+    transform: var(--#{$prefix}animation-slide-out-down-transform-from);
+  }
+
+  to {
+    visibility: hidden;
+    transform: var(--#{$prefix}animation-slide-out-down-transform-to);
+  }
+}
+
+.slide-out-down {
+  --#{$prefix}animation-slide-out-down-transform-from: #{$animation-slide-out-down-transform-from};
+  --#{$prefix}animation-slide-out-down-transform-to: #{$animation-slide-out-down-transform-to};
+
+  animation-name: slide-out-down;
+}
+
+@keyframes slide-out-left {
+  from {
+    transform: var(--#{$prefix}animation-slide-out-left-transform-from);
+  }
+
+  to {
+    visibility: hidden;
+    transform: var(--#{$prefix}animation-slide-out-left-transform-to);
+  }
+}
+
+.slide-out-left {
+  --#{$prefix}animation-slide-out-left-transform-from: #{$animation-slide-out-left-transform-from};
+  --#{$prefix}animation-slide-out-left-transform-to: #{$animation-slide-out-left-transform-to};
+
+  animation-name: slide-out-left;
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: var(--#{$prefix}animation-slide-out-right-transform-from);
+  }
+
+  to {
+    visibility: hidden;
+    transform: var(--#{$prefix}animation-slide-out-right-transform-to);
+  }
+}
+
+.slide-out-right {
+  --#{$prefix}animation-slide-out-right-transform-from: #{$animation-slide-out-right-transform-from};
+  --#{$prefix}animation-slide-out-right-transform-to: #{$animation-slide-out-right-transform-to};
+
+  animation-name: slide-out-right;
+}
+
+@keyframes slide-out-up {
+  from {
+    transform: var(--#{$prefix}animation-slide-out-up-transform-from);
+  }
+
+  to {
+    visibility: hidden;
+    transform: var(--#{$prefix}animation-slide-out-up-transform-to);
+  }
+}
+
+.slide-out-up {
+  --#{$prefix}animation-slide-out-up-transform-from: #{$animation-slide-out-up-transform-from};
+  --#{$prefix}animation-slide-out-up-transform-to: #{$animation-slide-out-up-transform-to};
+
+  animation-name: slide-out-up;
+}
+
+@keyframes slide-down {
+  from {
+    transform: var(--#{$prefix}animation-slide-down-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-down-transform-to);
+  }
+}
+
+.slide-down {
+  --#{$prefix}animation-slide-down-transform-from: #{$animation-slide-down-transform-from};
+  --#{$prefix}animation-slide-down-transform-to: #{$animation-slide-down-transform-to};
+
+  animation-name: slide-down;
+}
+
+@keyframes slide-left {
+  from {
+    transform: var(--#{$prefix}animation-slide-left-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-left-transform-to);
+  }
+}
+
+.slide-left {
+  --#{$prefix}animation-slide-left-transform-from: #{$animation-slide-left-transform-from};
+  --#{$prefix}animation-slide-left-transform-to: #{$animation-slide-left-transform-to};
+
+  animation-name: slide-left;
+}
+
+@keyframes slide-right {
+  from {
+    transform: var(--#{$prefix}animation-slide-right-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-right-transform-to);
+  }
+}
+
+.slide-right {
+  --#{$prefix}animation-slide-right-transform-from: #{$animation-slide-right-transform-from};
+  --#{$prefix}animation-slide-right-transform-to: #{$animation-slide-right-transform-to};
+
+  animation-name: slide-right;
+}
+
+@keyframes slide-up {
+  from {
+    transform: var(--#{$prefix}animation-slide-up-transform-from);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-slide-up-transform-to);
+  }
+}
+
+.slide-up {
+  --#{$prefix}animation-slide-up-transform-from: #{$animation-slide-up-transform-from};
+  --#{$prefix}animation-slide-up-transform-to: #{$animation-slide-up-transform-to};
+
+  animation-name: slide-up;
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-zoom-in-transform-from);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.zoom-in {
+  --#{$prefix}animation-zoom-in-transform-from: #{$animation-zoom-in-transform-from};
+
+  animation-name: zoom-in;
+}
+
+@keyframes zoom-out {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-zoom-out-transform-50);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.zoom-out {
+  --#{$prefix}animation-zoom-out-transform-50: #{$animation-zoom-out-transform-50};
+
+  animation-name: zoom-out;
+}
+
+@keyframes tada {
+  from {
+    transform: var(--#{$prefix}animation-tada-transform-from);
+  }
+
+  10%,
+  20% {
+    transform: var(--#{$prefix}animation-tada-transform-20);
+  }
+
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: var(--#{$prefix}animation-tada-transform-90);
+  }
+
+  40%,
+  60%,
+  80% {
+    transform: var(--#{$prefix}animation-tada-transform-80);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-tada-transform-to);
+  }
+}
+
+.tada {
+  --#{$prefix}animation-tada-transform-from: #{$animation-tada-transform-from};
+  --#{$prefix}animation-tada-transform-20: #{$animation-tada-transform-20};
+  --#{$prefix}animation-tada-transform-90: #{$animation-tada-transform-90};
+  --#{$prefix}animation-tada-transform-80: #{$animation-tada-transform-80};
+  --#{$prefix}animation-tada-transform-to: #{$animation-tada-transform-to};
+
+  animation-name: tada;
+}
+
+@keyframes pulse {
+  from {
+    transform: var(--#{$prefix}animation-pulse-transform-from);
+  }
+
+  50% {
+    transform: var(--#{$prefix}animation-pulse-transform-50);
+  }
+
+  to {
+    transform: var(--#{$prefix}animation-pulse-transform-to);
+  }
+}
+
+.pulse {
+  --#{$prefix}animation-pulse-transform-from: #{$animation-pulse-transform-from};
+  --#{$prefix}animation-pulse-transform-50: #{$animation-pulse-transform-50};
+  --#{$prefix}animation-pulse-transform-to: #{$animation-pulse-transform-to};
+
+  animation-name: pulse;
+}

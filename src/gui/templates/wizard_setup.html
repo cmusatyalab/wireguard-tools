@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %} Setup {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0 mt-2">Setup Wizard</h2>
+    </div>
+    <hr class="hr" />
+    <div class="container">
+
+        <!-- Tabs navs -->
+        <ul class="nav nav-tabs mb-3" id="wizard" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#basic-tab" role="tab"
+                    aria-controls="basic-tab" aria-selected="true">Basic</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#advanced-tab" role="tab"
+                    aria-controls="advanced-tab" aria-selected="false">Advanced</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#instructions-tab" role="tab"
+                    aria-controls="instructions-tab" aria-selected="false">Instructions</a>
+            </li>
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="basic-tab" role="tabpanel" aria-labelledby="ex1-tab-1">
+                <!-- Basic tab content -->
+                <form action="{{url_for('wizard.wizard_basic')}}" method="post">
+                    <h6>Network</h6>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="my-2 form-control" id="name" name="name" value="{{defaults.name}}" />
+                        <label for="name" class="form-label">Network Name</label>
+                    </div>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="my-2 form-control" id="description" name="description" />
+                        <label for="description" class="form-label">Description</label>
+                    </div>
+                    <h6>Base IP Address for Wireguard Network</h6>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="my-2 form-control" id="base_ip" name="base_ip"
+                            value="{{defaults.base_ip}}" />
+                        <label for="base_ip" class="form-label">Base IP</label>
+                    </div>
+                    <div class="form-outline">
+                        <select class="my-2 form-select" data-mdb-select-init id="subnet" name="subnet">
+                            {% for subnet in subnets %}
+                            <option value="{{ subnet['CIDR'] }}">{{ subnet['clients'] }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="subnet" class="form-label select-label">Total Clients</label>
+                    </div>
+                    <button type="submit" method="post" class="btn btn-primary">Build</button>
+                    <a href="{{url_for('index')}}" type="button" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="advanced-tab" role="tabpanel" aria-labelledby="ex1-tab-2">
+                <!-- Advanced tab content -->
+                <form action="submit">
+                    <h6>Base IP Address for Wireguard Network</h6>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="form-control" id="base_ip" name="base_ip" />
+                        <label for="base_ip" class="form-label">Base IP</label>
+                    </div>
+                    <h6>Generate Server Keys</h6>
+                    <div class="input-group">
+                        <div class="form-outline" data-mdb-input-init>
+                            <input type="text" class="form-control" id="private_key" name="private_key"
+                                oninput="updatePublicKey()" />
+                            <label for="private_key" class="form-label">Private Key</label>
+                        </div>
+
+                        <button class="btn btn-primary " data-mdb-ripple-init type="button" id="generatePrivateKey"
+                            onclick="generateAndSetPrivateKey()" data-mdb-tooltip-init title="Generate Private Key">
+                            <i class="fas fa-key"></i>
+                        </button>
+                    </div>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="form-control" id="public_key" name="public_key" value="">
+                        <label for="public_key" class="form-label">Public Key</label>
+                    </div>
+                    <button type="submit" method="post" class="btn btn-primary">Build</button>
+                    <a href="{{url_for('index')}}" type="button" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="instructions-tab" role="tabpanel" aria-labelledby="ex1-tab-3">
+                <!-- Instructions tab content -->
+                <h4>Basic Instructions</h4>
+                <p>The wizard will automatically generate a server and network based on the IP address of the machine it
+                    is running on.</p>
+                <p>The lighthouse server will be at the .1 of the network IP range.</p>
+                <p>The default server listen port is {{defaults.base_port}}.</p>
+                <p>Additional peers can be added <a href="{{url_for('peers.peers_all')}}">here</a>.</p>
+                <h4>Advanced Instructions</h4>
+                <strong class="text-danger">Currently Disabled</strong>
+                <p>The wizard will automatically generate a server and network based on the IP address of the machine it
+                    is specified.</p>
+
+                <p>Additional peers can be added <a href="{{url_for('peers.peers_all')}}">here</a>.</p>
+            </div>
+        </div>
+
+
+        <!-- End Tabbed content -->
+    </div>
+</div>
+
+{%endblock%}
+
+{% block scripts %}
+<script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
+<script>
+    function generateAndSetPrivateKey() {
+        let keypair = wireguard.generateKeypair();
+        let privateKey = keypair.privateKey;
+        document.getElementById('private_key').value = privateKey;
+        updatePublicKey();
+    }
+
+    function updatePublicKey() {
+        let privateKey = document.getElementById('private_key').value;
+        let publicKey = wireguard.getPublicKey(privateKey);
+        if (privateKey == "") {
+            publicKey = "No Private Key";
+        }
+        document.getElementById('public_key').value = publicKey;
+    }
+</script>
+{% endblock %}

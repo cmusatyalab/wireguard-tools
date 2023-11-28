@@ -1,0 +1,118 @@
+//
+// Steps - common code for stepper and timeline components
+//
+
+.steps {
+  --#{$prefix}steps-transition: #{$steps-transition};
+
+  position: relative;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  list-style: none;
+  overflow: hidden;
+  transition: var(--#{$prefix}steps-transition);
+}
+
+.steps-step {
+  --#{$prefix}steps-step-after-left: #{$steps-step-after-left};
+  --#{$prefix}steps-step-after-width: #{$steps-step-after-width};
+  --#{$prefix}steps-step-after-margin-top: #{$steps-step-after-margin-top};
+  --#{$prefix}steps-step-after-bg: #{$steps-step-after-bg};
+
+  height: fit-content;
+  position: relative;
+
+  &-after {
+    position: absolute;
+    left: var(--#{$prefix}steps-step-after-left);
+    width: var(--#{$prefix}steps-step-after-width);
+    margin-top: var(--#{$prefix}steps-step-after-margin-top);
+    content: '';
+    background-color: var(--#{$prefix}steps-step-after-bg);
+  }
+}
+
+.steps-content {
+  --#{$prefix}steps-content-padding-y: #{$steps-content-padding-y};
+
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: var(--#{$prefix}steps-content-padding-y);
+  padding-right: var(--#{$prefix}steps-content-padding-y);
+}
+
+.steps-head-vertical {
+  --#{$prefix}steps-head-vertical-padding-top: #{$steps-head-vertical-padding-top};
+  --#{$prefix}steps-head-vertical-padding-x: #{$steps-head-vertical-padding-x};
+
+  padding-left: var(--#{$prefix}steps-head-vertical-padding-x);
+  padding-right: var(--#{$prefix}steps-head-vertical-padding-x);
+  padding-top: var(--#{$prefix}steps-head-vertical-padding-top);
+}
+
+.steps-head-icon-vertical {
+  --#{$prefix}steps-head-icon-vertical-margin-right: #{$steps-head-icon-vertical-margin-right};
+
+  margin-right: var(--#{$prefix}steps-head-icon-vertical-margin-right);
+}
+
+.steps-head-text {
+  &-after-vertical {
+    position: absolute;
+  }
+}
+
+.steps-head {
+  --#{$prefix}steps-head-line-height: #{$steps-head-line-height};
+  --#{$prefix}steps-head-hover-bgc: #{$steps-head-hover-bgc};
+
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: unset;
+  line-height: var(--#{$prefix}steps-head-line-height);
+
+  &-hover {
+    background-color: var(--#{$prefix}steps-head-hover-bgc);
+  }
+
+  &-focus {
+    outline: none;
+  }
+}
+
+.steps-head-text {
+  --#{$prefix}steps-head-text-color: #{$steps-head-text-color};
+  --#{$prefix}steps-head-text-after-font-size: #{$steps-head-text-after-font-size};
+
+  color: var(--#{$prefix}steps-head-text-color);
+
+  &-after {
+    display: flex;
+    font-size: var(--#{$prefix}steps-head-text-after-font-size);
+    content: attr(data-content);
+  }
+}
+
+.steps-head-icon {
+  --#{$prefix}steps-head-icon-font-size: #{$steps-head-icon-font-size};
+  --#{$prefix}steps-head-icon-width: #{$steps-head-icon-width};
+  --#{$prefix}steps-head-icon-height: #{$steps-head-icon-height};
+  --#{$prefix}steps-head-icon-font-weight: #{$steps-head-icon-font-weight};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  font-size: var(--#{$prefix}steps-head-icon-font-size);
+  width: var(--#{$prefix}steps-head-icon-width);
+  height: var(--#{$prefix}steps-head-icon-height);
+  font-weight: var(--#{$prefix}steps-head-icon-font-weight);
+}
+
+.steps-active-head-text {
+  --#{$prefix}steps-active-head-text-font-weight: #{$steps-active-head-text-font-weight};
+
+  font-weight: var(--#{$prefix}steps-active-head-text-font-weight);
+}

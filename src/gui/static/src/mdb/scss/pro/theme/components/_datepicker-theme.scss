@@ -1,0 +1,110 @@
+@mixin mdb-datepicker-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $onBackground: map-get($theme, onBackground);
+
+  .datepicker {
+    &-modal-container {
+      background-color: $surface;
+    }
+
+    &-header {
+      background-color: $pickerHeader;
+    }
+
+    &-title-text {
+      color: $onPrimary;
+    }
+
+    &-date-text {
+      color: $onPrimary;
+    }
+
+    &-date-controls {
+      color: $onSurface;
+    }
+
+    &-view-change-button {
+      color: $onSurface;
+
+      &:hover,
+      &:focus {
+        background-color: $surfaceHover;
+      }
+    }
+
+    &-previous-button,
+    &-next-button {
+      color: $onSurface;
+
+      &:hover,
+      &:focus {
+        background-color: $surfaceHover;
+      }
+    }
+
+    &-cell {
+      &:not(.disabled):not(.selected):hover .datepicker-cell-content {
+        background-color: $surfaceHover;
+      }
+
+      &.selected .datepicker-cell-content {
+        background-color: $primary;
+        color: $onPrimary;
+      }
+
+      &:not(.selected).focused .datepicker-cell-content {
+        background-color: $surfaceHover;
+      }
+
+      &.focused .datepicker-cell-content.selected {
+        background-color: $primary;
+      }
+
+      &.current .datepicker-cell-content {
+        border-color: $onSurface;
+      }
+    }
+
+    &-footer-btn {
+      background-color: transparent;
+      color: $onSurface;
+
+      &:hover,
+      &:focus {
+        background-color: $surfaceHover;
+      }
+    }
+
+    &-dropdown-container {
+      background-color: $surface;
+    }
+
+    &-toggle-button {
+      color: $onBackground;
+
+      &:focus {
+        color: $primary;
+      }
+
+      &:hover {
+        color: $primary;
+      }
+    }
+
+    input:focus + &-toggle-button,
+    input:focus + &-toggle-button i {
+      color: $primary;
+    }
+  }
+}

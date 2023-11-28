@@ -1,0 +1,57 @@
+.buttons-container {
+  // scss-docs-start date-time-picker-css-vars
+  --#{$prefix}datetimepicker-buttons-container-background-color: #{$datetimepicker-buttons-container-background-color};
+  --#{$prefix}datetimepicker-button-toggle-width: #{$datetimepicker-button-toggle-width};
+  --#{$prefix}datetimepicker-button-toggle-color: #{$datetimepicker-button-toggle-color};
+  --#{$prefix}datetimepicker-button-toggle-font-size: #{$datetimepicker-button-toggle-font-size};
+  --#{$prefix}datetimepicker-button-toggle-border-radius: #{$datetimepicker-button-toggle-border-radius};
+  --#{$prefix}datetimepicker-button-toggle-min-height: #{$datetimepicker-button-toggle-min-height};
+  --#{$prefix}datetimepicker-button-toggle-hover-background-color: #{$datetimepicker-button-toggle-hover-background-color};
+  // scss-docs-end date-time-picker-css-vars
+
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  background-color: var(--#{$prefix}datetimepicker-buttons-container-background-color);
+}
+
+.datepicker-button-toggle,
+.timepicker-button-toggle {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  width: var(--#{$prefix}datetimepicker-button-toggle-width);
+  color: var(--#{$prefix}datetimepicker-button-toggle-color);
+  font-size: var(--#{$prefix}datetimepicker-button-toggle-font-size);
+  border-radius: var(--#{$prefix}datetimepicker-button-toggle-border-radius);
+  min-height: var(--#{$prefix}datetimepicker-button-toggle-min-height);
+
+  &:hover {
+    background-color: var(--#{$prefix}datetimepicker-button-toggle-hover-background-color);
+    outline: none;
+  }
+
+  i {
+    pointer-events: none;
+  }
+}
+
+.datetimepicker-toggle-button {
+  --#{$prefix}datetimepicker-toggle-button-transform: #{$datetimepicker-toggle-button-transform};
+
+  position: absolute;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  right: var(--#{$prefix}datepicker-toggle-right);
+  top: var(--#{$prefix}datepicker-toggle-top);
+  transform: var(--#{$prefix}datetimepicker-toggle-button-transform);
+
+  &:focus {
+    color: var(--#{$prefix}datepicker-toggle-focus-color);
+  }
+
+  &:hover {
+    color: var(--#{$prefix}datepicker-toggle-focus-color);
+  }
+}

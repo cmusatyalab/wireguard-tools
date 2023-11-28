@@ -1,0 +1,559 @@
+// animations
+
+@keyframes drop-in {
+  0% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-drop-in-transform-0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-drop-in-transform-100);
+  }
+}
+
+.drop-in {
+  --#{$prefix}animation-drop-in-transform-0: #{$animation-drop-in-transform-0};
+  --#{$prefix}animation-drop-in-transform-100: #{$animation-drop-in-transform-100};
+  --#{$prefix}animation-drop-in-timing-function: #{$animation-drop-in-timing-function};
+
+  transform-origin: top center;
+  animation-timing-function: var(--#{$prefix}animation-drop-in-timing-function);
+  animation-name: drop-in;
+}
+
+@keyframes drop-out {
+  0% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-drop-out-transform-0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-drop-out-transform-100);
+  }
+}
+
+.drop-out {
+  --#{$prefix}animation-drop-out-transform-0: #{$animation-drop-out-transform-0};
+  --#{$prefix}animation-drop-out-transform-100: #{$animation-drop-out-transform-100};
+  --#{$prefix}animation-drop-out-timing-function: #{$animation-drop-out-timing-function};
+
+  transform-origin: top center;
+  animation-timing-function: var(--#{$prefix}animation-drop-out-timing-function);
+  animation-name: drop-out;
+}
+
+@keyframes fly-in {
+  0% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-in-transform-0);
+  }
+
+  20% {
+    transform: var(--#{$prefix}animation-fly-in-transform-20);
+  }
+
+  40% {
+    transform: var(--#{$prefix}animation-fly-in-transform-40);
+  }
+
+  60% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-in-transform-60);
+  }
+
+  80% {
+    transform: var(--#{$prefix}animation-fly-in-transform-80);
+  }
+
+  100% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-in-transform-100);
+  }
+}
+
+.fly-in {
+  --#{$prefix}animation-fly-in-transform-0: #{$animation-fly-in-transform-0};
+  --#{$prefix}animation-fly-in-transform-20: #{$animation-fly-in-transform-20};
+  --#{$prefix}animation-fly-in-transform-40: #{$animation-fly-in-transform-40};
+  --#{$prefix}animation-fly-in-transform-60: #{$animation-fly-in-transform-60};
+  --#{$prefix}animation-fly-in-transform-80: #{$animation-fly-in-transform-80};
+  --#{$prefix}animation-fly-in-transform-100: #{$animation-fly-in-transform-100};
+  --#{$prefix}animation-fly-in-timing-function: #{$animation-fly-in-timing-function};
+
+  animation-name: fly-in;
+  transition-timing-function: var(--#{$prefix}animation-fly-in-timing-function);
+}
+
+@keyframes fly-in-up {
+  0% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-in-up-transform-0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-in-up-transform-60);
+  }
+
+  75% {
+    transform: var(--#{$prefix}animation-fly-in-up-transform-75);
+  }
+
+  90% {
+    transform: var(--#{$prefix}animation-fly-in-up-transform-90);
+  }
+
+  100% {
+    transform: var(--#{$prefix}animation-fly-in-up-transform-100);
+  }
+}
+
+.fly-in-up {
+  --#{$prefix}animation-fly-in-up-transform-0: #{$animation-fly-in-up-transform-0};
+  --#{$prefix}animation-fly-in-up-transform-60: #{$animation-fly-in-up-transform-60};
+  --#{$prefix}animation-fly-in-up-transform-75: #{$animation-fly-in-up-transform-75};
+  --#{$prefix}animation-fly-in-up-transform-90: #{$animation-fly-in-up-transform-90};
+  --#{$prefix}animation-fly-in-up-transform-100: #{$animation-fly-in-up-transform-100};
+  --#{$prefix}animation-fly-in-up-timing-function: #{$animation-fly-in-up-timing-function};
+
+  animation-name: fly-in-up;
+  transition-timing-function: var(--#{$prefix}animation-fly-in-up-timing-function);
+}
+
+@keyframes fly-in-down {
+  0% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-in-down-transform-0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-in-down-transform-60);
+  }
+
+  75% {
+    transform: var(--#{$prefix}animation-fly-in-down-transform-75);
+  }
+
+  90% {
+    transform: var(--#{$prefix}animation-fly-in-down-transform-90);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+.fly-in-down {
+  --#{$prefix}animation-fly-in-down-transform-0: #{$animation-fly-in-down-transform-0};
+  --#{$prefix}animation-fly-in-down-transform-60: #{$animation-fly-in-down-transform-60};
+  --#{$prefix}animation-fly-in-down-transform-75: #{$animation-fly-in-down-transform-75};
+  --#{$prefix}animation-fly-in-down-transform-90: #{$animation-fly-in-down-transform-90};
+  --#{$prefix}animation-fly-in-down-timing-function: #{$animation-fly-in-down-timing-function};
+
+  animation-name: fly-in-down;
+  transition-timing-function: var(--#{$prefix}animation-fly-in-down-timing-function);
+}
+
+@keyframes fly-in-left {
+  0% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-in-left-transform-0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-in-left-transform-60);
+  }
+
+  75% {
+    transform: var(--#{$prefix}animation-fly-in-left-transform-75);
+  }
+
+  90% {
+    transform: var(--#{$prefix}animation-fly-in-left-transform-90);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+.fly-in-left {
+  --#{$prefix}animation-fly-in-left-transform-0: #{$animation-fly-in-left-transform-0};
+  --#{$prefix}animation-fly-in-left-transform-60: #{$animation-fly-in-left-transform-60};
+  --#{$prefix}animation-fly-in-left-transform-75: #{$animation-fly-in-left-transform-75};
+  --#{$prefix}animation-fly-in-left-transform-90: #{$animation-fly-in-left-transform-90};
+  --#{$prefix}animation-fly-in-left-timing-function: #{$animation-fly-in-left-timing-function};
+
+  animation-name: fly-in-left;
+  transition-timing-function: var(--#{$prefix}animation-fly-in-left-timing-function);
+}
+
+@keyframes fly-in-right {
+  0% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-in-right-transform-0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-in-right-transform-60);
+  }
+
+  75% {
+    transform: var(--#{$prefix}animation-fly-in-right-transform-75);
+  }
+
+  90% {
+    transform: var(--#{$prefix}animation-fly-in-right-transform-90);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+.fly-in-right {
+  --#{$prefix}animation-fly-in-right-transform-0: #{$animation-fly-in-right-transform-0};
+  --#{$prefix}animation-fly-in-right-transform-60: #{$animation-fly-in-right-transform-60};
+  --#{$prefix}animation-fly-in-right-transform-75: #{$animation-fly-in-right-transform-75};
+  --#{$prefix}animation-fly-in-right-transform-90: #{$animation-fly-in-right-transform-90};
+  --#{$prefix}animation-fly-in-right-timing-function: #{$animation-fly-in-right-timing-function};
+
+  animation-name: fly-in-right;
+  transition-timing-function: var(--#{$prefix}animation-fly-in-right-timing-function);
+}
+
+@keyframes fly-out {
+  20% {
+    transform: var(--#{$prefix}animation-fly-out-transform-20);
+  }
+
+  50%,
+  55% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-out-transform-55);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-out-transform-100);
+  }
+}
+
+.fly-out {
+  --#{$prefix}animation-fly-out-transform-20: #{$animation-fly-out-transform-20};
+  --#{$prefix}animation-fly-out-transform-55: #{$animation-fly-out-transform-55};
+  --#{$prefix}animation-fly-out-transform-100: #{$animation-fly-out-transform-100};
+  --#{$prefix}animation-fly-out-timing-function: #{$animation-fly-out-timing-function};
+
+  animation-name: fly-out;
+  transition-timing-function: var(--#{$prefix}animation-fly-out-timing-function);
+}
+
+@keyframes fly-out-up {
+  20% {
+    transform: var(--#{$prefix}animation-fly-out-up-transform-20);
+  }
+
+  40%,
+  45% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-out-up-transform-45);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-out-up-transform-100);
+  }
+}
+
+.fly-out-up {
+  --#{$prefix}animation-fly-out-up-transform-20: #{$animation-fly-out-up-transform-20};
+  --#{$prefix}animation-fly-out-up-transform-45: #{$animation-fly-out-up-transform-45};
+  --#{$prefix}animation-fly-out-up-transform-100: #{$animation-fly-out-up-transform-100};
+  --#{$prefix}animation-fly-out-up-timing-function: #{$animation-fly-out-up-timing-function};
+
+  animation-name: fly-out-up;
+  transition-timing-function: var(--#{$prefix}animation-fly-out-up-timing-function);
+}
+
+@keyframes fly-out-down {
+  20% {
+    transform: var(--#{$prefix}animation-fly-out-down-transform-20);
+  }
+
+  40%,
+  45% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-out-down-transform-45);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-out-down-transform-100);
+  }
+}
+
+.fly-out-down {
+  --#{$prefix}animation-fly-out-down-transform-20: #{$animation-fly-out-down-transform-20};
+  --#{$prefix}animation-fly-out-down-transform-45: #{$animation-fly-out-down-transform-45};
+  --#{$prefix}animation-fly-out-down-transform-100: #{$animation-fly-out-down-transform-100};
+  --#{$prefix}animation-fly-out-down-timing-function: #{$animation-fly-out-down-timing-function};
+
+  animation-name: fly-out-down;
+  transition-timing-function: var(--#{$prefix}animation-fly-out-down-timing-function);
+}
+
+@keyframes fly-out-left {
+  20% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-out-left-transform-20);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-out-left-transform-100);
+  }
+}
+
+.fly-out-left {
+  --#{$prefix}animation-fly-out-left-transform-20: #{$animation-fly-out-left-transform-20};
+  --#{$prefix}animation-fly-out-left-transform-100: #{$animation-fly-out-left-transform-100};
+  --#{$prefix}animation-fly-out-left-timing-function: #{$animation-fly-out-left-timing-function};
+
+  animation-name: fly-out-left;
+  transition-timing-function: var(--#{$prefix}animation-fly-out-left-timing-function);
+}
+
+@keyframes fly-out-right {
+  20% {
+    opacity: 1;
+    transform: var(--#{$prefix}animation-fly-out-right-transform-20);
+  }
+
+  100% {
+    opacity: 0;
+    transform: var(--#{$prefix}animation-fly-out-right-transform-100);
+  }
+}
+
+.fly-out-right {
+  --#{$prefix}animation-fly-out-right-transform-20: #{$animation-fly-out-right-transform-20};
+  --#{$prefix}animation-fly-out-right-transform-100: #{$animation-fly-out-right-transform-100};
+  --#{$prefix}animation-fly-out-right-timing-function: #{$animation-fly-out-right-timing-function};
+
+  animation-name: fly-out-right;
+  transition-timing-function: var(--#{$prefix}animation-fly-out-right-timing-function);
+}
+
+@keyframes browse-in {
+  0% {
+    transform: var(--#{$prefix}animation-browse-in-transform-0);
+    z-index: -1;
+  }
+
+  10% {
+    transform: var(--#{$prefix}animation-browse-in-transform-10);
+    z-index: -1;
+    opacity: 0.7;
+  }
+
+  80% {
+    transform: var(--#{$prefix}animation-browse-in-transform-80);
+    opacity: 1;
+    z-index: 999;
+  }
+
+  100% {
+    transform: var(--#{$prefix}animation-browse-in-transform-100);
+    z-index: 999;
+  }
+}
+
+.browse-in {
+  --#{$prefix}animation-browse-in-transform-0: #{$animation-browse-in-transform-0};
+  --#{$prefix}animation-browse-in-transform-10: #{$animation-browse-in-transform-10};
+  --#{$prefix}animation-browse-in-transform-80: #{$animation-browse-in-transform-80};
+  --#{$prefix}animation-browse-in-transform-100: #{$animation-browse-in-transform-100};
+
+  animation-name: browse-in;
+}
+
+@keyframes browse-out-left {
+  0% {
+    z-index: 999;
+    transform: var(--#{$prefix}animation-browse-out-left-transform-0);
+  }
+
+  50% {
+    z-index: -1;
+    transform: var(--#{$prefix}animation-browse-out-left-transform-50);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    z-index: -1;
+    transform: var(--#{$prefix}animation-browse-out-left-transform-100);
+    opacity: 0;
+  }
+}
+
+.browse-out,
+.browse-out-left {
+  --#{$prefix}animation-browse-out-left-transform-0: #{$animation-browse-out-left-transform-0};
+  --#{$prefix}animation-browse-out-left-transform-50: #{$animation-browse-out-left-transform-50};
+  --#{$prefix}animation-browse-out-left-transform-100: #{$animation-browse-out-left-transform-100};
+
+  animation-name: browse-out-left;
+}
+
+@keyframes browse-out-right {
+  0% {
+    z-index: 999;
+    transform: var(--#{$prefix}animation-browse-out-right-transform-0);
+  }
+
+  50% {
+    z-index: 1;
+    transform: var(--#{$prefix}animation-browse-out-right-transform-50);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    z-index: 1;
+    transform: var(--#{$prefix}animation-browse-out-right-transform-100);
+    opacity: 0;
+  }
+}
+
+.browse-out-right {
+  --#{$prefix}animation-browse-out-right-transform-0: #{$animation-browse-out-right-transform-0};
+  --#{$prefix}animation-browse-out-right-transform-50: #{$animation-browse-out-right-transform-50};
+  --#{$prefix}animation-browse-out-right-transform-100: #{$animation-browse-out-right-transform-100};
+
+  animation-name: browse-out-right;
+}
+
+@keyframes jiggle {
+  0% {
+    transform: var(--#{$prefix}animation-jiggle-transform-0);
+  }
+
+  30% {
+    transform: var(--#{$prefix}animation-jiggle-transform-30);
+  }
+
+  40% {
+    transform: var(--#{$prefix}animation-jiggle-transform-40);
+  }
+
+  50% {
+    transform: var(--#{$prefix}animation-jiggle-transform-50);
+  }
+
+  65% {
+    transform: var(--#{$prefix}animation-jiggle-transform-65);
+  }
+
+  75% {
+    transform: var(--#{$prefix}animation-jiggle-transform-75);
+  }
+
+  100% {
+    transform: var(--#{$prefix}animation-jiggle-transform-100);
+  }
+}
+
+.jiggle {
+  --#{$prefix}animation-jiggle-transform-0: #{$animation-jiggle-transform-0};
+  --#{$prefix}animation-jiggle-transform-30: #{$animation-jiggle-transform-30};
+  --#{$prefix}animation-jiggle-transform-40: #{$animation-jiggle-transform-40};
+  --#{$prefix}animation-jiggle-transform-50: #{$animation-jiggle-transform-50};
+  --#{$prefix}animation-jiggle-transform-65: #{$animation-jiggle-transform-65};
+  --#{$prefix}animation-jiggle-transform-75: #{$animation-jiggle-transform-75};
+  --#{$prefix}animation-jiggle-transform-100: #{$animation-jiggle-transform-100};
+
+  animation-name: jiggle;
+}
+
+@keyframes flash {
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+
+.flash {
+  --#{$prefix}animation-flash-duration: #{$animation-flash-duration};
+
+  animation-duration: var(--#{$prefix}animation-flash-duration);
+  animation-name: flash;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: var(--#{$prefix}animation-shake-transform-100);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: var(--#{$prefix}animation-shake-transform-90);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: var(--#{$prefix}animation-shake-transform-80);
+  }
+}
+
+.shake {
+  --#{$prefix}animation-shake-transform-100: #{$animation-shake-transform-100};
+  --#{$prefix}animation-shake-transform-90: #{$animation-shake-transform-90};
+  --#{$prefix}animation-shake-transform-80: #{$animation-shake-transform-80};
+
+  animation-name: shake;
+}
+
+@keyframes glow {
+  0% {
+    background-color: var(--#{$prefix}animation-glow-bg-0);
+  }
+
+  30% {
+    background-color: var(--#{$prefix}animation-glow-bg-30);
+  }
+
+  100% {
+    background-color: var(--#{$prefix}animation-glow-bg-100);
+  }
+}
+
+.glow {
+  --#{$prefix}animation-glow-bg-0: #{$animation-glow-bg-0};
+  --#{$prefix}animation-glow-bg-30: #{$animation-glow-bg-30};
+  --#{$prefix}animation-glow-bg-100: #{$animation-glow-bg-100};
+
+  animation-name: glow;
+}

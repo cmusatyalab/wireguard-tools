@@ -1,0 +1,46 @@
+@mixin mdb-form-file-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $onBackground: map-get($theme, onBackground);
+
+  .form-file-input {
+    &:focus-within ~ .form-file-label {
+      border-color: $primary;
+      box-shadow: 0px 0px 0px 1px $primary;
+    }
+    &[disabled] ~ .form-file-label .form-file-text,
+    &:disabled ~ .form-file-label .form-file-text,
+    &[disabled] ~ .form-file-label .form-file-button,
+    &:disabled ~ .form-file-label .form-file-button {
+      background-color: rgba($onSurface, 0.2);
+    }
+  }
+
+  .form-file-label {
+    border-color: rgba($onSurface, 0.7);
+  }
+
+  .form-file-button {
+    background-color: transparent;
+    color: rgba($onSurface, 0.7);
+  }
+
+  .form-file-text {
+    background-color: transparent;
+    color: rgba($onSurface, 0.7);
+  }
+
+  .form-control::-webkit-file-upload-button {
+    color: rgba($onBackground, 0.7);
+  }
+}

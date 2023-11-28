@@ -1,0 +1,116 @@
+@mixin mdb-form-select-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHighlight: map-get($theme, surfaceHighlight);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $tooltipBackground: map-get($theme, tooltipBackground);
+  $dropdownHover: map-get($theme, dropdownHover);
+  $surfaceDisabled: map-get($theme, dropdownDisabled);
+  $onBackground: map-get($theme, onBackground);
+
+  .select-arrow {
+    color: $onBackground;
+  }
+
+  .select-clear-btn {
+    color: $onBackground;
+    &:focus {
+      color: $primary;
+    }
+  }
+
+  .select-dropdown {
+    background-color: $surface;
+  }
+
+  .select-input.focused {
+    color: rgba($onSurface, 0.7);
+
+    & ~ .select-label {
+      color: $primary;
+    }
+
+    & ~ .form-notch .form-notch-leading {
+      border-top-color: $primary;
+      border-bottom-color: $primary;
+      border-left-color: $primary;
+    }
+
+    & ~ .form-notch .form-notch-middle {
+      border-color: $primary;
+    }
+
+    & ~ .form-notch .form-notch-trailing {
+      border-color: $primary;
+    }
+  }
+
+  .select-input.focused ~ .select-arrow {
+    color: $primary;
+  }
+
+  .select-options-wrapper {
+    &::-webkit-scrollbar-button {
+      &:start:decrement,
+      &:end:increment {
+        background-color: $surface;
+      }
+    }
+
+    &::-webkit-scrollbar-track-piece {
+      background-color: $surface;
+    }
+
+    &::-webkit-scrollbar-thumb:vertical {
+      background-color: $tooltipBackground;
+    }
+  }
+
+  .select-option-group-label {
+    background-color: transparent;
+    color: rgba($onSurface, 0.7);
+  }
+
+  .select-option {
+    background-color: $surface;
+    color: $onSurface;
+
+    &:hover:not(.disabled) {
+      background-color: $surfaceHover;
+    }
+
+    &.active {
+      background-color: $surfaceHover;
+    }
+
+    &.selected.active {
+      background-color: $surfaceHover;
+    }
+
+    &.selected.disabled {
+      color: $surfaceDisabled;
+      background-color: transparent;
+    }
+
+    &.selected {
+      background-color: $surfaceHighlight;
+    }
+
+    &.disabled {
+      color: $surfaceDisabled;
+    }
+  }
+
+  .select-option-secondary-text {
+    color: rgba($onSurface, 0.7);
+  }
+}

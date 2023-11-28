@@ -1,0 +1,89 @@
+@mixin mdb-sidenav-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+  $sidenavPrimaryText: map-get($theme, sidenavPrimaryText);
+  $sidenavSecondaryText: map-get($theme, sidenavSecondaryText);
+  $sidenavPrimaryBg: map-get($theme, sidenavPrimaryBg);
+  $sidenavSecondaryBg: map-get($theme, sidenavSecondaryBg);
+
+  .sidenav {
+    background-color: $surface;
+  }
+
+  .sidenav-item {
+    .sidenav-link {
+      &:hover {
+        color: $sidenavPrimaryText;
+        background-color: $sidenavPrimaryBg;
+      }
+    }
+  }
+
+  .sidenav-link {
+    &:active,
+    &:focus {
+      color: $sidenavPrimaryText;
+      background-color: $sidenavPrimaryBg;
+    }
+
+    &.active {
+      color: $sidenavPrimaryText;
+    }
+  }
+
+  // Color options
+  .sidenav-primary {
+    .sidenav-item {
+      .sidenav-link {
+        &:hover {
+          color: $sidenavPrimaryText;
+          background-color: $sidenavPrimaryBg;
+        }
+      }
+    }
+
+    .sidenav-link {
+      &:active,
+      &:focus {
+        color: $sidenavPrimaryText;
+        background-color: $sidenavPrimaryBg;
+      }
+
+      &.active {
+        color: $sidenavPrimaryText;
+      }
+    }
+  }
+  .sidenav-secondary {
+    .sidenav-item {
+      .sidenav-link {
+        &:hover {
+          color: $sidenavSecondaryText;
+          background-color: $sidenavSecondaryBg;
+        }
+      }
+    }
+
+    .sidenav-link {
+      &:active,
+      &:focus {
+        color: $sidenavSecondaryText;
+        background-color: $sidenavSecondaryBg;
+      }
+
+      &.active {
+        color: $sidenavSecondaryText;
+      }
+    }
+  }
+}

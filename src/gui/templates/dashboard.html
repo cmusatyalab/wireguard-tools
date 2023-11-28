@@ -3,9 +3,15 @@
 {% block title %} Dashboard {% endblock %}
 
 {% block content %}
-<h1>Wireguard GUI</h1>
-<h2>Dashboard</h2>
+<div class="row">
+    <div class="p-2 col-md">
+        <h2>Dashboard</h2>
+    </div>
 
-
-<h3>{{ utc_dt }}</h3>
+    <div class="p-2 text-right col-md">
+        <a href="{{ url_for('networks.networks_all') }}" class="btn btn-primary">Networks</a>
+        <a href="{{ url_for('peers.peers_all') }}" class="btn btn-primary">Peers</a>
+    </div>
+    <p>Dashboard Widgets under development.</p>
+</div>
 {% endblock %}

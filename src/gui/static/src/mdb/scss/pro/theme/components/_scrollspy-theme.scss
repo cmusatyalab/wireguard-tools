@@ -1,0 +1,18 @@
+@mixin mdb-scrollspy-theme($theme) {
+  $scrollspyActive: map-get($theme, scrollspyActive);
+  $onBackground: map-get($theme, onBackground);
+
+  .nav-pills {
+    &.menu-sidebar {
+      .nav-link {
+        color: $onBackground;
+      }
+
+      .nav-link.active,
+      .show > .nav-link {
+        color: $scrollspyActive;
+        border-left-color: $scrollspyActive;
+      }
+    }
+  }
+}

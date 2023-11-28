@@ -1,0 +1,117 @@
+$primary: #3b71ca !default;
+$secondary: #9fa6b2 !default;
+$success: #14a44d !default;
+$danger: #dc4c64 !default;
+$warning: #e4a11b !default;
+$info: #54b4d3 !default;
+$light: #fbfbfb !default;
+$dark: #332d2d !default;
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'success': $success,
+  'info': $info,
+  'warning': $warning,
+  'danger': $danger,
+  'light': $light,
+  'dark': $dark,
+) !default;
+
+$treeview-text-color: var(--mdb-body-color) !default;
+$treeview-link-color: var(--mdb-body-color) !default;
+$treeview-disabled-text-color: rgba(var(--mdb-body-color-rgb), 0.5) !default;
+$treeview-bg: var(--mdb-body-bg) !default;
+$treeview-line: var(--mdb-border-color) !default;
+
+.treeview {
+  --mdb-treeview-text-color: #{$treeview-text-color};
+  --mdb-treeview-link-color: #{$treeview-link-color};
+  --mdb-treeview-disabled-text-color: #{$treeview-disabled-text-color};
+  --mdb-treeview-bg: #{$treeview-bg};
+  --mdb-treeview-line: #{$treeview-line};
+
+  width: 100%;
+  background-color: var(--mdb-treeview-bg);
+
+  .active,
+  .treeview-category {
+    color: var(--mdb-treeview-text-color);
+    padding: 0 0.4rem 0 0.4rem;
+    border-radius: 5px;
+  }
+
+  .treeview-line {
+    border-left: 2px solid var(--mdb-treeview-line);
+  }
+
+  .non-transitions {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+
+  .treeview-disabled {
+    color: var(--mdb-treeview-disabled-text-color) !important;
+    cursor: not-allowed;
+  }
+
+  ul {
+    margin-left: 0.8rem;
+    padding-left: 0.8rem;
+
+    ul:not(.collapse):not(.collapsing):not(.show) {
+      display: none;
+    }
+  }
+
+  li {
+    list-style-type: none;
+    margin: 3px 0 3px 0;
+  }
+
+  li:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: var(--mdb-treeview-link-color);
+    display: block;
+  }
+
+  a[data-mdb-toggle='collapse'] {
+    color: unset;
+  }
+
+  span[aria-label='toggle'] {
+    i {
+      transition: 0.3s;
+      cursor: pointer;
+    }
+  }
+}
+
+// Color options
+@each $color, $value in $theme-colors {
+  $red: red($value);
+  $green: green($value);
+  $blue: blue($value);
+
+  .treeview-category:hover {
+    background-color: rgba($red, $green, $blue, 0.05);
+  }
+
+  .treeview-#{$color} {
+    .active {
+      color: $value !important;
+      background-color: rgba($red, $green, $blue, 0.05);
+    }
+
+    li:focus,
+    a:focus {
+      outline: none;
+      background-color: rgba($red, $green, $blue, 0.05);
+    }
+  }
+}

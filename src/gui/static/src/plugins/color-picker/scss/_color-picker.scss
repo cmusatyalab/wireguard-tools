@@ -1,0 +1,119 @@
+$color-picker-btn-color: var(--mdb-body-color) !default;
+$color-picker-btn-hover-bg: var(--mdb-highlight-bg-color) !default;
+$color-picker-box-shadow-color-rgb: var(--mdb-box-shadow-color-rgb) !default;
+
+.color-picker {
+  --mdb-color-picker-btn-color: #{$color-picker-btn-color};
+  --mdb-color-picker-btn-hover-bg: #{$color-picker-btn-hover-bg};
+  --mdb-color-picker-box-shadow-color-rgb: #{$color-picker-box-shadow-color-rgb};
+
+  .color-picker-color-dot-wrapper {
+    background: repeating-conic-gradient(#e0e0e0 0deg 25%, white 0deg 50%);
+    background-size: 0.9rem 0.9rem;
+    border-radius: 100%;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .color-picker-color-dot {
+    display: inline-table;
+    border-radius: 100%;
+    height: inherit;
+    width: inherit;
+  }
+
+  .color-picker-canvas-dot {
+    height: 1rem;
+    width: 1rem;
+    position: absolute;
+    background: transparent;
+    border-radius: 100%;
+    box-shadow: 0 0 0 2px #fff,
+      inset 0 0 0 1px rgba(var(--mdb-color-picker-box-shadow-color-rgb), 0.4);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .color-picker-canvas-wrapper {
+    position: relative;
+    background: repeating-conic-gradient(#e0e0e0 0deg 25%, white 0deg 50%);
+    background-size: 0.9rem 0.9rem;
+
+    canvas {
+      display: block;
+    }
+  }
+
+  .color-picker-swatches .color-picker-swatches-color {
+    height: 20px;
+    width: 100%;
+    border-radius: 0.2rem;
+    cursor: pointer;
+  }
+
+  .color-picker-swatches {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #hueRange::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      90deg,
+      red,
+      #ff0 16.66%,
+      #0f0 33.33%,
+      #0ff 50%,
+      #00f 66.66%,
+      #f0f 83.33%,
+      red
+    );
+  }
+
+  #hueRange::-moz-range-track {
+    background: linear-gradient(
+      90deg,
+      red,
+      #ff0 16.66%,
+      #0f0 33.33%,
+      #0ff 50%,
+      #00f 66.66%,
+      #f0f 83.33%,
+      red
+    );
+  }
+
+  #alphaRange::-webkit-slider-runnable-track {
+    background: var(--track-background, #ddd);
+  }
+
+  #alphaRange::-moz-range-track {
+    background: var(--track-background, #ddd);
+  }
+
+  .color-picker-range-alpha {
+    height: 0.25rem;
+    background: repeating-conic-gradient(#e0e0e0 0deg 25%, white 0deg 50%);
+    background-size: 0.2rem 0.2rem;
+
+    input {
+      position: relative;
+      top: -10px;
+    }
+  }
+
+  .color-picker-color-inputs-wrapper input {
+    padding-left: 0.24rem;
+    padding-right: 0.24rem;
+    background-color: cmyk(0%, 51%, 51%, 34%);
+  }
+
+  .color-picker-next-format-button,
+  .color-picker-previous-format-button,
+  .color-picker-copy-button {
+    color: var(--mdb-color-picker-btn-color);
+
+    &:hover {
+      background-color: var(--mdb-color-picker-btn-hover-bg);
+    }
+  }
+}

@@ -1,0 +1,31 @@
+.loading-spinner {
+  // scss-docs-start loading-css-vars
+  --#{$prefix}loading-spinner-top: #{$loading-spinner-top};
+  --#{$prefix}loading-spinner-left: #{$loading-spinner-left};
+  --#{$prefix}loading-spinner-transform: #{$loading-spinner-transform};
+  --#{$prefix}loading-spinner-color: #{$loading-spinner-color};
+  // scss-docs-end loading-css-vars
+
+  position: absolute;
+  top: var(--#{$prefix}loading-spinner-top);
+  left: var(--#{$prefix}loading-spinner-left);
+  transform: var(--#{$prefix}loading-spinner-transform);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: var(--#{$prefix}loading-spinner-color);
+  z-index: 1056;
+}
+
+.loading-backdrop {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--#{$prefix}datepicker-backdrop-background-color);
+  z-index: var(--#{$prefix}datepicker-zindex);
+}

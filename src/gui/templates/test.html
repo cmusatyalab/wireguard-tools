@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %} Setup {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Setup Wizard</h2>
+    </div>
+    <hr class="hr" />
+    <div class="container">
+
+        <!-- Tabs navs -->
+        <ul class="nav nav-tabs mb-3" id="wizard" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#basic-tab" role="tab"
+                    aria-controls="basic-tab" aria-selected="true">Basic</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#advanced-tab" role="tab"
+                    aria-controls="advanced-tab" aria-selected="false">Advanced</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#instructions-tab" role="tab"
+                    aria-controls="instructions-tab" aria-selected="false">Instructions</a>
+            </li>
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="basic-tab" role="tabpanel" aria-labelledby="ex1-tab-1">
+                <!-- Basic tab content -->
+                <form action="submit">
+                    <h6>Base IP Address for Wireguard Network</h6>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="form-control" id="base_ip" name="base_ip" />
+                        <label for="base_ip" class="form-label">Base IP</label>
+                    </div>
+                    <button type="submit" method="post" class="btn btn-primary">Build</button>
+                    <a href="{{url_for('index')}}" type="button" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="advanced-tab" role="tabpanel" aria-labelledby="ex1-tab-2">
+                <!-- Advanced tab content -->
+                <form action="submit">
+                    <h6>Base IP Address for Wireguard Network</h6>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="form-control" id="base_ip" name="base_ip" />
+                        <label for="base_ip" class="form-label">Base IP</label>
+                    </div>
+                    <h6>Generate Server Keys</h6>
+                    <div class="input-group">
+                        <div class="form-outline" data-mdb-input-init>
+                            <input type="text" class="form-control" id="private_key" name="private_key"
+                                oninput="updatePublicKey()" />
+                            <label for="private_key" class="form-label">Private Key</label>
+                        </div>
+
+                        <button class="btn btn-primary " data-mdb-ripple-init type="button" id="generatePrivateKey"
+                            onclick="generateAndSetPrivateKey()" data-mdb-tooltip-init title="Generate Private Key">
+                            <i class="fas fa-key"></i>
+                        </button>
+                    </div>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" class="form-control" id="public_key" name="public_key" value="">
+                        <label for="public_key" class="form-label">Public Key</label>
+                    </div>
+                    <button type="submit" method="post" class="btn btn-primary">Build</button>
+                    <a href="{{url_for('index')}}" type="button" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="instructions-tab" role="tabpanel" aria-labelledby="ex1-tab-3">
+                <!-- Instructions tab content -->
+                <h4>Basic Instructions</h4>
+                <h4>Advanced Instructions</h4>
+            </div>
+        </div>
+
+
+        <!-- End Tabbed content -->
+    </div>
+</div>
+
+{%endblock%}
+
+{% block scripts %}
+<script>
+const triggerEl = document.querySelector('#ex1-tab-2');
+mdb.Tab.getInstance(triggerEl).show();
+</script>
+{% endblock %}

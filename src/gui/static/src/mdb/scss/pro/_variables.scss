@@ -1,0 +1,1072 @@
+// Variables pro
+
+// scss-docs-start zindex-stack pro
+$sidenav-zindex: 1035 !default;
+$sidenav-backdrop-zindex: 1034 !default;
+$timepicker-zindex: 1065 !default;
+$datepicker-zindex: 1065 !default;
+$datepicker-container-zindex: 1066 !default;
+$lightbox-zindex: 1100 !default;
+$lightbox-toolbar-zindex: 1110 !default;
+$popconfirm-zindex: 1080 !default;
+$popconfirm-backdrop-zindex: 1070 !default;
+$autocomplete-dropdown-container-zindex: 1065 !default;
+// scss-docs-end zindex-stack pro
+
+// Animations
+
+$animation-delay-1s: 1s !default;
+$animation-delay-2s: 2s !default;
+$animation-delay-3s: 3s !default;
+$animation-delay-4s: 4s !default;
+$animation-delay-5s: 5s !default;
+$animation-fast-duration: 800ms !default;
+$animation-faster-duration: 500ms !default;
+$animation-slow-duration: 2s !default;
+$animation-slower-duration: 3s !default;
+
+$animation-fade-in-down-transform-from: translate3d(0, -100%, 0) !default;
+$animation-fade-in-down-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-fade-in-left-transform-from: translate3d(-100%, 0, 0) !default;
+$animation-fade-in-left-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-fade-in-right-transform-from: translate3d(100%, 0, 0) !default;
+$animation-fade-in-right-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-fade-in-up-transform-from: translate3d(0, 100%, 0) !default;
+$animation-fade-in-up-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-fade-out-down-transform-to: translate3d(0, 100%, 0) !default;
+
+$animation-fade-out-left-transform-to: translate3d(-100%, 0, 0) !default;
+
+$animation-fade-out-right-transform-to: translate3d(100%, 0, 0) !default;
+
+$animation-fade-out-up-transform-to: translate3d(0, -100%, 0) !default;
+
+$animation-slide-in-down-transform-from: translate3d(0, -100%, 0) !default;
+$animation-slide-in-down-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-slide-in-left-transform-from: translate3d(-100%, 0, 0) !default;
+$animation-slide-in-left-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-slide-in-right-transform-from: translate3d(100%, 0, 0) !default;
+$animation-slide-in-right-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-slide-in-up-transform-from: translate3d(0, 100%, 0) !default;
+$animation-slide-in-up-transform-to: translate3d(0, 0, 0) !default;
+
+$animation-slide-out-down-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-out-down-transform-to: translate3d(0, 100%, 0) !default;
+
+$animation-slide-out-left-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-out-left-transform-to: translate3d(-100%, 0, 0) !default;
+
+$animation-slide-out-right-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-out-right-transform-to: translate3d(100%, 0, 0) !default;
+
+$animation-slide-out-up-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-out-up-transform-to: translate3d(0, -100%, 0) !default;
+
+$animation-slide-down-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-down-transform-to: translate3d(0, 100%, 0) !default;
+
+$animation-slide-left-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-left-transform-to: translate3d(-100%, 0, 0) !default;
+
+$animation-slide-right-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-right-transform-to: translate3d(100%, 0, 0) !default;
+
+$animation-slide-up-transform-from: translate3d(0, 0, 0) !default;
+$animation-slide-up-transform-to: translate3d(0, -100%, 0) !default;
+
+$animation-zoom-in-transform-from: scale3d(0.3, 0.3, 0.3) !default;
+
+$animation-zoom-out-transform-50: scale3d(0.3, 0.3, 0.3) !default;
+
+$animation-tada-transform-from: scale3d(1, 1, 1) !default;
+$animation-tada-transform-20: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg) !default;
+$animation-tada-transform-90: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg) !default;
+$animation-tada-transform-80: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg) !default;
+$animation-tada-transform-to: scale3d(1, 1, 1) !default;
+
+$animation-pulse-transform-from: scale3d(1, 1, 1) !default;
+$animation-pulse-transform-50: scale3d(1.05, 1.05, 1.05) !default;
+$animation-pulse-transform-to: scale3d(1, 1, 1) !default;
+
+// Animations extended
+
+$animation-drop-in-transform-0: scale(0) !default;
+$animation-drop-in-transform-100: scale(1) !default;
+$animation-drop-in-timing-function: cubic-bezier(0.34, 1.61, 0.7, 1) !default;
+
+$animation-drop-out-transform-0: scale(1) !default;
+$animation-drop-out-transform-100: scale(0) !default;
+$animation-drop-out-timing-function: cubic-bezier(0.34, 1.61, 0.7, 1) !default;
+
+$animation-fly-in-transform-0: scale3d(0.3, 0.3, 0.3) !default;
+$animation-fly-in-transform-20: scale3d(1.1, 1.1, 1.1) !default;
+$animation-fly-in-transform-40: scale3d(0.9, 0.9, 0.9) !default;
+$animation-fly-in-transform-60: scale3d(1.03, 1.03, 1.03) !default;
+$animation-fly-in-transform-80: scale3d(0.97, 0.97, 0.97) !default;
+$animation-fly-in-transform-100: scale3d(1, 1, 1) !default;
+$animation-fly-in-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-in-up-transform-0: translate3d(0, 1500px, 0) !default;
+$animation-fly-in-up-transform-60: translate3d(0, -20px, 0) !default;
+$animation-fly-in-up-transform-75: translate3d(0, 10px, 0) !default;
+$animation-fly-in-up-transform-90: translate3d(0, -5px, 0) !default;
+$animation-fly-in-up-transform-100: translate3d(0, 0, 0) !default;
+$animation-fly-in-up-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-in-down-transform-0: translate3d(0, -1500px, 0) !default;
+$animation-fly-in-down-transform-60: translate3d(0, 25px, 0) !default;
+$animation-fly-in-down-transform-75: translate3d(0, -10px, 0) !default;
+$animation-fly-in-down-transform-90: translate3d(0, 5px, 0) !default;
+$animation-fly-in-down-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-in-left-transform-0: translate3d(1500px, 0, 0) !default;
+$animation-fly-in-left-transform-60: translate3d(-25px, 0, 0) !default;
+$animation-fly-in-left-transform-75: translate3d(10px, 0, 0) !default;
+$animation-fly-in-left-transform-90: translate3d(-5px, 0, 0) !default;
+$animation-fly-in-left-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-in-right-transform-0: translate3d(-1500px, 0, 0) !default;
+$animation-fly-in-right-transform-60: translate3d(25px, 0, 0) !default;
+$animation-fly-in-right-transform-75: translate3d(-10px, 0, 0) !default;
+$animation-fly-in-right-transform-90: translate3d(5px, 0, 0) !default;
+$animation-fly-in-right-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-out-transform-20: scale3d(0.9, 0.9, 0.9) !default;
+$animation-fly-out-transform-55: scale3d(1.1, 1.1, 1.1) !default;
+$animation-fly-out-transform-100: scale3d(0.3, 0.3, 0.3) !default;
+$animation-fly-out-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-out-up-transform-20: translate3d(0, 10px, 0) !default;
+$animation-fly-out-up-transform-45: translate3d(0, -20px, 0) !default;
+$animation-fly-out-up-transform-100: translate3d(0, 2000px, 0) !default;
+$animation-fly-out-up-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-out-down-transform-20: translate3d(0, -10px, 0) !default;
+$animation-fly-out-down-transform-45: translate3d(0, 20px, 0) !default;
+$animation-fly-out-down-transform-100: translate3d(0, -2000px, 0) !default;
+$animation-fly-out-down-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-out-left-transform-20: translate3d(-20px, 0, 0) !default;
+$animation-fly-out-left-transform-100: translate3d(2000px, 0, 0) !default;
+$animation-fly-out-left-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-fly-out-right-transform-20: translate3d(20px, 0, 0) !default;
+$animation-fly-out-right-transform-100: translate3d(-2000px, 0, 0) !default;
+$animation-fly-out-right-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1) !default;
+
+$animation-browse-in-transform-0: scale(0.8) translateZ(0px) !default;
+$animation-browse-in-transform-10: scale(0.8) translateZ(0px) !default;
+$animation-browse-in-transform-80: scale(1.05) translateZ(0px) !default;
+$animation-browse-in-transform-100: scale(1) translateZ(0px) !default;
+
+$animation-browse-out-left-transform-0: translateX(0%) rotateY(0deg) rotateX(0deg) !default;
+$animation-browse-out-left-transform-50: translateX(-105%) rotateY(35deg) rotateX(10deg)
+  translateZ(-10px) !default;
+$animation-browse-out-left-transform-100: translateX(0%) rotateY(0deg) rotateX(0deg)
+  translateZ(-10px) !default;
+
+$animation-browse-out-right-transform-0: translateX(0%) rotateY(0deg) rotateX(0deg) !default;
+$animation-browse-out-right-transform-50: translateX(105%) rotateY(35deg) rotateX(10deg)
+  translateZ(-10px) !default;
+$animation-browse-out-right-transform-100: translateX(0%) rotateY(0deg) rotateX(0deg)
+  translateZ(-10px) !default;
+
+$animation-jiggle-transform-0: scale3d(1, 1, 1) !default;
+$animation-jiggle-transform-30: scale3d(1.25, 0.75, 1) !default;
+$animation-jiggle-transform-40: scale3d(0.75, 1.25, 1) !default;
+$animation-jiggle-transform-50: scale3d(1.15, 0.85, 1) !default;
+$animation-jiggle-transform-65: scale3d(0.95, 1.05, 1) !default;
+$animation-jiggle-transform-75: scale3d(1.05, 0.95, 1) !default;
+$animation-jiggle-transform-100: scale3d(1, 1, 1) !default;
+
+$animation-flash-duration: 750ms !default;
+
+$animation-shake-transform-100: translateX(0) !default;
+$animation-shake-transform-90: translateX(-10px) !default;
+$animation-shake-transform-80: translateX(10px) !default;
+
+$animation-glow-bg-0: #fcfcfd !default;
+$animation-glow-bg-30: #fff6cd !default;
+$animation-glow-bg-100: #fcfcfd !default;
+
+//Autocomplete
+
+$autocomplete-label-max-width: 80% !default;
+$autocomplete-label-active-transform: translateY(-1rem) translateY(0.1rem) scale(0.8) !default;
+$autocomplete-input-focused-color: var(--#{$prefix}surface-color) !default;
+$autocomplete-label-color: $primary !default;
+$autocomplete-dropdown-background-color: var(--#{$prefix}surface-bg) !default;
+$autocomplete-dropdown-box-shadow: 0 2px 5px 0 rgba(var(--#{$prefix}box-shadow-color-rgb), 0.16),
+  0 2px 10px 0 rgba(var(--#{$prefix}box-shadow-color-rgb), 0.12) !default;
+$autocomplete-dropdown-margin: 0 !default;
+$autocomplete-dropdown-transform: scaleY(0.8) !default;
+$autocomplete-dropdown-transition: all 0.2s !default;
+$autocomplete-dropdown-open-transform: scaleY(1) !default;
+$autocomplete-item-color: var(--#{$prefix}surface-color) !default;
+$autocomplete-item-padding: 6.5px 16px !default;
+$autocomplete-item-font-size: 1rem !default;
+$autocomplete-item-font-weight: 400 !default;
+$autocomplete-item-hover-background-color: var(--#{$prefix}highlight-bg-color) !default;
+$autocomplete-item-disabled-color: rgba(var(--#{$prefix}surface-color-rgb), 0.5) !default;
+$autocomplete-scrollbar-thumb-background-color: var(--#{$prefix}scrollbar-thumb-bg) !default;
+
+// Sidenav
+
+$sidenav-transform: translateX(-100%) !default;
+$sidenav-color: var(--#{$prefix}surface-color) !default;
+$sidenav-background-color: var(--#{$prefix}surface-bg) !default;
+$sidenav-width: 240px !default;
+$sidenav-height: 100vh !default;
+$sidenav-box-shadow: 0 4px 12px 0 rgba(var(--#{$prefix}box-shadow-color-rgb), 0.07),
+  0 2px 4px rgba(var(--#{$prefix}box-shadow-color-rgb), 0.05) !default;
+
+$sidenav-data-hidden-false-transform: translateX(0%) !default;
+$sidenav-data-color-light-color: rgba(255, 255, 255, 0.6) !default;
+$sidenav-data-right-true-transform: translateX(100%) !default;
+$sidenav-data-slim-collapsed-true-width: 77px !default;
+
+$sidenav-menu-padding: 0.2rem !default;
+
+$sidenav-collapse-sidenav-link-font-size: 0.78rem !default;
+$sidenav-collapse-sidenav-link-height: 1.5rem !default;
+$sidenav-collapse-sidenav-link-padding-left: 3.4rem !default;
+
+$sidenav-link-font-size: 0.89rem !default;
+$sidenav-link-padding-y: 1rem !default;
+$sidenav-link-padding-x: 1.5rem !default;
+$sidenav-link-height: 3rem !default;
+$sidenav-link-border-radius: 5px !default;
+$sidenav-link-transition: all 0.3s linear !default;
+
+$sidenav-link-hover-color: $primary !default;
+$sidenav-link-hover-background-color: var(--#{$prefix}highlight-bg-color) !default;
+
+$sidenav-link-active-focus-color: $sidenav-link-hover-color !default;
+$sidenav-link-active-focus-background-color: $sidenav-link-hover-background-color !default;
+$sidenav-link-active-color: $sidenav-link-hover-color !default;
+
+$sidenav-rotate-icon-margin-right: 0.8rem !default;
+$sidenav-rotate-icon-transition: transform 0.3s !default;
+
+$sidenav-backdrop-background-color: rgba(
+  0,
+  0,
+  0,
+  var(--#{$prefix}sidenav-backdrop-opacity)
+) !default;
+
+$sidenav-light-color: $sidenav-data-color-light-color !default;
+
+$sidenav-subheading-font-size: 0.6rem !default;
+$sidenav-subheading-padding-y: 1rem !default;
+$sidenav-subheading-padding-x: 1.5rem !default;
+$sidenav-subheading-fw: 700 !default;
+
+$sidenav-sm-link-pt: 0.4rem !default;
+$sidenav-sm-link-pb: $sidenav-sm-link-pt !default;
+
+$sidenav-slim-link-padding-left: 1rem !default;
+
+// Navbar
+
+$navbar-scroll-transition: background 0.5s ease-in-out, padding 0.5s ease-in-out !default;
+$navbar-scroll-scrolled-padding-y: 5px !default;
+$navbar-scroll-scrolled-color: #4f4f4f !default;
+$navbar-scroll-color: #fff !default;
+$navbar-scrolled-bg: #fff !default;
+
+// Rating
+
+$rating-icon-padding: 0.25rem !default;
+
+// Timepicker
+
+// $timepicker-wrapper-z-index: 1071 !default;
+$timepicker-wrapper-bg: rgba(0, 0, 0, 0.4) !default;
+
+$timepicker-wrapper-inline-border-radius: 0.5rem !default;
+
+$timepicker-elements-min-width: 310px !default;
+$timepicker-elements-min-height: 325px !default;
+$timepicker-elements-background: var(--#{$prefix}surface-bg) !default;
+$timepicker-elements-border-top-right-radius: 0.6rem !default;
+$timepicker-elements-border-top-left-radius: 0.6rem !default;
+$timepicker-elements-media-border-bottom-left-radius: 0 !default;
+
+$timepicker-head-bg: var(--#{$prefix}picker-header-bg) !default;
+$timepicker-head-height: 100px !default;
+$timepicker-head-border-top-right-radius: 0.5rem !default;
+$timepicker-head-border-top-left-radius: 0.5rem !default;
+$timepicker-head-padding-y: 10px !default;
+$timepicker-head-padding-right: 24px !default;
+$timepicker-head-padding-left: 50px !default;
+
+$timepicker-head-media-padding: 10px !default;
+$timepicker-head-media-padding-right: 10px !default;
+$timepicker-head-media-min-height: 305px !default;
+$timepicker-head-inline-border-bottom-right-radius: 0.5rem !default;
+$timepicker-head-inline-border-bottom-left-radius: 0.5rem !default;
+
+$timepicker-button-font-size: 0.8rem !default;
+$timepicker-button-min-width: 64px !default;
+$timepicker-button-font-weight: 500 !default;
+$timepicker-button-line-height: 40px !default;
+$timepicker-button-border-radius: 10px !default;
+$timepicker-button-letter-spacing: 0.1rem !default;
+$timepicker-button-color: var(--#{$prefix}surface-color) !default;
+$timepicker-button-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+  box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !default;
+$timepicker-button-hover-bg: rgba(var(--#{$prefix}emphasis-color-rgb), 0.08) !default;
+$timepicker-button-focus-bg: $timepicker-button-hover-bg !default;
+$timepicker-button-padding-x: 10px !default;
+$timepicker-button-height: 40px !default;
+$timepicker-button-margin-bottom: 10px !default;
+
+$timepicker-submit-inline-height: 48px !default;
+$timepicker-submit-inline-min-width: 48px !default;
+$timepicker-submit-inline-margin-left: 30px !default;
+$timepicker-submit-inline-color: $white !default;
+
+$timepicker-current-font-size: 3.75rem !default;
+$timepicker-current-font-weight: 300 !default;
+$timepicker-current-line-height: 1.2 !default;
+$timepicker-current-letter-spacing: -0.00833em !default;
+$timepicker-current-color: color-contrast($primary);
+$timepicker-current-opacity: 0.54 !default;
+
+$timepicker-mode-wrapper-font-size: 18px !default;
+$timepicker-mode-wrapper-color: rgba(255, 255, 255, 0.54) !default;
+
+$timepicker-clock-wrapper-min-width: 310px !default;
+$timepicker-clock-wrapper-max-width: 325px !default;
+$timepicker-clock-wrapper-min-height: 305px !default;
+$timepicker-clock-wrapper-text-color: var(--#{$prefix}surface-color) !default;
+
+$timepicker-clock-animation: show-up-clock 350ms linear !default;
+$timepicker-clock-width: 260px !default;
+$timepicker-clock-height: 260px !default;
+$timepicker-clock-bg: var(--#{$prefix}timepicker-clock-face-bg) !default;
+
+$timepicker-clock-inner-top: 50% !default;
+$timepicker-clock-inner-left: 50% !default;
+$timepicker-clock-inner-transform: translate(-50%, -50%) !default;
+$timepicker-clock-inner-width: 160px !default;
+$timepicker-clock-inner-height: 160px !default;
+
+$timepicker-time-tips-inner-width: 32px !default;
+$timepicker-time-tips-inner-height: 32px !default;
+$timepicker-time-tips-inner-font-size: 1.1rem !default;
+$timepicker-time-tips-inner-font-weight: 300 !default;
+$timepicker-time-tips-inner-active-color: color-contrast($primary) !default;
+$timepicker-time-tips-inner-active-bg: $primary !default;
+$timepicker-time-tips-inner-active-font-weight: 400 !default;
+$timepicker-time-tips-inner-disabled-color: rgba(var(--#{$prefix}surface-color-rgb), 0.5) !default;
+
+$timepicker-dot-font-weight: 300 !default;
+$timepicker-dot-line-height: 1.2 !default;
+$timepicker-dot-letter-spacing: -0.00833em !default;
+$timepicker-dot-color: color-contrast($primary) !default;
+$timepicker-dot-font-size: 3.75rem !default;
+$timepicker-dot-opacity: 0.54 !default;
+$timepicker-dot-media-font-size: 3rem !default;
+$timepicker-dot-media-font-weight: 400 !default;
+
+$timepicker-current-inline-font-size: 2.5rem !default;
+
+$timepicker-item-width: 20px !default;
+$timepicker-item-height: 20px !default;
+$timepicker-item-padding: 10px !default;
+$timepicker-item-font-size: 1.1em !default;
+
+$timepicker-item-middle-dot-top: 50% !default;
+$timepicker-item-middle-dot-left: 50% !default;
+$timepicker-item-middle-dot-width: 6px !default;
+$timepicker-item-middle-dot-height: $timepicker-item-middle-dot-width !default;
+$timepicker-item-middle-dot-transform: translate(-50%, -50%) !default;
+$timepicker-item-middle-dot-border-radius: 50% !default;
+$timepicker-item-middle-dot-bg: $primary !default;
+
+$timepicker-hand-pointer-bg: $primary !default;
+$timepicker-hand-pointer-bottom: 50% !default;
+$timepicker-hand-pointer-height: 40% !default;
+$timepicker-hand-pointer-left: calc(50% - 1px) !default;
+$timepicker-hand-pointer-width: 2px !default;
+
+$timepicker-transform-transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+  height 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !default;
+
+$timepicker-time-tips-width: 32px !default;
+$timepicker-time-tips-height: 32px !default;
+$timepicker-time-tips-font-size: 1.1rem !default;
+$timepicker-time-tips-active-color: $white !default;
+
+$timepicker-circle-top: -21px !default;
+$timepicker-circle-left: -15px !default;
+$timepicker-circle-width: 4px !default;
+$timepicker-circle-border-width: 14px !default;
+$timepicker-circle-border-color: $primary !default;
+$timepicker-circle-height: 4px !default;
+$timepicker-circle-active-background-color: color-contrast($primary) !default;
+
+$timepicker-hour-mode-color: color-contrast($primary) !default;
+$timepicker-hour-mode-opacity: 0.54 !default;
+$timepicker-hour-mode-hover-bg: rgba(var(--#{$prefix}emphasis-color-rgb), 0.15) !default;
+$timepicker-hour-mode-active-color: color-contrast($primary) !default;
+$timepicker-hour-mode-font-size: 2.5rem !default;
+
+$timepicker-footer-border-bottom-left-radius: 0.5rem !default;
+$timepicker-footer-border-bottom-right-radius: 0.5rem !default;
+$timepicker-footer-height: 56px !default;
+$timepicker-footer-padding-x: 12px !default;
+$timepicker-footer-bg: var(--#{$prefix}surface-bg) !default;
+
+$timepicker-container-max-height: calc(100% - 64px) !default;
+
+$timepicker-icon-up-down-transition: 0.2s ease all !default;
+$timepicker-icon-up-down-transform: translate(-50%, -50%) !default;
+$timepicker-icon-up-down-left: 50% !default;
+$timepicker-icon-up-down-width: 30px !default;
+$timepicker-icon-up-down-height: 30px !default;
+$timepicker-icon-up-top: -35px !default;
+$timepicker-icon-down-bottom: -47px !default;
+
+$timepicker-icon-btn-width: 30px !default;
+$timepicker-icon-btn-height: 30px !default;
+$timepicker-input-color: $primary !default;
+
+$timepicker-btn-icon-right: -10px !default;
+$timepicker-btn-icon-transform: translate(-50%, -50%) !default;
+$timepicker-btn-icon-top: 50% !default;
+$timepicker-btn-icon-transition: all 0.3s ease !default;
+$timepicker-btn-icon-hover-color: $primary !default;
+$timepicker-btn-icon-focus-color: $primary !default;
+
+// Multi-range
+
+$multi-range-slider-horizontal-height: 0.25rem !default;
+$multi-range-tooltip-transition: top 0.2s, transform 0.2s, border-radius 0.2s !default;
+$multi-range-tooltip-border-radius: 50% 50% 50% 0 !default;
+$multi-range-tooltip-position-top: -18px !default;
+$multi-range-tooltip-transform: rotate(-45deg) translate(-5px, -4px) scale(0) !default;
+$multi-range-tooltip-transform-active: rotate(-45deg) translate(-5px, -4px) scale(1) !default;
+$multi-range-tooltip-content-size: 30px !default;
+$multi-range-tooltip-content-transform: rotate(45deg) translateY(25%) !default;
+$multi-range-tooltip-content-font-size: 10px !default;
+
+// Lightbox
+
+$lightbox-gallery-background-color: rgba(0, 0, 0, 0.9) !default;
+$lightbox-gallery-transition: all 0.3s ease-out !default;
+
+$lightbox-gallery-toolbar-height: 50px !default;
+$lightbox-gallery-toolbar-transition: opacity 0.4s !default;
+
+$lightbox-gallery-counter-color: #b3b3b3 !default;
+$lightbox-gallery-counter-padding-x: 10px !default;
+
+$lightbox-gallery-toolbar-button-width: 50px !default;
+$lightbox-gallery-toolbar-button-height: 50px !default;
+$lightbox-gallery-toolbar-button-color: #b3b3b3 !default;
+$lightbox-gallery-toolbar-button-transition: color 0.2s !default;
+$lightbox-gallery-toolbar-button-hover-color: $white !default;
+
+$lightbox-gallery-content-top: 50px !default;
+$lightbox-gallery-content-left: $lightbox-gallery-content-top !default;
+$lightbox-gallery-content-width: calc(100% - 100px) !default;
+$lightbox-gallery-content-height: $lightbox-gallery-content-width !default;
+
+$lightbox-gallery-image-transform: scale(0.25) !default;
+$lightbox-gallery-image-transition: all 0.4s ease-out !default;
+
+$lightbox-gallery-arrow-width: 50px !default;
+$lightbox-gallery-arrow-transition: opacity 0.4s !default;
+$lightbox-gallery-arrow-button-width: 50px !default;
+$lightbox-gallery-arrow-button-height: 50px !default;
+$lightbox-gallery-arrow-button-color: #b3b3b3 !default;
+$lightbox-gallery-arrow-button-transition: color 0.2s !default;
+$lightbox-gallery-arrow-button-hover-color: $white !default;
+
+$lightbox-gallery-caption-wrapper-height: 50px !default;
+$lightbox-gallery-caption-color: $white !default;
+$lightbox-gallery-caption-margin-x: 10px !default;
+
+$lightbox-gallery-loader-transition: opacity 1s !default;
+
+$lightbox-gallery-button-focus-color: $white !default;
+$lightbox-disabled-scroll-media-padding-right: 17px !default;
+
+// Loading
+
+$loading-spinner-top: 50% !default;
+$loading-spinner-left: 50% !default;
+$loading-spinner-transform: translate(-50%, -50%) !default;
+$loading-spinner-color: $primary !default;
+
+// Modal
+$modal-top-left-top: 10px !default;
+$modal-top-left-left: 10px !default;
+$modal-top-right-top: 10px !default;
+$modal-top-right-right: 10px !default;
+$modal-bottom-left-bottom: 10px !default;
+$modal-bottom-left-left: 10px !default;
+$modal-bottom-right-bottom: 10px !default;
+$modal-bottom-right-right: 10px !default;
+$modal-fade-top-transform: translate3d(0, -25%, 0) !default;
+$modal-fade-right-transform: translate3d(25%, 0, 0) !default;
+$modal-fade-bottom-transform: translate3d(0, 25%, 0) !default;
+$modal-fade-left-transform: translate3d(-25%, 0, 0) !default;
+$modal-side-right: 10px !default;
+$modal-side-bottom: 10px !default;
+
+$modal-non-invasive-box-shadow: $box-shadow-3 !default;
+$modal-non-invasive-box-shadow-top: $box-shadow-3-top !default;
+
+// Datepicker
+
+$datepicker-toggle-right: -10px !default;
+$datepicker-toggle-top: 50% !default;
+$datepicker-toggle-focus-color: $primary !default;
+
+$datepicker-backdrop-background-color: rgba(0, 0, 0, 0.4) !default;
+
+$datepicker-dropdown-container-width: 328px !default;
+$datepicker-dropdown-container-height: 380px !default;
+$datepicker-dropdown-container-background-color: var(--#{$prefix}surface-bg) !default;
+$datepicker-dropdown-container-border-radius: 0.5rem !default;
+$datepicker-dropdown-container-box-shadow: $box-shadow-4 !default;
+
+$datepicker-modal-container-transform: translate(-50%, -50%) !default;
+$datepicker-modal-container-width: 328px !default;
+$datepicker-modal-container-height: 512px !default;
+$datepicker-modal-container-background-color: var(--#{$prefix}surface-bg) !default;
+$datepicker-modal-container-border-radius: 0.6rem 0.6rem 0.5rem 0.5rem !default;
+$datepicker-modal-container-box-shadow: $datepicker-dropdown-container-box-shadow !default;
+// $datepicker-modal-container-z-index: 1072 !default;
+$datepicker-modal-container-date-media-margin-top: 100px !default;
+$datepicker-modal-container-day-cell-media-width: 32px !default;
+$datepicker-modal-container-day-cell-media-height: $datepicker-modal-container-day-cell-media-width !default;
+$datepicker-modal-container-media-width: 475px !default;
+$datepicker-modal-container-media-height: 360px !default;
+
+$datepicker-header-height: 120px !default;
+$datepicker-header-padding-x: 24px !default;
+$datepicker-header-background-color: var(--#{$prefix}picker-header-bg) !default;
+$datepicker-header-border-radius: 0.5rem 0.5rem 0 0 !default;
+$datepicker-header-border-radius-landscape: 0.5rem 0 0 0.5rem !default;
+
+$datepicker-title-height: 32px !default;
+$datepicker-title-text-font-size: 10px !default;
+$datepicker-title-text-font-weight: 400 !default;
+$datepicker-title-text-letter-spacing: 1.7px !default;
+$datepicker-title-text-color: color-contrast($primary) !default;
+
+$datepicker-date-height: 72px !default;
+$datepicker-date-text-font-size: 34px !default;
+$datepicker-date-text-font-weight: 400 !default;
+$datepicker-date-text-color: color-contrast($primary) !default;
+
+$datepicker-date-controls-padding-top: 10px !default;
+$datepicker-date-controls-padding-x: 12px !default;
+
+// $datepicker-arrow-border-width: 5px !default;
+// $datepicker-arrow-margin-left: 5px !default;
+// $datepicker-arrow-transform: rotate(180deg) !default;
+
+$datepicker-date-controls-color: rgba(0, 0, 0, 0.64) !default;
+
+$datepicker-view-change-button-padding: 10px !default;
+$datepicker-view-change-button-color: var(--#{$prefix}surface-color) !default;
+$datepicker-view-change-button-disabled-color: rgba(
+  var(--#{$prefix}surface-color-rgb),
+  0.5
+) !default;
+$datepicker-view-change-button-font-weight: 500 !default;
+$datepicker-view-change-button-font-size: 0.9rem !default;
+$datepicker-view-change-button-border-radius: 10px !default;
+$datepicker-view-change-button-state-background-color: var(--#{$prefix}highlight-bg-color) !default;
+$datepicker-view-change-button-after-border-width: 5px !default;
+$datepicker-view-change-button-after-margin-left: 5px !default;
+
+$datepicker-arrow-controls-margin-top: 10px !default;
+
+$datepicker-previous-button-width: 40px !default;
+$datepicker-previous-button-height: $datepicker-previous-button-width !default;
+$datepicker-previous-button-line-height: $datepicker-previous-button-height !default;
+$datepicker-previous-button-color: var(--#{$prefix}surface-color) !default;
+$datepicker-previous-button-disabled-color: rgba(var(--#{$prefix}surface-color-rgb), 0.5) !default;
+$datepicker-previous-button-margin-right: 24px !default;
+$datepicker-previous-button-state-background-color: var(--#{$prefix}highlight-bg-color) !default;
+$datepicker-previous-button-state-border-radius: 50% !default;
+
+$datepicker-previous-button-after-margin: 15.5px !default;
+$datepicker-previous-button-after-border-width: 2px !default;
+$datepicker-previous-button-after-transform: translateX(2px) rotate(-45deg) !default;
+
+$datepicker-next-button-width: 40px !default;
+$datepicker-next-button-height: $datepicker-next-button-width !default;
+$datepicker-next-button-line-height: $datepicker-next-button-height !default;
+$datepicker-next-button-color: var(--#{$prefix}surface-color) !default;
+$datepicker-next-button-disabled-color: rgba(var(--#{$prefix}surface-color-rgb), 0.5) !default;
+$datepicker-next-button-margin-background-color: var(--#{$prefix}highlight-bg-color) !default;
+$datepicker-next-button-state-border-radius: 50% !default;
+
+$datepicker-next-button-after-margin: 15.5px !default;
+$datepicker-next-button-after-border-width: 2px !default;
+$datepicker-next-button-after-transform: translateX(-2px) rotate(45deg) !default;
+
+$datepicker-view-padding-x: 12px !default;
+$datepicker-table-width: 304px !default;
+
+$datepicker-day-heading-width: 40px !default;
+$datepicker-day-heading-height: $datepicker-day-heading-width !default;
+$datepicker-day-heading-font-size: 12px !default;
+$datepicker-day-heading-font-weight: 400 !default;
+$datepicker-day-heading-color: var(--#{$prefix}surface-color) !default;
+
+$datepicker-cell-disabled-color: rgba(var(--#{$prefix}surface-color-rgb), 0.5) !default;
+$datepicker-cell-hover-background-color: var(--#{$prefix}highlight-bg-color) !default;
+$datepicker-cell-selected-background-color: $primary !default;
+$datepicker-cell-selected-color: color-contrast($primary) !default;
+$datepicker-cell-focused-background-color: var(--#{$prefix}highlight-bg-color) !default;
+$datepicker-cell-focused-selected-background-color: $primary !default;
+$datepicker-cell-border-width: 1px !default;
+$datepicker-cell-border-color: var(--#{$prefix}surface-color) !default;
+$datepicker-cell-color: var(--#{$prefix}surface-color) !default;
+
+$datepicker-small-cell-width: 40px !default;
+$datepicker-small-cell-height: $datepicker-small-cell-width !default;
+
+$datepicker-small-cell-content-width: 36px !default;
+$datepicker-small-cell-content-height: $datepicker-small-cell-content-width !default;
+$datepicker-small-cell-content-line-height: $datepicker-small-cell-content-height !default;
+$datepicker-small-cell-content-border-radius: 50% !default;
+$datepicker-small-cell-content-font-size: 13px !default;
+
+$datepicker-large-cell-width: 76px !default;
+$datepicker-large-cell-height: 42px !default;
+
+$datepicker-large-cell-content-width: 72px !default;
+$datepicker-large-cell-content-height: 40px !default;
+$datepicker-large-cell-content-line-height: $datepicker-large-cell-content-height !default;
+$datepicker-large-cell-content-padding-y: 1px !default;
+$datepicker-large-cell-content-padding-x: 2px !default;
+$datepicker-large-cell-content-border-radius: 999px !default;
+
+// $datepicker-yearview-content-padding-x: $datepicker-view-padding-x !default;
+
+$datepicker-footer-height: 56px !default;
+$datepicker-footer-padding-x: $datepicker-view-padding-x !default;
+
+$datepicker-footer-btn-background-color: var(--#{$prefix}surface-bg) !default;
+$datepicker-footer-btn-color: var(--#{$prefix}surface-color) !default;
+$datepicker-footer-btn-disabled-color: rgba(var(--#{$prefix}surface-color-rgb), 0.5) !default;
+$datepicker-footer-btn-padding-x: 10px !default;
+$datepicker-footer-btn-font-size: 0.8rem !default;
+$datepicker-footer-btn-font-weight: 500 !default;
+$datepicker-footer-btn-height: 40px !default;
+$datepicker-footer-btn-line-height: $datepicker-footer-btn-height !default;
+$datepicker-footer-btn-letter-spacing: 0.1rem !default;
+$datepicker-footer-btn-border-radius: 10px !default;
+$datepicker-footer-btn-margin-bottom: 10px !default;
+$datepicker-footer-btn-state-background-color: var(--#{$prefix}highlight-bg-color) !default;
+
+// Datetimepicker
+
+$datetimepicker-buttons-container-background-color: var(--#{$prefix}picker-header-bg) !default;
+$datetimepicker-button-toggle-width: 50% !default;
+$datetimepicker-button-toggle-color: white !default;
+$datetimepicker-button-toggle-font-size: 23px !default;
+$datetimepicker-button-toggle-border-radius: 10px !default;
+$datetimepicker-button-toggle-min-height: 40px !default;
+$datetimepicker-button-toggle-hover-background-color: rgba(0, 0, 0, 0.15) !default;
+$datetimepicker-toggle-button-transform: translate(-50%, -50%) !default;
+
+// Popconfirm
+
+$popconfirm-padding: 1rem !default;
+$popconfirm-background-color: var(--#{$prefix}surface-bg) !default;
+$popconfirm-border-radius: 0.5rem !default;
+
+$popconfirm-popover-width: 300px !default;
+$popconfirm-popover-margin: 5px !default;
+$popconfirm-modal-width: $popconfirm-popover-width !default;
+$popconfirm-buttons-container-btn-ml: 0.5rem !default;
+$popconfirm-backdrop-background-color: rgba(0, 0, 0, 0.4) !default;
+$popconfirm-border: 1px solid var(--#{$prefix}divider-color) !default;
+$popconfirm-text-color: var(--#{$prefix}surface-color) !default;
+$popconfirm-icon-text-color: var(--#{$prefix}surface-color) !default;
+
+// Datatable
+
+$datatable-color: var(--#{$prefix}body-color) !default;
+$datatable-border-color: var(--#{$prefix}border-color) !default;
+$datatable-striped-color: var(--#{$prefix}body-color) !default;
+$datatable-accent-bg: rgba(var(--#{$prefix}emphasis-color-rgb), 0.02) !default;
+$datatable-hover-color: var(--#{$prefix}body-color) !default;
+$datatable-hover-bg: rgba(var(--#{$prefix}emphasis-color-rgb), 0.025) !default;
+$datatable-muted-color: rgba(var(--#{$prefix}emphasis-color-rgb), 0.55) !default;
+$datatable-active-color: rgba(var(--#{$prefix}emphasis-color-rgb), 0.1) !default;
+
+$datatable-font-size: 0.9rem !default;
+$datatable-background-color: var(--#{$prefix}body-bg) !default;
+$datatable-table-th-td-max-width: 250px !default;
+$datatable-table-th-td-padding-y: 1rem !default;
+$datatable-table-th-td-padding-x: 1.4rem !default;
+$datatable-thead-tr-border-width: 1px !default;
+$datatable-thead-th-font-weight: 500 !default;
+$datatable-thead-fixed-cell-background-color: var(--#{$prefix}body-bg) !default;
+
+$datatable-tbody-font-weight: 300 !default;
+$datatable-tbody-tr-transition: all 0.3s ease-in !default;
+$datatable-tbody-tr-last-child-height: 71px !default;
+$datatable-tbody-loader-height: 2px !default;
+
+$datatable-tbody-progress-animation: datatableProgress 3s ease-in-out !default;
+$datatable-tbody-progress-width: 45% !default;
+$datatable-tbody-progress-opacity: 0.5 !default;
+$datatable-tbody-progress-border-radius: 1px !default;
+
+$datatable-pagination-padding-y: 0.5rem !default;
+$datatable-pagination-border-width: 1px !default;
+$datatable-pagination-nav-font-size: 0.9rem !default;
+$datatable-pagination-buttons-margin-left: 2rem !default;
+$datatable-pagination-button-padding-x: 1rem !default;
+
+$datatable-sort-icon-transition-duration: 0.3s !default;
+$datatable-sort-icon-left: 0.4rem !default;
+$datatable-sort-icon-top: calc(50% - 0.5rem) !default;
+
+$datatable-select-wrapper-font-size: 0.9rem !default;
+$datatable-select-wrapper-font-weight: 300 !default;
+
+$datatable-select-font-size: 1rem !default;
+$datatable-select-line-height: 1.3 !default;
+$datatable-select-padding-top: 0.4em !default;
+$datatable-select-padding-right: 1.2em !default;
+$datatable-select-padding-bottom: 0.3em !default;
+$datatable-select-padding-left: 0.6em !default;
+$datatable-select-margin-right: 1.4rem !default;
+$datatable-select-margin-left: 0.1rem !default;
+$datatable-select-background: url("data:image/svg+xml !default;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23000'><polygon points='0,0 100,0 50,50'/></svg>") !default;
+$datatable-select-background-position: right 0.4em top 60%, 0 0 !default;
+$datatable-select-background-size: 0.65em auto, 100% !default;
+$datatable-select-focus-font-weight: 500 !default;
+$datatable-select-option-color: $black !default;
+
+$datatable-sm-th-td-padding-y: 0.5rem !default;
+$datatable-sm-th-td-padding-x: 1.4rem !default;
+$datatable-sm-tbody-tr-last-child-height: 55px !default;
+$datatable-sm-pagination-padding: 0.2rem !default;
+
+$datatable-dark-check-border-color: $white !default;
+$datatable-dark-select-background: url("data:image/svg+xml !default;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='white'><polygon points='0,0 100,0 50,50'/></svg>") !default;
+$datatable-dark-datatable-progress-opacity: 0.8 !default;
+$datatable-dark-select-arrow-input-color: white !default;
+$datatable-dark-border-color: rgb(251, 251, 251) !default;
+$datatable-dark-color: #fff !default;
+$datatable-dark-border-color: #fff !default;
+$datatable-dark-striped-color: white !default;
+$datatable-dark-accent-bg: rgba(255, 255, 255, 0.05) !default;
+$datatable-dark-hover-color: white !default;
+$datatable-dark-hover-bg: rgb(63, 63, 63) !default;
+$datatable-dark-active-color: rgba(255, 255, 255, 0.2) !default;
+
+$datatable-hover-tbody-tr-transition: background-color 0.2s ease-in !default;
+$datatable-bordered-th-td-border-width: 1px !default;
+$datatable-loading-select-background: url("data:image/svg+xml !default;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='grey'><polygon points='0,0 100,0 50,50'/></svg>") !default;
+
+// Perfect scrollbar
+
+$scrollbar-rail-x-y-bg-color: var(--#{$prefix}scrollbar-rail-bg) !default;
+$scrollbar-rail-x-y-opacity: 0.6 !default;
+$scrollbar-rail-x-y-hover-opacity: 0.9 !default;
+$scrollbar-rail-x-y-transition-opacity-bg: background-color 0.2s linear, opacity 0.2s linear !default;
+$scrollbar-rail-x-transition-height-bg: background-color 0.2s linear, height 0.2s ease-in-out !default;
+$scrollbar-rail-y-transition-width-bg: background-color 0.2s linear, width 0.2s ease-in-out !default;
+
+$scrollbar-z-index: 1035 !default;
+$scrollbar-rail-x-y-clicking-length: 0.6875rem !default;
+$scrollbar-rail-x-y-length: 0.9375rem !default;
+$scrollbar-thumb-x-y-length: 0.375rem !default;
+$scrollbar-thumb-x-y-border-radius: $scrollbar-thumb-x-y-length !default;
+$scrollbar-thumb-x-y-position-length: 0.125rem !default;
+$scrollbar-thumb-x-y-color: var(--#{$prefix}scrollbar-thumb-bg) !default;
+
+// Chips
+$chip-height: 32px !default;
+$chip-md-height: 42px !default;
+$chip-lg-height: 52px !default;
+$chip-font-size: 13px !default;
+$chip-font-weight: 400 !default;
+$chip-font-color: var(--#{$prefix}surface-color) !default;
+$chip-line-height: 2 !default;
+$chip-padding-right: 12px !default;
+$chip-br: 16px !default;
+$chip-md-br: 21px !default;
+$chip-lg-br: 26px !default;
+$chip-bg: var(--#{$prefix}tertiary-bg) !default;
+$chip-margin-y: 5px !default;
+$chip-margin-right: 1rem !default;
+$chip-transition-opacity: 0.3s linear !default;
+$chip-img-margin-right: 8px !default;
+$chip-img-margin-left: -12px !default;
+$chip-icon-color: rgba(var(--#{$prefix}emphasis-color-rgb), 0.3) !default;
+$chip-icon-hover-color: rgba(var(--#{$prefix}emphasis-color-rgb), 0.4) !default;
+$chip-icon-transition: 0.2s ease-in-out !default;
+$chip-outline-border-width: 1px !default;
+$chip-close-font-size: 16px !default;
+$chip-close-line-height: $chip-height !default;
+$chip-close-padding-left: 8px !default;
+$chip-close-opacity: 0.53 !default;
+$chip-contenteditable-border-width: 3px !default;
+$chip-contenteditable-border-color: var(--#{$prefix}border-color) !default;
+
+$chips-margin-bottom: 30px !default;
+$chips-min-height: 45px !default;
+$chips-padding-bottom: 1rem !default;
+$chips-input-font-color: $body-color !default;
+$chips-input-font-size: 13px !default;
+$chips-input-font-weight: 500 !default;
+$chips-input-height: $chip-height !default;
+$chips-input-margin-right: 20px !default;
+$chips-input-line-height: $chip-height !default;
+$chips-input-width: 150px !default;
+$chips-transition: 0.3s ease !default;
+$chips-focus-box-shadow: 0.3s ease !default;
+$chips-padding-padding: 5px !default;
+
+// Select
+$form-outline-select-arrow-color: var(--#{$prefix}surface-color) !default;
+$form-outline-select-arrow-font-size: 16px !default;
+$form-outline-select-arrow-top: 7px !default;
+$form-outline-select-arrow-right: 16px !default;
+
+$form-outline-select-valid-color: #00b74a !default;
+$form-outline-select-invalid-color: #f93154 !default;
+
+$form-outline-select-clear-btn-color: var(--#{$prefix}surface-color) !default;
+$form-outline-select-clear-btn-font-size: 1rem !default;
+$form-outline-select-clear-btn-top: 7px !default;
+$form-outline-select-clear-btn-right: 27px !default;
+$form-outline-select-clear-btn-focus-color: $primary !default;
+
+$form-outline-select-sm-clear-btn-font-size: 0.8rem !default;
+$form-outline-select-sm-clear-btn-top: 4px !default;
+
+$form-outline-select-lg-clear-btn-top: 11px !default;
+
+$form-outline-select-dropdown-container-z-index: $popconfirm-backdrop-zindex !default;
+
+$form-outline-select-dropdown-bg: var(--#{$prefix}surface-bg) !default;
+$form-outline-select-dropdown-box-shadow: 0 2px 5px 0
+    rgba(var(--#{$prefix}box-shadow-color-rgb), 0.16),
+  0 2px 10px 0 rgba(var(--#{$prefix}box-shadow-color-rgb), 0.12) !default;
+$form-outline-select-dropdown-min-width: 100px !default;
+$form-outline-select-dropdown-transform: scaleY(0.8) !default;
+$form-outline-select-dropdown-transition: all 0.2s !default;
+
+$form-outline-select-dropdown-open-transform: scaleY(1) !default;
+
+$form-outline-select-dropdown-input-group-padding: 10px !default;
+
+$form-outline-select-label-max-width: 80% !default;
+$form-outline-select-label-active-transform: translateY(-1rem) translateY(0.1rem) scale(0.8) !default;
+
+$form-outline-select-lg-label-active-transform: translateY(-1.25rem) translateY(0.1rem) scale(0.8) !default;
+$form-outline-select-sm-label-active-transform: translateY(-0.83rem) translateY(0.1rem) scale(0.8) !default;
+
+$form-outline-select-input-focused-color: var(--#{$prefix}surface-color) !default;
+
+$form-outline-select-label-color: $primary !default;
+$form-outline-form-notch-border-top: 1px solid transparent !default;
+
+$form-outline-select-notch-border-width: 2px !default;
+$form-outline-select-notch-border-color: $primary !default;
+$form-outline-select-white-notch-border-color: #fff !default;
+$form-outline-select-notch-transition: all 0.2s linear !default;
+
+$form-outline-select-input-focused-arrow-color: $primary !default;
+
+$form-outline-select-white-focus-arrow-color: #fff !default;
+$form-outline-select-white-arrow-color: #fff !default;
+$form-outline-select-white-clear-btn: #fff !default;
+
+$form-outline-select-sm-arrow-top: 3px !default;
+$form-outline-select-lg-arrow-top: 11px !default;
+
+$form-outline-select-options-wrapper-scrollbar-width: 4px !default;
+$form-outline-select-options-wrapper-scrollbar-height: 4px !default;
+$form-outline-select-options-wrapper-scrollbar-border-bottom-right-radius: 4px !default;
+$form-outline-select-options-wrapper-scrollbar-border-bottom-left-radius: 4px !default;
+$form-outline-select-options-wrapper-scrollbar-thumb-height: 50px !default;
+$form-outline-select-options-wrapper-scrollbar-thumb-bg: var(
+  --#{$prefix}scrollbar-thumb-bg
+) !default;
+$form-outline-select-options-wrapper-scrollbar-thumb-border-radius: 4px !default;
+
+$form-outline-select-option-group-label-padding-left: 16px !default;
+$form-outline-select-option-group-label-padding-right: 16px !default;
+$form-outline-select-option-group-label-font-size: 1rem !default;
+$form-outline-select-option-group-label-font-weight: 400 !default;
+$form-outline-select-option-group-label-color: rgba(
+  var(--#{$prefix}emphasis-color-rgb),
+  0.55
+) !default;
+
+$form-outline-select-option-group-select-option-padding-left: 26px !default;
+
+$form-outline-select-option-color: var(--#{$prefix}surface-color) !default;
+$form-outline-select-option-padding-left: 16px !default;
+$form-outline-select-option-padding-right: 16px !default;
+$form-outline-select-option-font-size: 1rem !default;
+$form-outline-select-option-font-weight: 400 !default;
+
+$form-outline-select-option-hover-not-disabled-bg: var(--#{$prefix}highlight-bg-color) !default;
+$form-outline-select-option-active-bg: var(--#{$prefix}highlight-bg-color) !default;
+$form-outline-select-option-selected-active-bg: rgba($primary, 0.45) !default;
+$form-outline-select-option-selected-disabled-color: rgba(
+  var(--#{$prefix}surface-color-rgb),
+  0.5
+) !default;
+$form-outline-select-option-disabled-color: rgba(var(--#{$prefix}surface-color-rgb), 0.5) !default;
+
+$form-outline-select-option-text-form-check-input-margin-right: 10px !default;
+
+$form-outline-select-option-secondary-text-font-size: 0.8rem !default;
+$form-outline-select-option-secondary-text-color: rgba(
+  var(--#{$prefix}emphasis-color-rgb),
+  0.55
+) !default;
+
+$form-outline-select-option-icon-width: 28px !default;
+$form-outline-select-option-icon-height: 28px !default;
+
+$form-outline-select-custom-content-padding: 16px !default;
+
+$form-outline-select-no-results-padding-left: 16px !default;
+$form-outline-select-no-results-padding-right: 16px !default;
+
+$form-outline-select-white-arrow: #fff !default;
+
+$form-outline-select-option-selected-bg: rgba($primary, 0.3) !default;
+$form-outline-select-option-selected-hover-bg: $form-outline-select-option-selected-active-bg !default;
+$form-outline-select-option-disabled-secondary-text-color: rgba(
+  var(--#{$prefix}emphasis-color-rgb),
+  0.3
+) !default;
+
+// Steps
+
+$steps-transition: height 0.2s ease-in-out !default;
+
+$steps-step-after-left: 2.45rem !default;
+$steps-step-after-width: 1px !default;
+$steps-step-after-margin-top: 0.5rem !default;
+$steps-step-after-bg: rgba(var(--#{$prefix}emphasis-color-rgb), 0.1) !default;
+
+$steps-content-padding-y: 1.5rem !default;
+
+$steps-head-vertical-padding-top: 1.5rem !default;
+$steps-head-vertical-padding-x: 1.5rem !default;
+
+$steps-head-icon-vertical-margin-right: 0.75rem !default;
+
+$steps-head-line-height: 1.3 !default;
+$steps-head-hover-bgc: rgba(var(--#{$prefix}emphasis-color-rgb), 0.025) !default;
+
+$steps-head-text-color: rgba(var(--#{$prefix}emphasis-color-rgb), 0.55) !default;
+$steps-head-text-after-font-size: 0.8rem !default;
+
+$steps-head-icon-font-size: 0.875rem !default;
+$steps-head-icon-width: 1.938rem !default;
+$steps-head-icon-height: 1.938rem !default;
+$steps-head-icon-font-weight: 500 !default;
+
+$steps-active-head-text-font-weight: 500 !default;
+
+// Stepper
+
+$stepper-padding-x: 1rem !default;
+
+$stepper-step-height: 4.5rem !default;
+
+$stepper-step-head-padding-left: 1.5rem !default;
+$stepper-step-head-padding-right: 1.5rem !default;
+$stepper-step-head-height: 1px !default;
+$stepper-step-head-bg: rgba(var(--#{$prefix}emphasis-color-rgb), 0.1) !default;
+$stepper-step-head-margin-right: 0.5rem !default;
+$stepper-step-head-margin-left: 0.5rem !default;
+
+$stepper-head-icon-margin-y: 1.5rem !default;
+$stepper-head-icon-margin-right: 0.5rem !default;
+
+$stepper-vertical-step-top: 3.25rem !default;
+$stepper-vertical-step-height: calc(100% - 2.45rem) !default;
+$stepper-vertical-content-padding-left: 3.75rem !default;
+$stepper-vertical-content-transition: height 0.3s ease-in-out, margin-top 0.3s ease-in-out,
+  margin-bottom 0.3s ease-in-out, padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out !default;
+$stepper-vertical-head-padding-bottom: 1.5rem !default;
+
+$stepper-mobile-step-margin-y: 1rem !default;
+$stepper-mobile-step-head-padding-x: 0.25rem !default;
+$stepper-mobile-head-icon-height: 0.5rem !default;
+$stepper-mobile-head-icon-width: 0.5rem !default;
+$stepper-mobile-content-top: 2.56rem !default;
+$stepper-mobile-active-head-icon-bg: var(--#{$prefix}primary) !default;
+$stepper-mobile-completed-head-icon-bg: var(--#{$prefix}success) !default;
+
+$stepper-head-icon-bg: var(--#{$prefix}surface-inverted-bg) !default;
+$stepper-head-icon-color: var(--#{$prefix}surface-inverted-color) !default;
+
+$stepper-completed-head-icon-bg: var(--#{$prefix}success-bg-subtle) !default;
+$stepper-completed-head-icon-color: var(--#{$prefix}success-text-emphasis) !default;
+
+$stepper-active-head-icon-bg: var(--#{$prefix}primary-bg-subtle) !default;
+$stepper-active-head-icon-color: var(--#{$prefix}primary-text-emphasis) !default;
+
+$stepper-invalid-head-icon-bg: var(--#{$prefix}danger-bg-subtle) !default;
+$stepper-invalid-head-icon-color: var(--#{$prefix}danger-text-emphasis) !default;
+
+$stepper-disabled-head-color: rgba(var(--#{$prefix}emphasis-color-rgb), 0.3) !default;
+$stepper-disabled-head-icon-bg: $stepper-head-icon-bg !default;
+$stepper-disabled-head-icon-color: rgba(var(--#{$prefix}surface-inverted-color-rgb), 0.55) !default;
+
+$stepper-mobile-head-padding-y: 0.5rem !default;
+$stepper-mobile-head-padding-x: 1rem !default;
+$stepper-mobile-head-bg: var(--#{$prefix}stepper-mobile-bg) !default;
+$stepper-mobile-footer-height: 2.5rem !default;
+$stepper-mobile-footer-bg: $stepper-mobile-head-bg !default;
+$stepper-mobile-invalid-icon-bg: var(--#{$prefix}danger) !default;
+$stepper-back-btn-i-margin-right: 0.5rem !default;
+$stepper-next-btn-i-margin-left: 0.5rem !default;
+
+$stepper-mobile-progress-bar-height: 0.3rem !default;
+$stepper-mobile-progress-height: 0.3rem !default;
+$stepper-mobile-progress-background-color: var(--#{$prefix}secondary-bg) !default;
+$stepper-mobile-active-progress-bar-color: var(--#{$prefix}primary) !default;
+
+// Timeline
+
+$timeline-step-top: 2.94rem !default;
+$timeline-step-height: calc(100% - 1.94rem) !default;
+
+$timeline-content-padding-left: 4.25rem !default;
+
+$timeline-head-padding-bottom: 0.5rem !default;
+
+$timeline-step-sm-left: 1.8rem !default;
+$timeline-step-sm-top: 2rem !default;
+
+$timeline-head-sm-margin-right: 1rem !default;
+$timeline-head-sm-bg: #dfdfdf !default;
+$timeline-head-sm-height: 0.7rem !default;
+$timeline-head-sm-width: 0.7rem !default;
+
+$timeline-content-sm-padding-left: 3.25rem !default;

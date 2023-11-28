@@ -1,0 +1,127 @@
+.multi-range-slider {
+  // scss-docs-start multi-range-css-vars
+  --#{$prefix}multi-range-sliderhand-focus-box-shadow: #{$form-range-thumb-focus-box-shadow};
+  --#{$prefix}multi-range-slider-horizontal-height: #{$multi-range-slider-horizontal-height};
+  --#{$prefix}multi-range-hand-width: #{$form-range-thumb-width};
+  --#{$prefix}multi-range-hand-height: #{$form-range-thumb-height};
+  --#{$prefix}multi-range-hand-bg: #{$form-range-thumb-bg};
+  --#{$prefix}multi-range-hand-border-radius: #{$range-thumb-border-radius};
+  --#{$prefix}multi-range-hand-box-shadow: #{$form-range-thumb-box-shadow};
+  --#{$prefix}multi-range-hand-transition: #{$form-range-thumb-transition};
+  --#{$prefix}multi-range-hand-active-bg: #{$form-range-thumb-active-bg};
+  --#{$prefix}multi-range-track-bg: #{$form-range-track-bg};
+  --#{$prefix}multi-range-tooltip-value-color: #{$range-thumb-value-color};
+  --#{$prefix}multi-range-tooltip-transition: #{$multi-range-tooltip-transition};
+  --#{$prefix}multi-range-tooltip-border-radius: #{$multi-range-tooltip-border-radius};
+  --#{$prefix}multi-range-tooltip-transform: #{$multi-range-tooltip-transform};
+  --#{$prefix}multi-range-tooltip-transform-active: #{$multi-range-tooltip-transform-active};
+  --#{$prefix}multi-range-tooltip-content-size: #{$multi-range-tooltip-content-size};
+  --#{$prefix}multi-range-tooltip-content-transform: #{$multi-range-tooltip-content-transform};
+  --#{$prefix}multi-range-tooltip-content-font-size: #{$multi-range-tooltip-content-font-size};
+  --#{$prefix}multi-range-tooltip-position-top: #{$multi-range-tooltip-position-top};
+  // scss-docs-end multi-range-css-vars
+
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  &:focus {
+    outline: none;
+    box-shadow: var(--#{$prefix}multi-range-sliderhand-focus-box-shadow);
+  }
+
+  &::-moz-focus-outer {
+    border: 0;
+  }
+
+  &-connects {
+    overflow: hidden;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  &-horizontal {
+    height: var(--#{$prefix}multi-range-slider-horizontal-height);
+  }
+
+  &-hand {
+    width: var(--#{$prefix}multi-range-hand-width);
+    height: var(--#{$prefix}multi-range-hand-height);
+    margin-top: ($form-range-track-height - $form-range-thumb-height) * 0.5; // Webkit specific
+    @include gradient-bg(var(--#{$prefix}multi-range-hand-bg));
+    border: 0;
+    border-radius: 50%;
+    @include transition(var(--#{$prefix}multi-range-thumb-transition));
+    appearance: none;
+    z-index: 5;
+    cursor: pointer;
+    will-change: transform;
+    position: absolute;
+    top: 50%;
+    transform-origin: 0 0;
+    transform-style: flat;
+    transform: translateY(-25%);
+
+    &:active,
+    &.active {
+      z-index: 6;
+      @include gradient-bg(var(--#{$prefix}multi-range-hand-active-bg));
+    }
+  }
+
+  &-connect {
+    background-color: var(--#{$prefix}multi-range-track-bg);
+    height: 100%;
+    width: 100%;
+    will-change: transform;
+    z-index: 1;
+  }
+
+  position: relative;
+  width: 100%;
+  padding: 0;
+  margin: auto;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+
+  // Firefox
+  border: 1px solid var(--#{$prefix}multi-range-track-bg);
+  outline: none;
+
+  // Webkit
+  appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &-tooltip {
+    position: absolute;
+    top: var(--#{$prefix}multi-range-tooltip-position-top);
+    background-color: $primary;
+    transform-origin: 50% 50%;
+    border: none;
+    transition: var(--#{$prefix}multi-range-tooltip-transition);
+    color: var(--#{$prefix}multi-range-tooltip-value-color);
+    border-radius: var(--#{$prefix}multi-range-tooltip-border-radius);
+    transform: var(--#{$prefix}multi-range-tooltip-transform);
+
+    &-value {
+      transform: var(--#{$prefix}multi-range-tooltip-content-transform);
+      color: #fff;
+      height: var(--#{$prefix}multi-range-tooltip-content-size);
+      font-size: var(--#{$prefix}multi-range-tooltip-content-font-size);
+      display: block;
+      width: var(--#{$prefix}multi-range-tooltip-content-size);
+      text-align: center;
+    }
+
+    &.active {
+      top: -38px;
+      transform: var(--#{$prefix}multi-range-tooltip-transform-active);
+    }
+  }
+}

@@ -1,0 +1,19 @@
+@mixin mdb-type-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+
+  .note {
+    color: $surface;
+  }
+
+  .note-primary {
+    background-color: lighten($primary, 43%);
+    border-color: $primary;
+  }
+
+  .note-secondary {
+    background-color: lighten($secondary, 33%);
+    border-color: $secondary;
+  }
+}

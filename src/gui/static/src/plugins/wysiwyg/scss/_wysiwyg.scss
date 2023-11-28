@@ -1,0 +1,103 @@
+$wysiwyg-text-color: var(--mdb-surface-color) !default;
+$wysiwyg-bg: var(--mdb-surface-bg) !default;
+$wysiwyg-border-color: var(--mdb-border-color) !default;
+$wysiwyg-hover: var(--mdb-highlight-bg-color) !default;
+$wysiwyg-toolbar-bg: var(--mdb-tertiary-bg) !default;
+
+.wysiwyg {
+  --mdb-wysiwyg-text-color: #{$wysiwyg-text-color};
+  --mdb-wysiwyg-bg: #{$wysiwyg-bg};
+  --mdb-wysiwyg-border-color: #{$wysiwyg-border-color};
+  --mdb-wysiwyg-hover: #{$wysiwyg-hover};
+  --mdb-wysiwyg-toolbar-bg: #{$wysiwyg-toolbar-bg};
+
+  width: 100%;
+  border: 1px solid var(--mdb-wysiwyg-border-color);
+
+  &-textarea {
+    width: 0px;
+    height: 0px;
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  &-content {
+    min-height: 450px;
+    padding: 0.5rem;
+
+    // the absolute values are added to prevent unnecessary styles from being applied when toggling lists
+    background-color: var(--mdb-wysiwyg-bg);
+    color: var(--mdb-wysiwyg-text-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: start;
+    // the absolute values are added to prevent unnecessary styles from being applied when toggling lists
+
+    &:focus {
+      outline: none;
+    }
+    .wysiwyg-show-html {
+      white-space: pre-line;
+    }
+  }
+
+  &-toolbar {
+    background-color: var(--mdb-wysiwyg-toolbar-bg);
+    padding: 0.3rem 0 0.3rem 0;
+  }
+
+  &-toolbar-group {
+    &:not(:first-child):not(.ml-auto):before {
+      content: '';
+      position: absolute;
+      height: 1.2rem;
+      width: 0;
+      border-right: 1px solid #bcbcbc;
+      margin-top: 0.4rem;
+    }
+    .dropdown-menu {
+      min-width: 8rem;
+    }
+  }
+
+  &-color {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  &-toolbar-group.wysiwyg-hide {
+    display: none;
+  }
+
+  &-toolbar-toggler .dropdown-menu {
+    min-width: 0;
+    .mx-1 {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+      border-bottom: 1px solid var(--mdb-wysiwyg-border-color);
+      border-right: 1px solid var(--mdb-wysiwyg-border-color);
+      border-radius: 0;
+    }
+  }
+}
+
+.btn-group > .btn.wysiwyg-btn {
+  background-color: transparent;
+  min-width: 32px;
+  min-height: 32px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  i {
+    color: var(--mdb-wysiwyg-text-color);
+  }
+
+  &:hover {
+    background-color: var(--mdb-wysiwyg-hover);
+  }
+}

@@ -1,0 +1,72 @@
+@mixin mdb-navbar-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $surfaceDisabled: map-get($theme, dropdownDisabled);
+
+  .navbar-brand {
+    color: $onSurface;
+
+    &:hover {
+      color: $onSurface;
+    }
+  }
+
+  .navbar-nav {
+    .nav-link {
+      color: $onSurface;
+
+      &:hover,
+      &:focus {
+        color: $onSurface;
+      }
+
+      &.disabled {
+        color: $surfaceDisabled;
+      }
+    }
+  }
+
+  .navbar-scroll {
+    .nav-link,
+    .fa-bars {
+      color: $onSurface;
+    }
+  }
+
+  .navbar-scrolled {
+    .nav-link,
+    .fa-bars {
+      color: $onSurface;
+    }
+  }
+
+  .navbar-scrolled {
+    background-color: $primary;
+  }
+
+  .navbar {
+    &.navbar-light {
+      &.bg-light {
+        .breadcrumb {
+          .breadcrumb-item {
+            a {
+              color: rgba(0, 0, 0, 0.55);
+              &:hover {
+                color: rgba(0, 0, 0, 0.7);
+              }
+            }
+            + .breadcrumb-item {
+              &:before {
+                color: rgba(0, 0, 0, 0.55);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

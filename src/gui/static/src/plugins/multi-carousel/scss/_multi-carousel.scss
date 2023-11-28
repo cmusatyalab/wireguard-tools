@@ -1,0 +1,50 @@
+.multi-carousel {
+  position: relative;
+  .multi-carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0;
+    .multi-carousel-item {
+      display: inline-block;
+      width: 100%;
+      font-size: 16px;
+      transition: all 0.3s ease-out;
+      padding: 0 3px;
+      img {
+        max-height: 200px;
+        object-fit: cover;
+      }
+    }
+  }
+
+  &.vertical {
+    height: 350px;
+    @media (max-width: 768px) {
+      height: 150px;
+    }
+    .multi-carousel-inner {
+      height: 100%;
+      .multi-carousel-item {
+        padding: 2px 0;
+      }
+      img {
+        max-height: none;
+      }
+    }
+    .carousel-control-prev {
+      width: 100%;
+      height: 15%;
+    }
+    .carousel-control-next {
+      top: auto;
+      width: 100%;
+      height: 15%;
+    }
+    .carousel-control-prev span,
+    .carousel-control-next span {
+      transform: rotate(90deg);
+    }
+  }
+}

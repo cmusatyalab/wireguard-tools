@@ -1,9 +1,17 @@
-# SPDX-FileCopyrightText: 2022 Carnegie Mellon University
-# SPDX-License-Identifier: 0BSD
-
 /dist/
 __pycache__/
 *~
 *.swp
 
+.reuse
+
+# Virtual Environments
 .venv
+venv
+
+# Database file
+src/database.db
+src/wg.db
+
+# SQLAlchemy migrations
+src/migrations/

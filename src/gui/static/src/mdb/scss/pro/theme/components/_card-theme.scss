@@ -1,0 +1,28 @@
+@mixin mdb-card-theme($theme) {
+  $primary: map-get($theme, primary);
+  $surface: map-get($theme, surface);
+  $divider: map-get($theme, divider);
+  $cardShadow: map-get($theme, cardShadow);
+
+  .card {
+    background-color: $surface;
+    box-shadow: $cardShadow;
+  }
+
+  .card-header {
+    background-color: $surface !important;
+    border-bottom-color: $divider;
+  }
+  .card-footer {
+    border-top-color: $divider;
+    background-color: $surface !important;
+  }
+
+  .card-link {
+    color: lighten($primary, 20%);
+
+    &:hover {
+      color: lighten($primary, 15%);
+    }
+  }
+}

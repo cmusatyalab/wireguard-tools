@@ -1,0 +1,25 @@
+@mixin mdb-modal-theme($theme) {
+  $primary: map-get($theme, primary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $divider: map-get($theme, divider);
+  $cardShadow: map-get($theme, dardShadow);
+  $modalButtonColor: map-get($theme, modalButtonColor);
+
+  .modal-content {
+    background-color: $surface;
+    box-shadow: $cardShadow;
+  }
+  .modal-header {
+    border-bottom-color: $divider;
+    color: $onSurface;
+  }
+  .modal-footer {
+    border-top-color: $divider;
+  }
+
+  .btn-close {
+    filter: $modalButtonColor;
+    width: 20px;
+  }
+}

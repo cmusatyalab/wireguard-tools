@@ -1,0 +1,16 @@
+@mixin mdb-alert-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+
+  .alert-primary {
+    --#{$prefix}alert-color: var(--#{$prefix}primary-text-emphasis);
+    --#{$prefix}alert-bg: var(--#{$prefix}primary-bg-subtle);
+    --#{$prefix}alert-border-color: var(--#{$prefix}primary-border-subtle);
+  }
+
+  .alert-secondary {
+    --#{$prefix}alert-color: var(--#{$prefix}secondary-text-emphasis);
+    --#{$prefix}alert-bg: var(--#{$prefix}secondary-bg-subtle);
+    --#{$prefix}alert-border-color: var(--#{$prefix}secondary-border-subtle);
+  }
+}

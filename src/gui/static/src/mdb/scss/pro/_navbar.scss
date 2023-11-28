@@ -1,0 +1,35 @@
+.navbar {
+  // scss-docs-start navbar-css-vars
+  --#{$prefix}navbar-scroll-transition: #{$navbar-scroll-transition};
+  --#{$prefix}navbar-scroll-scrolled-padding-y: #{$navbar-scroll-scrolled-padding-y};
+  --#{$prefix}navbar-scroll-scrolled-color: #{$navbar-scroll-scrolled-color};
+  --#{$prefix}navbar-scroll-color: #{$navbar-scroll-color};
+  --#{$prefix}navbar-scrolled-bg: #{$navbar-scrolled-bg};
+  // scss-docs-end navbar-css-vars
+
+  &.navbar-scroll {
+    transition: var(--#{$prefix}navbar-scroll-transition);
+    &.navbar-scrolled {
+      padding-top: var(--#{$prefix}navbar-scroll-scrolled-padding-y);
+      padding-bottom: var(--#{$prefix}navbar-scroll-scrolled-padding-y);
+    }
+  }
+}
+
+.navbar-scroll {
+  .nav-link,
+  .fa-bars {
+    color: var(--#{$prefix}navbar-scroll-color);
+  }
+}
+
+.navbar-scrolled {
+  .nav-link,
+  .fa-bars {
+    color: var(--#{$prefix}navbar-scroll-scrolled-color);
+  }
+}
+
+.navbar-scrolled {
+  background-color: var(--#{$prefix}navbar-scrolled-bg);
+}

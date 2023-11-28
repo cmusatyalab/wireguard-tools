@@ -1,0 +1,76 @@
+//
+// Timeline styles
+//
+
+.timeline {
+  // scss-docs-start timeline-css-vars
+  --#{$prefix}timeline-step-top: #{$timeline-step-top};
+  --#{$prefix}timeline-step-height: #{$timeline-step-height};
+  --#{$prefix}timeline-content-padding-left: #{$timeline-content-padding-left};
+  --#{$prefix}timeline-head-padding-bottom: #{$timeline-head-padding-bottom};
+  --#{$prefix}timeline-step-sm-left: #{$timeline-step-sm-left};
+  --#{$prefix}timeline-step-sm-top: #{$timeline-step-sm-top};
+  --#{$prefix}timeline-head-sm-margin-right: #{$timeline-head-sm-margin-right};
+  --#{$prefix}timeline-head-sm-bg: #{$timeline-head-sm-bg};
+  --#{$prefix}timeline-head-sm-height: #{$timeline-head-sm-height};
+  --#{$prefix}timeline-head-sm-width: #{$timeline-head-sm-width};
+  --#{$prefix}timeline-content-sm-padding-left: #{$timeline-content-sm-padding-left};
+  // scss-docs-end timeline-css-vars
+
+  @extend .steps;
+}
+
+.timeline-step {
+  @extend .steps-step;
+
+  &:after {
+    @extend .steps-step-after;
+    top: var(--#{$prefix}timeline-step-top);
+    height: var(--#{$prefix}timeline-step-height);
+  }
+}
+
+.timeline-content {
+  @extend .steps-content;
+  padding-left: var(--#{$prefix}timeline-content-padding-left);
+}
+
+.timeline-head {
+  @extend .steps-head-vertical;
+  @extend .steps-head;
+  padding-bottom: var(--#{$prefix}timeline-head-padding-bottom);
+}
+
+.timeline-head-icon {
+  @extend .steps-head-icon-vertical;
+  @extend .steps-head-icon;
+}
+
+.timeline-head-text:after {
+  @extend .steps-head-text-after;
+}
+
+.timeline-head-text {
+  @extend .steps-head-text;
+  @extend .steps-active-head-text;
+}
+
+.timeline-step-sm {
+  &:after {
+    left: var(--#{$prefix}timeline-step-sm-left);
+    height: 100%;
+    top: var(--#{$prefix}timeline-step-sm-top);
+  }
+}
+
+.timeline-head-sm {
+  margin-right: var(--#{$prefix}timeline-head-sm-margin-right);
+  background-color: var(--#{$prefix}timeline-head-sm-bg);
+  border-radius: 100%;
+  height: var(--#{$prefix}timeline-head-sm-height);
+  width: var(--#{$prefix}timeline-head-sm-width);
+}
+
+.timeline-content-sm {
+  padding-left: var(--#{$prefix}timeline-content-sm-padding-left);
+}

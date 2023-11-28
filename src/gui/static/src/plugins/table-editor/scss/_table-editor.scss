@@ -1,0 +1,414 @@
+@import './variables';
+
+$table-editor-color: var(--mdb-body-color) !default;
+$table-editor-border-color: var(--mdb-border-color) !default;
+$table-editor-striped-color: var(--mdb-body-color) !default;
+$table-editor-accent-bg: rgba(var(--mdb-emphasis-color-rgb), 0.02) !default;
+$table-editor-hover-color: var(--mdb-body-color) !default;
+$table-editor-hover-bg: rgba(var(--mdb-emphasis-color-rgb), 0.025) !default;
+$table-editor-muted-color: rgba(var(--mdb-emphasis-color-rgb), 0.55) !default;
+$table-editor-active-color: rgba(var(--mdb-emphasis-color-rgb), 0.1) !default;
+
+.table-editor {
+  --mdb-table-editor-color: #{$table-editor-color};
+  --mdb-table-editor-border-color: #{$table-editor-border-color};
+  --mdb-table-editor-striped-color: #{$table-editor-striped-color};
+  --mdb-table-editor-accent-bg: #{$table-editor-accent-bg};
+  --mdb-table-editor-hover-color: #{$table-editor-hover-color};
+  --mdb-table-editor-hover-bg: #{$table-editor-hover-bg};
+  --mdb-table-editor-muted-color: #{$table-editor-muted-color};
+  --mdb-table-editor-active-color: #{$table-editor-active-color};
+
+  font-size: 0.9rem;
+  color: var(--mdb-table-editor-color);
+
+  tr {
+    .edit-button,
+    .delete-button,
+    .discard-button,
+    .save-button,
+    .popconfirm-toggle {
+      padding: 0;
+      margin: 0;
+      box-shadow: none;
+      &:focus,
+      &:active {
+        box-shadow: none;
+        color: $primary !important;
+      }
+    }
+  }
+
+  &__inner {
+    background-color: inherit;
+  }
+
+  table {
+    color: var(--mdb-table-editor-color);
+    background-color: inherit !important;
+    margin-bottom: 0;
+    border-color: var(--mdb-table-editor-border-color);
+
+    th,
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 250px;
+      padding: 1rem 1.4rem;
+    }
+  }
+
+  thead {
+    background-color: inherit;
+
+    tr {
+      background-color: inherit;
+      border-bottom: 1px solid var(--mdb-table-editor-border-color);
+    }
+    th {
+      position: relative;
+      border-bottom: none;
+      font-weight: 500;
+
+      &:hover {
+        .table-editor__sort-icon {
+          opacity: 1;
+        }
+      }
+    }
+
+    .fixed-cell {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      box-shadow: var(--mdb-table-editor-border-color) 0px 1px;
+      background-color: inherit;
+    }
+  }
+
+  tbody {
+    font-weight: 300;
+    background-color: inherit;
+
+    .fixed-cell {
+      position: sticky;
+      z-index: 1;
+      background-color: inherit;
+    }
+
+    tr {
+      background-color: inherit;
+      transition: all 0.3s ease-in;
+
+      &:last-child {
+        border-bottom: transparent;
+        height: 71px;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &.active {
+        background-color: var(--mdb-table-editor-active-color);
+      }
+    }
+
+    td {
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__loader {
+    width: 100%;
+    height: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__loader-inner {
+    display: block;
+    height: 100%;
+  }
+
+  &__progress {
+    animation: datatableProgress 3s ease-in-out;
+    animation-fill-mode: both;
+    animation-iteration-count: infinite;
+    width: 45%;
+    position: relative;
+    opacity: 0.5;
+    border-radius: 1px;
+    display: block;
+    height: 100%;
+  }
+
+  @keyframes datatableProgress {
+    0% {
+      left: -45%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  &__pagination {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--mdb-table-editor-border-color);
+  }
+
+  &__pagination-nav {
+    padding: 0;
+    font-size: 0.9rem;
+  }
+
+  &__pagination-buttons {
+    margin-left: 2rem;
+  }
+
+  &__pagination-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: var(--mdb-table-editor-color);
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: var(--mdb-table-editor-active-color);
+      color: var(--mdb-table-editor-color);
+    }
+  }
+
+  &__sort-icon {
+    opacity: 0;
+    color: var(--mdb-table-editor-muted-color);
+    cursor: pointer;
+    transition-property: opacity, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: linear;
+    position: absolute;
+    left: 0.4rem;
+    top: calc(50% - 0.5rem);
+
+    &.active {
+      opacity: 1;
+      color: var(--mdb-table-editor-color);
+    }
+  }
+
+  &__select-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 300;
+    padding: 0 1rem;
+
+    .select-input {
+      max-width: 70px;
+    }
+  }
+
+  &__select-text {
+    margin: 0 1rem;
+  }
+
+  &.sm {
+    th,
+    td {
+      padding: 0.5rem 1.4rem;
+    }
+
+    tbody {
+      tr:last-child {
+        border-bottom: transparent;
+        height: 55px;
+      }
+    }
+
+    .table-editor__pagination {
+      padding: 0.2rem 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .table-editor__pagination {
+      flex-direction: column-reverse;
+
+      &-nav {
+        margin: 0.8rem 0;
+      }
+
+      &-button {
+        font-size: 1rem;
+      }
+
+      &-buttons {
+        margin: 0.8rem 0;
+      }
+    }
+  }
+
+  &.bordered {
+    th,
+    td {
+      border-width: 1px;
+    }
+
+    .table-editor__pagination {
+      border: 1px solid var(--mdb-table-editor-border-color);
+    }
+  }
+
+  &.striped {
+    tbody {
+      tr:nth-of-type(odd) {
+        background-color: var(--mdb-table-editor-accent-bg);
+        color: var(--mdb-table-editor-striped-color);
+      }
+    }
+  }
+
+  &.hover {
+    tbody {
+      tr {
+        transition: background-color 0.2s ease-in !important;
+
+        &:hover {
+          background-color: var(--mdb-table-editor-hover-bg) !important;
+        }
+      }
+    }
+  }
+
+  &.dark {
+    --mdb-table-editor-color: #{#fff};
+    --mdb-table-editor-border-color: #{#fff};
+    --mdb-table-editor-active-color: #{rgba(255, 255, 255, 0.2)};
+
+    .form-check-input[type='checkbox']:checked {
+      background-color: transparent;
+      border-color: white;
+    }
+
+    .table-editor__progress {
+      opacity: 0.8;
+    }
+
+    tr {
+      .edit-button,
+      .delete-button,
+      .discard-button,
+      .save-button,
+      .popconfirm-toggle {
+        &:focus,
+        &:active {
+          color: white !important;
+          i {
+            font-weight: 600 !important;
+          }
+        }
+      }
+    }
+
+    .select-wrapper {
+      .select-arrow,
+      input {
+        color: white;
+      }
+
+      .form-outline .form-control:focus ~ .form-notch .form-notch-leading,
+      .form-notch-trailing {
+        border-color: rgb(251, 251, 251) !important;
+      }
+      .form-notch-leading,
+      .form-notch-middle,
+      .form-notch-trailing {
+        border-color: rgb(251, 251, 251);
+      }
+    }
+
+    &.striped {
+      --mdb-table-editor-striped-color: #{white};
+      --mdb-table-editor-accent-bg: #{rgba(255, 255, 255, 0.05)};
+    }
+
+    &.hover {
+      --mdb-table-editor-hover-bg: #{rgba(255, 255, 255, 0.2)};
+      --mdb-table-editor-hover-color: #{white};
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    &.border-#{$color} {
+      --mdb-table-editor-border-color: #{$value};
+    }
+  }
+
+  &.borderless {
+    --mdb-table-editor-border-color: #{transparent};
+  }
+
+  &.loading {
+    color: var(--mdb-table-editor-muted-color);
+
+    th {
+      color: var(--mdb-table-editor-muted-color);
+    }
+
+    .table-editor__sort-icon {
+      display: none;
+    }
+
+    .select-wrapper {
+      .select-arrow,
+      input {
+        color: var(--mdb-table-editor-muted-color);
+      }
+
+      .form-outline .form-control:focus ~ .form-notch .form-notch-leading,
+      .form-notch-trailing {
+        border-color: var(--mdb-table-editor-muted-color) !important;
+      }
+      .form-notch-leading,
+      .form-notch-middle,
+      .form-notch-trailing {
+        border-color: var(--mdb-table-editor-muted-color);
+      }
+    }
+  }
+
+  &.edited-table {
+    --mdb-table-editor-color: #{rgb(161, 161, 161)};
+    pointer-events: none;
+
+    .edited-row {
+      color: rgb(38, 38, 38);
+      pointer-events: all;
+
+      td {
+        padding: 0.8rem 1.4rem;
+      }
+
+      [data-mdb-field='action_buttons'] {
+        padding: 1rem 1.4rem;
+      }
+
+      input {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+    }
+
+    .ps__rail-x,
+    .ps__rail-y {
+      pointer-events: all;
+    }
+  }
+}

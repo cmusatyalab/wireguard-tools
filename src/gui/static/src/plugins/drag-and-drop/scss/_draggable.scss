@@ -1,0 +1,25 @@
+.draggable-element {
+  user-select: none;
+  transition: box-shadow 0.5s;
+  position: relative;
+}
+
+.draggable-cursor-grab {
+  cursor: grab;
+}
+
+.dragging {
+  cursor: move;
+  position: relative;
+  z-index: 9000 !important;
+}
+
+.draggable-disabled {
+  cursor: default;
+}
+
+.draggable-return-animate {
+  transition: transform 0.35s;
+  position: relative;
+  z-index: 9000 !important;
+}

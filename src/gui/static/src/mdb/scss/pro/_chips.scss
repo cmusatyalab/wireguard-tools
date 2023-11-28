@@ -1,0 +1,184 @@
+.chip {
+  // scss-docs-start chip-css-vars
+  --#{$prefix}chip-height: #{$chip-height};
+  --#{$prefix}chip-line-height: #{$chip-line-height};
+  --#{$prefix}chip-padding-right: #{$chip-padding-right};
+  --#{$prefix}chip-margin-y: #{$chip-margin-y};
+  --#{$prefix}chip-margin-right: #{$chip-margin-right};
+  --#{$prefix}chip-font-size: #{$chip-font-size};
+  --#{$prefix}chip-font-weight: #{$chip-font-weight};
+  --#{$prefix}chip-font-color: #{$chip-font-color};
+  --#{$prefix}chip-bg: #{$chip-bg};
+  --#{$prefix}chip-border-radius: #{$chip-br};
+  --#{$prefix}chip-transition-opacity: #{$chip-transition-opacity};
+  --#{$prefix}chip-img-margin-right: #{$chip-img-margin-right};
+  --#{$prefix}chip-img-margin-left: #{$chip-img-margin-left};
+  --#{$prefix}chip-close-padding-left: #{$chip-close-padding-left};
+  --#{$prefix}chip-close-font-size: #{$chip-close-font-size};
+  --#{$prefix}chip-close-opacity: #{$chip-close-opacity};
+  --#{$prefix}chip-outline-border-width: #{$chip-outline-border-width};
+  --#{$prefix}chip-md-height: #{$chip-md-height};
+  --#{$prefix}chip-md-br: #{$chip-md-br};
+  --#{$prefix}chip-lg-height: #{$chip-lg-height};
+  --#{$prefix}chip-lg-br: #{$chip-lg-br};
+  --#{$prefix}chip-contenteditable-border-width: #{$chip-contenteditable-border-width};
+  --#{$prefix}chip-contenteditable-border-color: #{$chip-contenteditable-border-color};
+  --#{$prefix}chip-icon-color: #{$chip-icon-color};
+  --#{$prefix}chip-icon-transition: #{$chip-icon-transition};
+  --#{$prefix}chip-icon-hover-color: #{$chip-icon-hover-color};
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--#{$prefix}chip-height);
+  line-height: var(--#{$prefix}chip-line-height);
+  padding: 0 var(--#{$prefix}chip-padding-right);
+  margin-top: var(--#{$prefix}chip-margin-y);
+  margin-bottom: var(--#{$prefix}chip-margin-y);
+  margin-right: var(--#{$prefix}chip-margin-right);
+  font-size: var(--#{$prefix}chip-font-size);
+  font-weight: var(--#{$prefix}chip-font-weight);
+  color: var(--#{$prefix}chip-font-color);
+  cursor: pointer;
+  background-color: var(--#{$prefix}chip-bg);
+  border-radius: var(--#{$prefix}chip-border-radius);
+  transition: opacity var(--#{$prefix}chip-transition-opacity);
+  word-wrap: break-word;
+  box-shadow: none;
+  text-transform: none;
+
+  &:hover {
+    box-shadow: none !important;
+  }
+
+  &:hover:not(.chip-outline) {
+    background-color: var(--#{$prefix}chip-bg);
+    box-shadow: none !important;
+  }
+
+  &:active,
+  &.active {
+    background-color: var(--#{$prefix}chip-bg);
+  }
+
+  img {
+    width: inherit;
+    height: inherit;
+    border-radius: 100%;
+    margin: 0 var(--#{$prefix}chip-img-margin-right) 0 var(--#{$prefix}chip-img-margin-left);
+  }
+
+  .close {
+    float: right;
+    padding-left: var(--#{$prefix}chip-close-padding-left);
+    font-size: var(--#{$prefix}chip-close-font-size);
+    opacity: var(--#{$prefix}chip-close-opacity);
+    cursor: pointer;
+
+    &:hover {
+      color: $dark;
+    }
+  }
+
+  .close-opacity {
+    opacity: 0;
+  }
+
+  &-outline {
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: var(--#{$prefix}chip-outline-border-width);
+  }
+
+  &.chip-md {
+    height: var(--#{$prefix}chip-md-height);
+    border-radius: var(--#{$prefix}chip-md-br);
+  }
+
+  &.chip-lg {
+    height: var(--#{$prefix}chip-lg-height);
+    border-radius: var(--#{$prefix}chip-lg-br);
+  }
+
+  &[contenteditable='true'] {
+    outline: none;
+    border: var(--#{$prefix}chip-contenteditable-border-width) solid
+      var(--#{$prefix}chip-contenteditable-border-color);
+    background-color: #fff;
+  }
+
+  .far,
+  .fas {
+    color: var(--#{$prefix}chip-icon-color);
+    transition: all var(--#{$prefix}chip-icon-transition);
+  }
+
+  .far:hover,
+  .fas:hover {
+    color: var(--#{$prefix}chip-icon-hover-color);
+  }
+}
+
+.chips {
+  --#{$prefix}chips-min-height: #{$chips-min-height};
+  --#{$prefix}chips-padding-bottom: #{$chips-padding-bottom};
+  --#{$prefix}chips-margin-bottom: #{$chips-margin-bottom};
+  --#{$prefix}chips-transition: #{$chips-transition};
+  --#{$prefix}chips-padding-padding: #{$chips-padding-padding};
+  --#{$prefix}chips-input-width: #{$chips-input-width};
+
+  min-height: var(--#{$prefix}chips-min-height);
+  padding-bottom: var(--#{$prefix}chips-padding-bottom);
+  margin-bottom: var(--#{$prefix}chips-margin-bottom);
+  border: none;
+  outline: none;
+  box-shadow: none;
+  transition: all var(--#{$prefix}chips-transition);
+
+  &-transition {
+    transition: all var(--#{$prefix}chips-transition);
+  }
+
+  &-padding {
+    padding: var(--#{$prefix}chips-padding-padding);
+  }
+
+  &:hover {
+    cursor: text;
+  }
+
+  .tag.selected {
+    color: $white;
+  }
+
+  &-placeholder,
+  &-initial {
+    margin-bottom: 0;
+    padding-bottom: 0;
+
+    .chips-input-wrapper {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      transition: all var(--#{$prefix}chips-transition);
+
+      input {
+        width: var(--#{$prefix}chips-input-width) !important;
+      }
+    }
+  }
+}
+
+.chip-opacity {
+  opacity: 0;
+}
+
+.form-control {
+  &.chips-input {
+    &.active {
+      box-shadow: none;
+    }
+  }
+}

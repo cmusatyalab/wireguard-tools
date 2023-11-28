@@ -1,0 +1,49 @@
+@mixin mdb-colors-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $divider: map-get($theme, divider);
+
+  .bg-primary {
+    background-color: $primary !important;
+    color: $onPrimary;
+  }
+
+  .bg-secondary {
+    background-color: $secondary !important;
+    color: $onSecondary;
+  }
+
+  .border-top,
+  .border-right,
+  .border-bottom,
+  .border-left,
+  .border {
+    border-color: $divider !important;
+  }
+
+  .border-primary {
+    border-color: $primary !important;
+  }
+
+  .border-secondary {
+    border-color: $secondary !important;
+  }
+
+  a:not(.sidenav-link):not(.btn):not(.dropdown-item):not(.nav-link):not(.navbar-brand):not(.page-link):not(.carousel-control-prev):not(.carousel-control-next) {
+    color: lighten($primary, 20%);
+
+    &:hover {
+      color: lighten($primary, 15%);
+    }
+  }
+
+  .text-primary {
+    color: $primary !important;
+  }
+
+  .text-secondary {
+    color: $secondary !important;
+  }
+}

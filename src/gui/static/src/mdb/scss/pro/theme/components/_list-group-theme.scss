@@ -1,0 +1,71 @@
+@mixin mdb-list-group-theme($theme) {
+  $primary: map-get($theme, primary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $secondary: map-get($theme, secondary);
+  $onSecondary: map-get($theme, onSecondary);
+  $divider: map-get($theme, divider);
+  $surfaceDisabled: map-get($theme, dropdownDisabled);
+  $surfaceHighlight: map-get($theme, surfaceHighlight);
+
+  .list-group-item {
+    background-color: $surface;
+    border-color: $divider;
+
+    &.active {
+      background-color: $primary;
+      border-color: $primary;
+    }
+
+    &.disabled,
+    &:disabled {
+      color: $surfaceDisabled;
+      background-color: $surface;
+    }
+  }
+
+  .list-group-item-action.active {
+    &:hover,
+    &:focus {
+      background-color: $primary;
+      border-color: $primary;
+    }
+  }
+
+  .list-group-item-action {
+    color: $onSurface;
+
+    &:hover,
+    &:focus {
+      color: $onSurface;
+      background: $surfaceHighlight;
+    }
+
+    &:active {
+      color: $onSurface;
+      background: $surfaceHighlight;
+    }
+
+    &.list-group-item-primary {
+      color: lighten($primary, 25%);
+      &:hover {
+        color: lighten($primary, 15%);
+        background-color: lighten($primary, 40%);
+      }
+    }
+    &.list-group-item-secondary {
+      &:hover {
+        color: darken($secondary, 15%);
+        background-color: lighten($secondary, 20%);
+      }
+    }
+  }
+
+  .list-group-item-primary {
+    color: $primary;
+  }
+
+  .list-group-item-secondary {
+    color: $secondary;
+  }
+}

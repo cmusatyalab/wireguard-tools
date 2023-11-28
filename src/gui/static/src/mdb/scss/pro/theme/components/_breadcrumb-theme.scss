@@ -1,0 +1,34 @@
+// Breadcrumb
+@mixin mdb-breadcrumb-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $error: map-get($theme, error);
+  $onError: map-get($theme, onError);
+  $success: map-get($theme, success);
+  $onSuccess: map-get($theme, onSuccess);
+  $surfaceHover: map-get($theme, surfaceHover);
+  $pickerHeader: map-get($theme, pickerHeader);
+
+  .navbar {
+    .breadcrumb {
+      .breadcrumb-item {
+        a {
+          color: $onPrimary;
+          &:hover,
+          &:focus {
+            color: $onPrimary;
+          }
+        }
+        + .breadcrumb-item {
+          &:before {
+            color: $onPrimary;
+          }
+        }
+      }
+    }
+  }
+}

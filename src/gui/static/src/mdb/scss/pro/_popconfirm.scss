@@ -1,0 +1,67 @@
+:root {
+  --#{$prefix}popconfirm-zindex: #{$popconfirm-zindex};
+  --#{$prefix}popconfirm-border-radius: #{$popconfirm-border-radius};
+}
+
+.popconfirm {
+  --#{$prefix}popconfirm-padding: #{$popconfirm-padding};
+  --#{$prefix}popconfirm-background-color: #{$popconfirm-background-color};
+  --#{$prefix}popconfirm-text-color: #{$popconfirm-text-color};
+
+  padding: var(--#{$prefix}popconfirm-padding);
+  background-color: var(--#{$prefix}popconfirm-background-color);
+  border-radius: var(--#{$prefix}popconfirm-border-radius);
+  opacity: 0;
+  color: var(--#{$prefix}popconfirm-text-color);
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+.popconfirm-popover {
+  --#{$prefix}popconfirm-popover-width: #{$popconfirm-popover-width};
+  --#{$prefix}popconfirm-border: #{$popconfirm-border};
+  z-index: var(--#{$prefix}popconfirm-zindex);
+  width: var(--#{$prefix}popconfirm-popover-width);
+  border-radius: var(--#{$prefix}popconfirm-border-radius);
+  border: var(--#{$prefix}popconfirm-border);
+}
+
+.popconfirm-modal {
+  --#{$prefix}popconfirm-modal-width: #{$popconfirm-modal-width};
+  z-index: var(--#{$prefix}popconfirm-zindex);
+  width: var(--#{$prefix}popconfirm-modal-width);
+  position: absolute;
+  border-radius: var(--#{$prefix}popconfirm-border-radius);
+}
+
+.popconfirm-buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  .btn {
+    --#{$prefix}popconfirm-buttons-container-btn-ml: #{$popconfirm-buttons-container-btn-ml};
+    margin-left: var(--#{$prefix}popconfirm-buttons-container-btn-ml);
+  }
+}
+
+.popconfirm-backdrop {
+  --#{$prefix}popconfirm-backdrop-zindex: #{$popconfirm-backdrop-zindex};
+  --#{$prefix}popconfirm-backdrop-background-color: #{$popconfirm-backdrop-background-color};
+  height: 100%;
+  width: 100%;
+  z-index: var(--#{$prefix}popconfirm-backdrop-zindex);
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--#{$prefix}popconfirm-backdrop-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popconfirm-icon-container i {
+  --#{$prefix}popconfirm-icon-text-color: #{$popconfirm-icon-text-color};
+
+  color: var(--#{$prefix}popconfirm-icon-text-color);
+}

@@ -1,18 +1,11 @@
-body {
-    font-family: Roboto, Arial, Geneva, sans-serif;
+.btn {
+    margin: 0.5em;
 }
 
-h1 {
-    border: 2px #eee solid;
-    color: teal;
-    font-size: 2em;
-    text-align: center;
-    padding: 10px;
+.container-fluid {
+    overflow: auto;
 }
 
-nav a {
-    color: #41c2d6;
-    font-size: 1em;
-    margin-left: 50px;
-    text-decoration: none;
+.footer {
+    clear: both;
 }

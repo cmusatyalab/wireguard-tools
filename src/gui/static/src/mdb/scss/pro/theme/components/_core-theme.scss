@@ -1,0 +1,13 @@
+@mixin mdb-core-theme($theme) {
+  $background: map-get($theme, background);
+  $onBackground: map-get($theme, onBackground);
+
+  #{if(&, '&', 'body')} {
+    background-color: $background;
+    color: $onBackground;
+  }
+
+  .bg-body {
+    background-color: $background !important;
+  }
+}

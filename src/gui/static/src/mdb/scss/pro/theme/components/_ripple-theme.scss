@@ -1,0 +1,66 @@
+@mixin mdb-ripple-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+
+  .ripple-surface-primary {
+    .ripple-wave {
+      $gradient: rgba(
+            $color: $primary,
+            $alpha: 0.2,
+          )
+          0,
+        rgba(
+            $color: $primary,
+            $alpha: 0.3,
+          )
+          40%,
+        rgba(
+            $color: $primary,
+            $alpha: 0.4,
+          )
+          50%,
+        rgba(
+            $color: $primary,
+            $alpha: 0.5,
+          )
+          60%,
+        rgba(
+            $color: $primary,
+            $alpha: 0,
+          )
+          70%;
+      background-image: radial-gradient(circle, $gradient);
+    }
+  }
+
+  .ripple-surface-secondary {
+    .ripple-wave {
+      $gradient: rgba(
+            $color: $secondary,
+            $alpha: 0.2,
+          )
+          0,
+        rgba(
+            $color: $secondary,
+            $alpha: 0.3,
+          )
+          40%,
+        rgba(
+            $color: $secondary,
+            $alpha: 0.4,
+          )
+          50%,
+        rgba(
+            $color: $secondary,
+            $alpha: 0.5,
+          )
+          60%,
+        rgba(
+            $color: $primary,
+            $alpha: 0,
+          )
+          70%;
+      background-image: radial-gradient(circle, $gradient);
+    }
+  }
+}

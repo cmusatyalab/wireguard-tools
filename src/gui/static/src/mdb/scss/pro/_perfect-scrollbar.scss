@@ -1,0 +1,132 @@
+.ps {
+  // scss-docs-start perfect-scrollbar-css-vars
+  --#{$prefix}scrollbar-rail-x-y-transition-opacity-bg: #{$scrollbar-rail-x-y-transition-opacity-bg};
+  --#{$prefix}scrollbar-z-index: #{$scrollbar-z-index};
+  --#{$prefix}scrollbar-rail-x-y-length: #{$scrollbar-rail-x-y-length};
+  --#{$prefix}scrollbar-rail-x-y-opacity: #{$scrollbar-rail-x-y-opacity};
+  --#{$prefix}scrollbar-rail-x-y-hover-opacity: #{$scrollbar-rail-x-y-hover-opacity};
+  --#{$prefix}scrollbar-rail-x-y-bg-color: #{$scrollbar-rail-x-y-bg-color};
+  --#{$prefix}scrollbar-rail-x-y-clicking-length: #{$scrollbar-rail-x-y-clicking-length};
+  --#{$prefix}scrollbar-rail-x-transition-height-bg: #{$scrollbar-rail-x-transition-height-bg};
+  --#{$prefix}scrollbar-rail-y-transition-width-bg: #{$scrollbar-rail-y-transition-width-bg};
+  --#{$prefix}scrollbar-thumb-x-y-color: #{$scrollbar-thumb-x-y-color};
+  --#{$prefix}scrollbar-thumb-x-y-border-radius: #{$scrollbar-thumb-x-y-border-radius};
+  --#{$prefix}scrollbar-thumb-x-y-length: #{$scrollbar-thumb-x-y-length};
+  --#{$prefix}scrollbar-thumb-x-y-position-length: #{$scrollbar-thumb-x-y-position-length};
+  // scss-docs-end perfect-scrollbar-css-vars
+
+  overflow: hidden !important;
+  overflow-anchor: none;
+  touch-action: auto;
+}
+
+.ps__rail-x,
+.ps__rail-y {
+  display: none;
+  opacity: 0;
+  transition: var(--#{$prefix}scrollbar-rail-x-y-transition-opacity-bg);
+  position: absolute;
+  z-index: var(--#{$prefix}scrollbar-z-index);
+}
+
+.ps__rail-x {
+  height: var(--#{$prefix}scrollbar-rail-x-y-length);
+  bottom: 0;
+}
+
+.ps__rail-y {
+  width: var(--#{$prefix}scrollbar-rail-x-y-length);
+  right: 0;
+}
+
+.ps--active-x > .ps__rail-x,
+.ps--active-y > .ps__rail-y {
+  display: block;
+  background-color: transparent;
+}
+
+.ps:hover > {
+  .ps__rail-x,
+  .ps__rail-y {
+    opacity: var(--#{$prefix}scrollbar-rail-x-y-opacity);
+  }
+}
+
+.ps--focus > {
+  .ps__rail-x,
+  .ps__rail-y {
+    opacity: var(--#{$prefix}scrollbar-rail-x-y-opacity);
+  }
+}
+
+.ps--scrolling-x > .ps__rail-x,
+.ps--scrolling-y > .ps__rail-y {
+  opacity: var(--#{$prefix}scrollbar-rail-x-y-opacity);
+}
+
+.ps {
+  .ps__rail-x:hover,
+  .ps__rail-y:hover,
+  .ps__rail-x:focus,
+  .ps__rail-y:focus,
+  .ps__rail-x.ps--clicking,
+  .ps__rail-y.ps--clicking {
+    background-color: var(--#{$prefix}scrollbar-rail-x-y-bg-color);
+    opacity: var(--#{$prefix}scrollbar-rail-x-y-hover-opacity);
+  }
+}
+
+/*
+ * Scrollbar thumb styles
+ */
+
+.ps__thumb-x,
+.ps__thumb-y {
+  background-color: var(--#{$prefix}scrollbar-thumb-x-y-color);
+  border-radius: var(--#{$prefix}scrollbar-thumb-x-y-border-radius);
+  /* please don't change 'position' */
+  position: absolute;
+}
+
+.ps__thumb-x {
+  transition: var(--#{$prefix}scrollbar-rail-x-transition-height-bg);
+  height: var(--#{$prefix}scrollbar-thumb-x-y-length);
+  /* there must be 'bottom' for ps__thumb-x */
+  bottom: var(--#{$prefix}scrollbar-thumb-x-y-position-length);
+}
+
+.ps__thumb-y {
+  transition: var(--#{$prefix}scrollbar-rail-y-transition-width-bg);
+  width: var(--#{$prefix}scrollbar-thumb-x-y-length);
+  /* there must be 'right' for ps__thumb-y */
+  right: var(--#{$prefix}scrollbar-thumb-x-y-position-length);
+}
+
+.ps__rail-x {
+  &:hover > .ps__thumb-x,
+  &:focus > .ps__thumb-x,
+  &.ps--clicking .ps__thumb-x {
+    height: var(--#{$prefix}scrollbar-rail-x-y-clicking-length);
+  }
+}
+
+.ps__rail-y {
+  &:hover > .ps__thumb-y,
+  &:focus > .ps__thumb-y,
+  &.ps--clicking .ps__thumb-y {
+    width: var(--#{$prefix}scrollbar-rail-x-y-clicking-length);
+  }
+}
+
+/* MS supports */
+@supports (-ms-overflow-style: none) {
+  .ps {
+    overflow: auto !important;
+  }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .ps {
+    overflow: auto !important;
+  }
+}

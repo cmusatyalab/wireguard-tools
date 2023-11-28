@@ -1,24 +1,65 @@
 {% extends 'base.html' %}
 
-{% block title %} About {% endblock %}
+{% block title %} Networks {% endblock %}
 
 {% block content %}
-<h1>Wireguard GUI</h1>
-<h2>Networks</h2>
-
-<h3>{{ utc_dt }}</h3>
-
-{% for network in network_list %}
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ network.name }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ network.address }}</h6>
-        <p class="card-text">{{ network.description }}</p>
-        <a href="{{ url_for('networks.networks', network_id=network.id) }}" class="card-link">Details</a>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Networks</h2>
+        <a href="{{ url_for('networks.networks_add') }}" class="btn btn-primary">Create Network</a>
     </div>
+    <hr class="hr" />
 
-</div>
+    <div class="card-group">
 
-{% endfor %}
-{% endblock %}
+        {% if networks|length == 0 %}
+        <div class="col-md">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">No Networks Found</h5>
+                    <p class="card-text">No networks have been configured. Click the button above to create a new
+                        network
+                        configuration.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% for network in networks %}
+        <div class="col-md-4">
+            <!-- Card -->
+            <div class="card">
+                <h5 class="card-header">{{ network.name }}</h5>
+                <div class="card-body">
+                    <h6 class="card-title mb-2">{{ network.address }}</h6>
+                    <p class="card-text">Base IP: {{network.base_ip}}</p>
+                    <p class="card-text">{{ network.description }}</p>
+                    <div class="card-footer row">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('peers.peers_all', network_id=network.id) }}"
+                                class="card-link">Peers</a>
+                        </div>
+                        <div class="col-md-4">
+                            {% if network.active %}
+                            <a href="{{url_for('networks.network_deactivate',network_id=network.id)}}" class="btn btn-danger">Deactivate</a>
+                            {% else %}
+                            <a href="{{url_for('networks.network_activate',network_id=network.id)}}" class="btn btn-success">Activate</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card -->
+        </div>
+        {% endfor %}
+
+    </div>
+    <br>
+    <div class="container-fluid">
+        <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
+            configurations are essentially in an unknown state.</p>
+    </div>
+    {% endblock %}

@@ -1,0 +1,36 @@
+@mixin mdb-shadows-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+
+  .shadow-1-primary {
+    box-shadow: 0px 2px 5px 0px rgba($primary, 0.25), 0px 3px 10px 0px rgba($primary, 0.2);
+  }
+  .shadow-2-primary {
+    box-shadow: 0px 4px 8px 0px rgba($primary, 0.25), 0px 5px 15px 2px rgba($primary, 0.2);
+  }
+  .shadow-3-primary {
+    box-shadow: 0px 6px 11px 0px rgba($primary, 0.25), 0px 7px 20px 3px rgba($primary, 0.2);
+  }
+  .shadow-4-primary {
+    box-shadow: 0px 6px 14px 0px rgba($primary, 0.25), 0px 10px 30px 4px rgba($primary, 0.2);
+  }
+  .shadow-5-primary {
+    box-shadow: 0px 6px 20px 0px rgba($primary, 0.25), 0px 12px 40px 5px rgba($primary, 0.2);
+  }
+
+  .shadow-1-secondary {
+    box-shadow: 0px 2px 5px 0px rgba($secondary, 0.25), 0px 3px 10px 0px rgba($secondary, 0.2);
+  }
+  .shadow-2-secondary {
+    box-shadow: 0px 4px 8px 0px rgba($secondary, 0.25), 0px 5px 15px 2px rgba($secondary, 0.2);
+  }
+  .shadow-3-secondary {
+    box-shadow: 0px 6px 11px 0px rgba($secondary, 0.25), 0px 7px 20px 3px rgba($secondary, 0.2);
+  }
+  .shadow-4-secondary {
+    box-shadow: 0px 6px 14px 0px rgba($secondary, 0.25), 0px 10px 30px 4px rgba($secondary, 0.2);
+  }
+  .shadow-5-secondary {
+    box-shadow: 0px 6px 20px 0px rgba($secondary, 0.25), 0px 12px 40px 5px rgba($secondary, 0.2);
+  }
+}

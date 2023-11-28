@@ -1,0 +1,27 @@
+@mixin mdb-tooltips-theme($theme) {
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $surface: map-get($theme, surface);
+  $onSurface: map-get($theme, onSurface);
+  $onPrimary: map-get($theme, onPrimary);
+  $onSecondary: map-get($theme, onSecondary);
+  $tooltipBackground: map-get($theme, tooltipBackground);
+
+  .link-primary {
+    color: lighten($primary, 20%);
+    &:hover {
+      color: lighten($primary, 15%);
+    }
+  }
+  .link-secondary {
+    color: lighten($secondary, 20%);
+    &:hover {
+      color: lighten($secondary, 15%);
+    }
+  }
+
+  .tooltip-inner {
+    color: $onPrimary;
+    background-color: $tooltipBackground;
+  }
+}
