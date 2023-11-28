@@ -24,6 +24,8 @@ Next, install the requirements with
     pip install -r requirements.txt
 ```
 
+Next, Make any adjustments you need to make to confiug.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address.
+
 Finally, move to the src/ directory and run the program
 ```
     cd src
