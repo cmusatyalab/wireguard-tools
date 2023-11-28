@@ -61,7 +61,7 @@ def wizard_basic():
 
     # Append CIDR subnet to base_ip
     print(subnets)
-    allowed_ips = base_ip + "/" + subnets[int(subnet)]["CIDR"]
+    allowed_ips = base_ip + "/" + str(subnet)
     print(allowed_ips)
 
     # Get the IP address of the current machine
