@@ -10,6 +10,8 @@ With this tool, operators can configure their VPN networks without needing to un
 
 We welcome contributions from the community. If you're interested in contributing, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.
 
+At present, the development roadmap is here [ROADMAP.md](ROADMAP.md)
+
 ## Acknowledgements
 
 We would like to thank Carnegie Mellon University for the WireGuard-Tools code that this project is based on. Their work has been invaluable in helping us get this project off the ground.
