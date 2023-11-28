@@ -15,14 +15,20 @@ At present, the development roadmap is here [ROADMAP.md](ROADMAP.md)
 ## Installation
 
 At present, simply clone this repository
+```
     git clone https://github.com/radawson/wireguard-gui
+```
 
 Next, install the requirements with
+```
     pip install -r requirements.txt
+```
 
 Finally, move to the src/ directory and run the program
+```
     cd src
     python run.py
+```
 
 ## Acknowledgements
 
