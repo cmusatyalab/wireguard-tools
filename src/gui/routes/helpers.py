@@ -12,8 +12,8 @@ def check_wireguard():
         # check if this is a linux machine
         if sp.check_output(["uname", "-s"]).decode("utf-8").strip() == "Linux":
             # Update Repositories
-            sp.run(["apt", "update"])
-            sp.run(["sudo", "apt", "full-upgrade"])
+            sp.run(["sudo", "apt", "update"])
+            sp.run(["sudo", "apt", "-y", "full-upgrade"])
             # Install Wireguard
             sp.run(["sudo", "apt", "install", "-y", "wireguard"])
             return True
