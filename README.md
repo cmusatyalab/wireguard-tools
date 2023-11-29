@@ -14,7 +14,7 @@ At present, the development roadmap is here [ROADMAP.md](ROADMAP.md)
 
 ## Installation
 
-At present, simply clone this repository
+At present, simply clone this repository onto a Linux machine. A Debian-based linux build is the only currently supported OS.
 
 ```bash
     git clone https://github.com/radawson/wireguard-gui
@@ -32,7 +32,7 @@ Finally, move to the src/ directory and run the program
 
 ```bash
     cd src
-    python run.py
+    python3 run.py
 ```
 
 ## Acknowledgements
