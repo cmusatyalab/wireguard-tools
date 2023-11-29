@@ -1,5 +1,6 @@
 import ipaddress
 import json
+import os
 from . import helpers
 from flask import Blueprint, current_app, render_template, redirect, url_for, request
 from ..models import db, Config, Network, Peer, subnets
@@ -24,6 +25,7 @@ def setup():
 def wizard_basic():
     # print(request.form)
     # Get the form data
+    message = ""
     name = request.form["name"]
     description = request.form["description"]
     base_ip = request.form["base_ip"]
@@ -80,7 +82,7 @@ def wizard_basic():
         peers_list="",
         base_ip=base_ip,
         subnet=subnet,
-        dns=dns,
+        dns_server=dns,
         description=description,
         config=json.dumps(
             {
@@ -106,8 +108,8 @@ def wizard_basic():
     adapters = helpers.get_adapter_names()
     print(f"Adapters found:{adapters}")
 
-    post_up_string = f"iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE"
-    post_down_string = f"iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE"
+    post_up_string = f"iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {adapters[0]} -j MASQUERADE"
+    post_down_string = f"iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {adapters[0]} -j MASQUERADE"
     new_peer = Peer(
         name=f"Server for {name}",
         private_key=private_key,
@@ -126,12 +128,19 @@ def wizard_basic():
     db.session.commit()
 
     # Create the adapter configuration file
-
     adapter_string = helpers.config_build(new_peer, new_network)
 
     if helpers.config_save(adapter_string, "server/wg0.conf"):
-        message = "Network created successfully"
+        message += "Network created successfully"
     else:
-        message = "Error creating network"
+        message += "Error creating network"
     networks = Network.query.all()
+    
+    # check if wireguard is installed
+    if helpers.check_wireguard():
+        os.copy("server/wg0.conf", "/etc/wireguard/wg0.conf")
+        message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
+    else:
+        message += "\nWireguard is not installed on this machine"
+        
     return render_template("networks.html", networks=networks, message=message)
