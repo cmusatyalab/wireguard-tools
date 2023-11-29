@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "Wireguard-gui"
+name = "wireguard-gui"
 dynamic = ["version"]
 authors = [
   { name="Rick Dawson", email="dawsora@gmail.com" },
@@ -12,6 +12,7 @@ description = "A package for setting up and managing WireGuard VPN networks thro
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",

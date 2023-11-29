@@ -15,3 +15,6 @@ src/wg.db
 
 # SQLAlchemy migrations
 src/migrations/
+
+# Config file output directory
+src/output

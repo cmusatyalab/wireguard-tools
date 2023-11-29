@@ -5,7 +5,7 @@ import os
 import yaml
 from .routes import networks, peers, settings, wizard
 
-__version__ = "0.1.1b1"
+__version__ = "0.1.3b0"
 
 basedir = os.getcwd()
 
@@ -21,9 +21,9 @@ def create_app():
   
     # Set the configuration from config.yaml
     app.config.update(config)
-    # Replace {basedir} in SQLALCHEMY_DATABASE_URI
+    # Replace {basedir} in SQLALCHEMY_DATABASE_URI and OUTPUT_DIR with the current working directory
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].format(basedir=basedir)
-
+    app.config['OUTPUT_DIR'] = app.config['OUTPUT_DIR'].format(basedir=basedir)
 
     # Initialize the database with the app
     from .models import db  # Move the import here

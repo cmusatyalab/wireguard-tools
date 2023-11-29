@@ -10,6 +10,31 @@ With this tool, operators can configure their VPN networks without needing to un
 
 We welcome contributions from the community. If you're interested in contributing, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.
 
+At present, the development roadmap is here [ROADMAP.md](ROADMAP.md)
+
+## Installation
+
+At present, simply clone this repository
+
+```bash
+    git clone https://github.com/radawson/wireguard-gui
+```
+
+Next, install the requirements with
+
+```bash
+    pip install -r requirements.txt
+```
+
+Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address.
+
+Finally, move to the src/ directory and run the program
+
+```bash
+    cd src
+    python run.py
+```
+
 ## Acknowledgements
 
 We would like to thank Carnegie Mellon University for the WireGuard-Tools code that this project is based on. Their work has been invaluable in helping us get this project off the ground.

@@ -1,9 +1,11 @@
+import ipaddress
 import json
-import socket
+import os
+from . import helpers
 from flask import Blueprint, current_app, render_template, redirect, url_for, request
 from ..models import db, Config, Network, Peer, subnets
 from wireguard_tools.wireguard_key import WireguardKey
-import ipaddress
+
 
 wizard = Blueprint("wizard", __name__, url_prefix="/wizard")
 
@@ -21,8 +23,9 @@ def setup():
 
 @wizard.route("/basic", methods=["POST"])
 def wizard_basic():
-    print(request.form)
+    # print(request.form)
     # Get the form data
+    message = ""
     name = request.form["name"]
     description = request.form["description"]
     base_ip = request.form["base_ip"]
@@ -57,32 +60,29 @@ def wizard_basic():
         return render_template(
             "wizard_setup.html", defaults=defaults, subnets=subnets, message=message
         )
-    listen_port = current_app.config["BASE_PORT"]
+    listen_port = defaults["base_port"]
 
     # Append CIDR subnet to base_ip
-    print(subnets)
-    allowed_ips = base_ip + "/" + subnets[int(subnet)]["CIDR"]
-    print(allowed_ips)
+    allowed_ips = base_ip + "/" + str(subnet)
 
     # Get the IP address of the current machine
-    endpoint_host = get_public_ip()
+    endpoint_host = helpers.get_public_ip()
 
     # Create a private key for the lighthouse
     new_key = WireguardKey.generate()
     private_key = str(new_key)
     public_key = str(new_key.public_key())
 
-    # Build peer config
-    peer_config = "[Peer]\n"
-
     # Create a new network object
     new_network = Network(
         name=name,
-        lighthouse="",
-        lh_ip=get_public_ip(),
-        public_key="public_key 1",
+        proxy=False,
+        lh_ip=endpoint_host,
+        public_key=public_key,
         peers_list="",
-        base_ip=allowed_ips,
+        base_ip=base_ip,
+        subnet=subnet,
+        dns_server=dns,
         description=description,
         config=json.dumps(
             {
@@ -101,11 +101,22 @@ def wizard_basic():
     db.session.commit()
 
     # Create a new peer object
-    lh_address = Network.append_ip(base_ip, 1)+"/32"
+    # The lighthouse is always the first peer in the network
+    lh_address = Network.append_ip(base_ip, 1) + "/32"
+
+    # Get adapter names for the machine
+    adapters = helpers.get_adapter_names()
+    print(f"Adapters found:{adapters}")
+
+    post_up_string = f"iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {adapters[0]} -j MASQUERADE"
+    post_down_string = f"iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {adapters[0]} -j MASQUERADE"
     new_peer = Peer(
         name=f"Server for {name}",
         private_key=private_key,
         address=lh_address,
+        listen_port=listen_port,
+        post_up=post_up_string,
+        post_down=post_down_string,
         network=new_network.id,
         description="Auto-generated peer for the lighthouse",
     )
@@ -117,24 +128,19 @@ def wizard_basic():
     db.session.commit()
 
     # Create the adapter configuration file
-    adapter_string = (
-        "[Interface]\nPrivateKey = {private_key}\nAddress = {lh_address}\nListenPort = {listen_port}\n"
+    adapter_string = helpers.config_build(new_peer, new_network)
 
-    )
-
-    # Redirect to the peers page
-    return redirect(url_for("networks.networks_all"))
-
-
-## FUNCTIONS ##
-def get_public_ip():
-    try:
-        # Connect to a random server
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-    except:
-        ip = "127.0.0.1"
-    finally:
-        s.close()
-    return ip
+    if helpers.config_save(adapter_string, "server/wg0.conf"):
+        message += "Network created successfully"
+    else:
+        message += "Error creating network"
+    networks = Network.query.all()
+    
+    # check if wireguard is installed
+    if helpers.check_wireguard():
+        os.copy("server/wg0.conf", "/etc/wireguard/wg0.conf")
+        message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
+    else:
+        message += "\nWireguard is not installed on this machine"
+        
+    return render_template("networks.html", networks=networks, message=message)

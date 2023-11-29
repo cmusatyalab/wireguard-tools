@@ -9,7 +9,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ network.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted" id="baseIP">{{ network.base_ip }}</h6>
+            <h6 class="card-subtitle mb-2 text-muted" id="address">{{ network.base_ip }}/{{network.subnet}}</h6>
             <div class="form-outline">
                 <form method="POST">
                     <div class="mb-3 form-outline" data-mdb-input-init>
@@ -26,12 +26,21 @@
 
                         <div class="mb-3">
                             <div class="mb-3 form-outline" data-mdb-input-init>
-                                <input type="text" class="form-control" id="address" name="address"
-                                    value="{{ network.address }}" />
-                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="base_ip" name="base_ip"
+                                    value="{{ network.base_ip }}" />
+                                <label for="base_ip" class="form-label">Base IP</label>
+                            </div>
+                            <div class="mb-3 form-outline">
+                                <select class=" form-select" data-mdb-select-init id="subnet" name="subnet">
+                                    {% for subnet in subnets %}
+                                    <option value="{{ subnet['CIDR'] }}" {% if subnet['CIDR'] == network.subnet %}selected{% endif %}>{{
+                                        subnet['CIDR'] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="subnet" class="form-label select-label">CIDR Subnet</label>
                             </div>
                             <div class="mb-3 form-outline" data-mdb-input-init>
-                                <input type="text" class="form-control" id="dns" name="dns" value="{{ network.dns }}" />
+                                <input type="text" class="form-control" id="dns" name="dns" value="{{ network.dns_server }}" />
                                 <label for="dns" class="form-label">DNS</label>
                             </div>
 

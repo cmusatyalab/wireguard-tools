@@ -89,14 +89,15 @@
     <!--Main layout-->
     <main>
         <div class="container">
+            <!-- TODO fix toast title -->
             {% if message %}
             <div class="toast fade mx-auto" id="basic-toast" role="alert" aria-live="assertive"
-                aria-atomic="true" data-mdb-toast-init data-mdb-autohide="true" data-mdb-delay="2000"
+                aria-atomic="true" data-mdb-toast-init data-mdb-autohide="true" data-mdb-delay="3000"
                 data-mdb-position="top-right" data-mdb-append-to-body="true" data-mdb-stacking="true"
                 data-mdb-width="350px" data-mdb-offset="50" data-mdb-color="primary">
                 <div class="toast-header">
                     <strong class="me-auto">Notification</strong>
-                    <small>{{message}}</small>
+                    <small>{{message.type}}</small>
                     <button type="button" class="btn-close" data-mdb-dismiss="toast" aria-label="Close"></button>
                 </div>
                 <div class="toast-body">{{message}}</div>
@@ -187,8 +188,6 @@
             if (toastElement) {
                 var toastInstance = new mdb.Toast(toastElement);
                 toastInstance.show();
-            } else {
-                console.log('No toast message received');
             }
         });
 
