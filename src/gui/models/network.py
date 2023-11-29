@@ -9,12 +9,13 @@ ma = Marshmallow()
 class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))         
-    lighthouse = db.Column(db.String(50))     
+    proxy = db.Column(db.Boolean, default=False)     
     lh_ip = db.Column(db.String(50))
     public_key = db.Column(db.String(50))
     peers_list = db.Column(db.Text)
     base_ip = db.Column(db.String(50))
     subnet = db.Column(db.Integer)
+    dns_server = db.Column(db.String(50))   # DNS server setting for peers in this network
     description = db.Column(db.Text)
     config = db.Column(db.Text)
     active = db.Column(db.Boolean, default=False)
@@ -74,12 +75,13 @@ def network_load_test_db():
     # Dummy list for testing
     network1 = Network(
         name="network 1",
-        lighthouse="lighthouse 1",
+        proxy = False,
         lh_ip="10.10.11.1",
-        public_key="public_key 1",
+        public_key="m1cSyM6Veev3vQIMYQ23gr22Qn/Vu3vg5d8xBTu43gE=",
         peers_list=json.dumps(["kHuDnIycdQYOVpSSMLqZwfe8D9eQSElSoIdWBFz8+jo=",]),
         base_ip="10.10.11.0",
         subnet="24",
+        dns_server="10.10.11.1",
         description="A basic /24 network",
         config=json.dumps({
             "public_key" : "m1cSyM6Veev3vQIMYQ23gr22Qn/Vu3vg5d8xBTu43gE=",
@@ -93,13 +95,14 @@ def network_load_test_db():
     )
     network2 = Network(
         name="network 2",
-        lighthouse="lighthouse 2",
+        proxy = True,
         lh_ip="172.122.88.1",
-        public_key="public_key 1",
-        peers_list="",
+        public_key="Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y=",
+        peers_list=json.dumps(["Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y="]),
         base_ip="172.122.88.0",
         subnet="16",
-        description="Another network that could be slightly larger",
+        dns_server="1.1.1.1,1.1.2.2",
+        description="Another network that could be slightly larger and uses the server as a proxy",
         config=json.dumps({
             "public_key" : "Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y=",
             "preshared_key" : None,
@@ -109,6 +112,24 @@ def network_load_test_db():
             "allowed_ips": "172.122.88.0/16"
         })
     )
-    network_list = [network1.__dict__, network2.__dict__]
+    network3 = Network(
+        name="network 3",
+        proxy = False,
+        lh_ip="192.168.43.1",
+        public_key="OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8=",
+        peers_list=json.dumps(["OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8="]),
+        base_ip="192.168.43.0",
+        subnet="24",
+        description="A small, closed network",
+        config=json.dumps({
+            "public_key" : "OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8=",
+            "preshared_key" : None,
+            "endpoint_host" : "99.133.211.115",
+            "endpoint_port": 51820,
+            "persistent_keepalive" : 30,
+            "allowed_ips": "192.168.43.0/24"
+        })
+    )
+    network_list = [network1.__dict__, network2.__dict__, network3.__dict__]
     db.session.bulk_insert_mappings(Network, network_list)
     db.session.commit()

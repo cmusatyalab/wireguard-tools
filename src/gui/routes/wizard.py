@@ -1,8 +1,6 @@
 import ipaddress
 import json
-import os
-import psutil
-import socket
+from . import helpers
 from flask import Blueprint, current_app, render_template, redirect, url_for, request
 from ..models import db, Config, Network, Peer, subnets
 from wireguard_tools.wireguard_key import WireguardKey
@@ -24,7 +22,7 @@ def setup():
 
 @wizard.route("/basic", methods=["POST"])
 def wizard_basic():
-    print(request.form)
+    # print(request.form)
     # Get the form data
     name = request.form["name"]
     description = request.form["description"]
@@ -60,32 +58,29 @@ def wizard_basic():
         return render_template(
             "wizard_setup.html", defaults=defaults, subnets=subnets, message=message
         )
-    listen_port = defaults['base_port']
+    listen_port = defaults["base_port"]
 
     # Append CIDR subnet to base_ip
-    print(subnets)
     allowed_ips = base_ip + "/" + str(subnet)
-    print(allowed_ips)
 
     # Get the IP address of the current machine
-    endpoint_host = get_public_ip()
+    endpoint_host = helpers.get_public_ip()
 
     # Create a private key for the lighthouse
     new_key = WireguardKey.generate()
     private_key = str(new_key)
     public_key = str(new_key.public_key())
 
-    # Build peer config
-    peer_config = "[Peer]\n"
-
     # Create a new network object
     new_network = Network(
         name=name,
-        lighthouse="",
-        lh_ip=get_public_ip(),
-        public_key="public_key 1",
+        proxy=False,
+        lh_ip=endpoint_host,
+        public_key=public_key,
         peers_list="",
-        base_ip=allowed_ips,
+        base_ip=base_ip,
+        subnet=subnet,
+        dns=dns,
         description=description,
         config=json.dumps(
             {
@@ -104,7 +99,12 @@ def wizard_basic():
     db.session.commit()
 
     # Create a new peer object
-    lh_address = Network.append_ip(base_ip, 1)+"/32"
+    # The lighthouse is always the first peer in the network
+    lh_address = Network.append_ip(base_ip, 1) + "/32"
+
+    # Get adapter names for the machine
+    adapters = helpers.get_adapter_names()
+    print(f"Adapters found:{adapters}")
 
     post_up_string = f"iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE"
     post_down_string = f"iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE"
@@ -126,35 +126,12 @@ def wizard_basic():
     db.session.commit()
 
     # Create the adapter configuration file
-    adapter_string = f"[Interface]\nPrivateKey = {private_key}\nAddress = {lh_address}\nListenPort = {listen_port}\nSaveConfig = true\n"
-    if dns:
-        adapter_string += f"DNS = {dns}\n"
-    # adapter_string += "\n[Peer]\nPublicKey = {public_key}\nAllowedIPs = {allowed_ips}\nEndpoint = {endpoint_host}:{endpoint_port}\n"
-    # if preshared_key:
-    #     adapter_string += "PresharedKey = {preshared_key}\n"
 
-    # Save the adapter configuration file to the output directory
-    os.makedirs(f"{current_app.config['OUTPUT_DIR']}/server", exist_ok=True)
-    server_config_file = open(
-        f"{current_app.config['OUTPUT_DIR']}/server/wg0.conf", "w"
-    )
-    server_config_file.write(
-        adapter_string
-    )
-    
-    # Redirect to the peers page
-    return redirect(url_for("networks.networks_all"))
+    adapter_string = helpers.config_build(new_peer, new_network)
 
-
-## FUNCTIONS ##
-def get_public_ip():
-    try:
-        # Connect to a known server
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-    except:
-        ip = "127.0.0.1"
-    finally:
-        s.close()
-    return ip
+    if helpers.config_save(adapter_string, "server/wg0.conf"):
+        message = "Network created successfully"
+    else:
+        message = "Error creating network"
+    networks = Network.query.all()
+    return render_template("networks.html", networks=networks, message=message)

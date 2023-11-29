@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from gui.models import db, Network
+from gui.models import db, Network, subnets
 import json
 
 networks = Blueprint("networks", __name__, url_prefix="/networks")
@@ -32,10 +32,9 @@ def networks_all():
 
 @networks.route("/<int:network_id>", methods=["GET", "POST"])
 def network_detail(network_id):
-    print(network_id)
     # network = next((item for item in network_list if item["id"] == int(network_id)), None)
     network = Network.query.filter_by(id=network_id).first()
-    print(f"Found: {network}")
+    #print(f"Found: {network}")
 
     if request.method == "POST":
         if request.method == "POST":
@@ -57,13 +56,13 @@ def network_detail(network_id):
     elif request.method == "GET":
         return render_template(
             "network_detail.html",
-            networks=query_all_networks(),
+            subnets=subnets,
             network=network,
             s_button="Update",
         )
     else:
         message = "Invalid request method"
-        return render_template("network_detail.html", network=network, message=message)
+        return render_template("network_detail.html", network=network, subnets=subnets, message=message)
 
 
 @networks.route("/add", methods=["GET", "POST"])
@@ -102,6 +101,7 @@ def networks_add():
         return render_template(
             "network_detail.html",
             network=new_network,
+            subnets=subnets,
             s_button="Add",
         )
 

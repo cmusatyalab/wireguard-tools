@@ -4,8 +4,6 @@
 
 * Server proxy or closed network
 
-* Downloading config files
-
 ## Planned Features
 
 * Server controller or tracking database option
@@ -15,3 +13,5 @@
 * User Logins
 
 * Dashboard with widgets
+
+* Event Logging
