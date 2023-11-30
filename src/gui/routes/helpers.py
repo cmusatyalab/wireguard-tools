@@ -44,14 +44,13 @@ def config_build(peer: Peer, network: Network) -> str:
     return config_file_string
 
 
-def config_save(config_file_string, filepath) -> "bool":
-    directory = filepath.split("/")[:-1]
-    print(f"Saving config file {filepath} to {directory}")
+def config_save(config_file_string, directory, filename) -> "bool":
+    print(f"Saving config file {filename} to {directory}")
     # Save the adapter configuration file to the output directory
     os.makedirs(f"{current_app.config['OUTPUT_DIR']}/{directory}", exist_ok=True)
     try:
         config_file = open(
-            f"{current_app.config['OUTPUT_DIR']}/{filepath}", "w"
+            f"{current_app.config['OUTPUT_DIR']}/{directory}/{filename}", "w"
         )
         config_file.write(config_file_string)
     except:

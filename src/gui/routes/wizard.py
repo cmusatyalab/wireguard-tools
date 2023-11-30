@@ -24,7 +24,7 @@ def setup():
 def wizard_basic():
     print(request.form)
     # Get the form data
-    message = ""
+    message = "Build Log:"
     name = request.form["name"]
     description = request.form["description"]
     base_ip = request.form["base_ip"]
@@ -99,6 +99,7 @@ def wizard_basic():
     # Add the new network to the database
     db.session.add(new_network)
     db.session.commit()
+    message += "\nNetwork added to database"
 
     # Create a new peer object
     # The lighthouse is always the first peer in the network
@@ -126,14 +127,15 @@ def wizard_basic():
     # Add the new peer to the database
     db.session.add(new_peer)
     db.session.commit()
+    message += "\nPeer added to database"
 
     # Create the adapter configuration file
     adapter_string = helpers.config_build(new_peer, new_network)
 
-    if helpers.config_save(adapter_string, "server/wg0.conf"):
-        message += "Network created successfully"
+    if helpers.config_save(adapter_string, "server","wg0.conf"):
+        message += "\nNetwork config saved successfully"
     else:
-        message += "Error creating network"
+        message += "\nError creating network config file"
     networks = Network.query.all()
     
     # check if wireguard is installed
