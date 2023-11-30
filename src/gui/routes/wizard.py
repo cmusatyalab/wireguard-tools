@@ -8,6 +8,7 @@ from wireguard_tools.wireguard_key import WireguardKey
 
 wizard = Blueprint("wizard", __name__, url_prefix="/wizard")
 
+
 ## ROUTES ##
 @wizard.route("/setup", methods=["GET"])
 def setup():
@@ -21,13 +22,14 @@ def setup():
 
 @wizard.route("/basic", methods=["POST"])
 def wizard_basic():
-    # print(request.form)
+    print(request.form)
     # Get the form data
     message = ""
     name = request.form["name"]
     description = request.form["description"]
     base_ip = request.form["base_ip"]
     subnet = request.form["subnet"]
+    sudo_password = request.form["sudo_password"]
     dns = current_app.config["BASE_DNS"]
 
     defaults = {
@@ -135,9 +137,9 @@ def wizard_basic():
     networks = Network.query.all()
     
     # check if wireguard is installed
-    if helpers.check_wireguard():
+    if helpers.check_wireguard(sudo_password):
         try:
-            helpers.run_sudo(f"cp {current_app.basedir}/server/wg0.conf /etc/wireguard/wg0.conf")
+            helpers.run_sudo(f"cp {current_app.basedir}/server/wg0.conf /etc/wireguard/wg0.conf", sudo_password)
             message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
         except:
             message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
@@ -145,3 +147,13 @@ def wizard_basic():
         message += "\nWireguard is not installed on this machine"
         
     return render_template("networks.html", networks=networks, message=message)
+
+@wizard.route("/advanced", methods=["POST"])
+def wizard_advanced():
+    message = "Advanced wizard not implemented yet"
+    defaults = {
+        "base_ip": current_app.config["BASE_IP"],
+        "base_port": current_app.config["BASE_PORT"],
+        "dns": current_app.config["BASE_DNS"],
+    }
+    return render_template("wizard_setup.html", message = message, defaults=defaults, subnets=subnets)

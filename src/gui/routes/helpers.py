@@ -7,15 +7,15 @@ import psutil
 import socket
 
 
-def check_wireguard():
+def check_wireguard(sudo_password: str):
     if not exists("/etc/wireguard"):
         # check if this is a linux machine
         if sp.check_output(["uname", "-s"]).decode("utf-8").strip() == "Linux":
             # Update Repositories
-            run_sudo("apt update")
-            run_sudo("apt -y full-upgrade")
+            run_sudo("apt update", sudo_password)
+            run_sudo("apt -y full-upgrade", sudo_password)
             # Install Wireguard
-            run_sudo("apt -y install wireguard")
+            run_sudo("apt -y install wireguard", sudo_password)
             return True
         else:
             print("Currently this only works on Linux machines")
@@ -88,9 +88,9 @@ def run_cmd(command) -> str:
     output = sp.run(cmd_lst)
     return output
 
-def run_sudo(command) -> str:
-    cmd_lst = ["sudo"]
-    for cmd in command.split():
-        cmd_lst.append(cmd)
-    output = sp.run(cmd_lst)
+def run_sudo(command: str, password: str) -> str:
+    cmd_lst = command.split()
+    cmd1 = sp.Popen(['echo',password], stdout=sp.PIPE)
+    cmd2 = sp.Popen(['sudo','-S'] + cmd_lst, stdin=cmd1.stdout, stdout=sp.PIPE)
+    output = cmd2.stdout.read().decode() 
     return output
