@@ -12,6 +12,7 @@ basedir = os.getcwd()
 def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
+    app.basedir = basedir
     
     ## CONFIGURATION ##
 
