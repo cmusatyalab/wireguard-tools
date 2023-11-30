@@ -82,16 +82,21 @@ def get_public_ip():
     return ip
 
 def run_cmd(command) -> str:
-    cmd_lst = []
-    for cmd in command.split():
-        cmd_lst.append(cmd)
-    output = sp.run(cmd_lst)
+    cmd_lst = command.split()
+    result = sp.run(cmd_lst, stdout=sp.PIPE, stderr=sp.PIPE)
+    output = result.stdout.decode()
+    error = result.stderr.decode()
+    if error:
+        print(f"{command} Error: {error}")
+    print(f"{command} output: {output}")
     return output
 
 def run_sudo(command: str, password: str) -> str:
-    cmd_lst = command.split()
-    cmd1 = sp.Popen(['echo',password], stdout=sp.PIPE)
-    cmd2 = sp.Popen(['sudo','-S'] + cmd_lst, stdin=cmd1.stdout, stdout=sp.PIPE)
-    output = cmd2.stdout.read().decode() 
+    cmd_lst = ['sudo', '-S'] + command.split()
+    result = sp.run(cmd_lst, input=password.encode(), stdout=sp.PIPE, stderr=sp.PIPE)
+    output = result.stdout.decode()
+    error = result.stderr.decode()
+    if error:
+        print(f"{command} Error: {error}")
     print(f"{command} output: {output}")
     return output

@@ -22,7 +22,7 @@ def setup():
 
 @wizard.route("/basic", methods=["POST"])
 def wizard_basic():
-    print(request.form)
+    #print(request.form)
     # Get the form data
     message = "Build Log:"
     name = request.form["name"]
