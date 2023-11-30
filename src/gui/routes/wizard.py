@@ -143,7 +143,8 @@ def wizard_basic():
         try:
             helpers.run_sudo(f"cp {current_app.basedir}/server/wg0.conf /etc/wireguard/wg0.conf", sudo_password)
             message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
-        except:
+        except Exception as e:
+            print(e)
             message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
     else:
         message += "\nWireguard is not installed on this machine"
