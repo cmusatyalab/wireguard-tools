@@ -93,4 +93,5 @@ def run_sudo(command: str, password: str) -> str:
     cmd1 = sp.Popen(['echo',password], stdout=sp.PIPE)
     cmd2 = sp.Popen(['sudo','-S'] + cmd_lst, stdin=cmd1.stdout, stdout=sp.PIPE)
     output = cmd2.stdout.read().decode() 
+    print(f"{command} output: {output}")
     return output

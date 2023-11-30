@@ -148,6 +148,7 @@ def wizard_basic():
     else:
         message += "\nWireguard is not installed on this machine"
         
+    print(message)    
     return render_template("networks.html", networks=networks, message=message)
 
 @wizard.route("/advanced", methods=["POST"])
