@@ -138,8 +138,11 @@ def wizard_basic():
     
     # check if wireguard is installed
     if helpers.check_wireguard():
-        os.copy("server/wg0.conf", "/etc/wireguard/wg0.conf")
-        message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
+        try:
+            helpers.run_sudo("cp server/wg0.conf /etc/wireguard/wg0.conf")
+            message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
+        except:
+            message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
     else:
         message += "\nWireguard is not installed on this machine"
         

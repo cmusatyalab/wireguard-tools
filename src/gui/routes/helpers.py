@@ -12,10 +12,10 @@ def check_wireguard():
         # check if this is a linux machine
         if sp.check_output(["uname", "-s"]).decode("utf-8").strip() == "Linux":
             # Update Repositories
-            sp.run(["sudo", "apt", "update"])
-            sp.run(["sudo", "apt", "-y", "full-upgrade"])
+            run_sudo("apt update")
+            run_sudo("apt -y full-upgrade")
             # Install Wireguard
-            sp.run(["sudo", "apt", "install", "-y", "wireguard"])
+            run_sudo("apt -y install wireguard")
             return True
         else:
             print("Currently this only works on Linux machines")
@@ -80,3 +80,17 @@ def get_public_ip():
     finally:
         s.close()
     return ip
+
+def run_cmd(command) -> str:
+    cmd_lst = []
+    for cmd in command.split():
+        cmd_lst.append(cmd)
+    output = sp.run(cmd_lst)
+    return output
+
+def run_sudo(command) -> str:
+    cmd_lst = ["sudo"]
+    for cmd in command.split():
+        cmd_lst.append(cmd)
+    output = sp.run(cmd_lst)
+    return output
