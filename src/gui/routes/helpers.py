@@ -46,11 +46,12 @@ def config_build(peer: Peer, network: Network) -> str:
 
 def config_save(config_file_string, filepath) -> "bool":
     location = filepath.split("/")[-1]
+    print(f"Saving config file {filepath} to {location}")
     # Save the adapter configuration file to the output directory
     os.makedirs(f"{current_app.config['OUTPUT_DIR']}/{location}", exist_ok=True)
     try:
         config_file = open(
-            f"{current_app.config['OUTPUT_DIR']}/{location}/wg0.conf", "w"
+            f"{current_app.config['OUTPUT_DIR']}/{filepath}", "w"
         )
         config_file.write(config_file_string)
     except:
