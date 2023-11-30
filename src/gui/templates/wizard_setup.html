@@ -55,7 +55,7 @@
                         </select>
                         <label for="subnet" class="form-label select-label">Total Clients</label>
                     </div>
-                    <input type="hidden" id="sudoPasswordInput" name="sudo_password">
+                    <input type="hidden" id="sudoPasswordInput" name="sudoPassword">
                     <button class="btn btn-primary" data-mdb-toggle="modal"
                         data-mdb-target="#sudoPasswordModal" id="buildButton">Build</button>
                     <a href="{{url_for('index')}}" type="button" class="btn btn-secondary">Cancel</a>
@@ -86,7 +86,7 @@
                         <input type="text" class="form-control" id="public_key" name="public_key" value="">
                         <label for="public_key" class="form-label">Public Key</label>
                     </div>
-                    <input type="hidden" id="sudoPasswordInputA" name="sudo_password">
+                    <input type="hidden" id="sudoPasswordInputA" name="sudoPassword">
                     <button type="submit" method="post" class="btn btn-primary">Build</button>
                     <a href="{{url_for('index')}}" type="button" class="btn btn-secondary">Cancel</a>
                 </form>
@@ -121,7 +121,7 @@
                     <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="password" id="sudo_password" class="form-control" placeholder="Sudo Password">
+                    <input type="password" id="sudoPassword" class="form-control" placeholder="Sudo Password">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>

@@ -29,7 +29,7 @@ def wizard_basic():
     description = request.form["description"]
     base_ip = request.form["base_ip"]
     subnet = request.form["subnet"]
-    sudo_password = request.form["sudo_password"]
+    sudo_password = request.form["sudoPassword"]
     dns = current_app.config["BASE_DNS"]
 
     defaults = {
