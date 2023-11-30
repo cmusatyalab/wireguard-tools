@@ -9,6 +9,7 @@ from wireguard_tools.wireguard_key import WireguardKey
 
 wizard = Blueprint("wizard", __name__, url_prefix="/wizard")
 
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 ## ROUTES ##
 @wizard.route("/setup", methods=["GET"])
@@ -139,7 +140,7 @@ def wizard_basic():
     # check if wireguard is installed
     if helpers.check_wireguard():
         try:
-            helpers.run_sudo("cp server/wg0.conf /etc/wireguard/wg0.conf")
+            helpers.run_sudo(f"cp {basedir}/server/wg0.conf /etc/wireguard/wg0.conf")
             message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
         except:
             message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
