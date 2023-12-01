@@ -1,3 +1,4 @@
+import traceback
 from flask import Blueprint, render_template, request
 from gui.models import db, Network, subnets
 from . import helpers
@@ -124,6 +125,7 @@ def network_activate(network_id):
     try:
         helpers.run_sudo("wg-quick up " + network.config_name, sudo_password)
     except Exception as e:
+        traceback.print_exc()
         message += "Error activating network: " + str(e)
         network_list = query_all_networks()
     else:
@@ -142,6 +144,7 @@ def network_deactivate(network_id):
     try:
         helpers.run_sudo("wg-quick down " + network.config_name, sudo_password)
     except Exception as e:
+        traceback.print_exc()
         message += "Error activating network: " + str(e)
         network_list = query_all_networks()
     else:

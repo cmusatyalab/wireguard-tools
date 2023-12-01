@@ -88,6 +88,7 @@ def get_public_ip():
     return ip
 
 def run_cmd(command) -> str:
+    print(f"Running {command}")
     cmd_lst = command.split()
     result = sp.run(cmd_lst, stdout=sp.PIPE, stderr=sp.PIPE)
     output = result.stdout.decode()
@@ -98,6 +99,7 @@ def run_cmd(command) -> str:
     return output
 
 def run_sudo(command: str, password: str) -> str:
+    print(f"Running {command} with sudo")
     cmd_lst = ['sudo', '-S'] + command.split()
     result = sp.run(cmd_lst, input=password.encode(), stdout=sp.PIPE, stderr=sp.PIPE)
     output = result.stdout.decode()
