@@ -123,7 +123,7 @@ def network_activate(network_id):
         sudo_password = request.form.get('sudoPassword')
         network = Network.query.filter_by(id=network_id).first()
         try:
-            helpers.run_sudo("wg-quick up " + network.name, sudo_password)
+            helpers.run_sudo("wg-quick up " + network.config_name, sudo_password)
         except Exception as e:
             message += "Error activating network: " + str(e)
             network_list = query_all_networks()
