@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 import datetime
 import os
 import yaml
-from .routes import networks, peers, settings, wizard
+from .routes import networks, peers, settings, users, wizard
 
 __version__ = "0.1.3b0"
 
@@ -64,6 +64,7 @@ def create_app():
     app.register_blueprint(networks)
     app.register_blueprint(peers)
     app.register_blueprint(settings)
+    app.register_blueprint(users)
     app.register_blueprint(wizard)
 
     return app

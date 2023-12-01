@@ -17,6 +17,7 @@ class Network(db.Model):
     subnet = db.Column(db.Integer)
     dns_server = db.Column(db.String(50))   # DNS server setting for peers in this network
     description = db.Column(db.Text)
+    config_name = db.Column(db.String(50))
     config = db.Column(db.Text)
     active = db.Column(db.Boolean, default=False)
 

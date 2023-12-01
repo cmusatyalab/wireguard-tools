@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 from gui.models import db, Network, subnets
+from . import helpers
 import json
 
 networks = Blueprint("networks", __name__, url_prefix="/networks")
@@ -9,11 +10,12 @@ def query_all_networks():
     network_query = Network.query.all()
     #TODO: create a more robust error handling system
     for network in network_query:
-        try:
-            network.peers = json.loads(network.peers)
-        except:
-            network.peers = "Json error"
-            print(f"Json error in peers for network {network.name}")
+        if network.peers_list:
+            try:
+                network.peers_list = json.loads(network.peers_list)
+            except:
+                network.peers_list = "Json error"
+                print(f"Json error in peers for network {network.name}")
         try:
             network.config = json.loads(network.config)
         except:
@@ -116,12 +118,21 @@ def network_delete(network_id):
 
 @networks.route("/activate/<int:network_id>", methods=["GET", "POST"])
 def network_activate(network_id):
-    network = Network.query.filter_by(id=network_id).first()
-    network.active = True
-    db.session.commit()
-    message = "Network activated successfully"
-    network_list = query_all_networks()
-    return render_template("networks.html", message=message, networks=network_list)
+    if request.method == "POST":
+        message = ""
+        sudo_password = request.form.get('sudoPassword')
+        network = Network.query.filter_by(id=network_id).first()
+        try:
+            helpers.run_sudo("wg-quick up " + network.name, sudo_password)
+        except Exception as e:
+            message += "Error activating network: " + str(e)
+            network_list = query_all_networks()
+        else:
+            network.active = True
+            db.session.commit()
+            message += "Network activated successfully"
+            network_list = query_all_networks()
+        return render_template("networks.html", message=message, networks=network_list)
 
 @networks.route("/deactivate/<int:network_id>", methods=["GET","POST"])
 def network_deactivate(network_id):

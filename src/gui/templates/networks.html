@@ -35,18 +35,20 @@
                     <p class="card-text">Base IP: {{network.base_ip}}</p>
                     <p class="card-text">{{ network.description }}</p>
                     <div class="card-footer row">
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-12">
                             <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-12">
                             <a href="{{ url_for('peers.peers_all', network_id=network.id) }}"
                                 class="card-link">Peers</a>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-12">
                             {% if network.active %}
-                            <a href="{{url_for('networks.network_deactivate',network_id=network.id)}}" class="btn btn-danger">Deactivate</a>
+                            <button data-network-id="{{ network.id }}"
+                                class="btn btn-danger activateButton">Deactivate</button>
                             {% else %}
-                            <a href="{{url_for('networks.network_activate',network_id=network.id)}}" class="btn btn-success">Activate</a>
+                            <button data-network-id="{{ network.id }}"
+                                class="btn btn-success activateButton">Activate</button>
                             {% endif %}
                         </div>
                     </div>
@@ -62,4 +64,70 @@
         <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
             configurations are essentially in an unknown state.</p>
     </div>
-    {% endblock %}
+    <!-- Sudo Password Modal -->
+    <div class="modal fade" id="sudoPasswordModal" tabindex="-1" aria-labelledby="sudoPasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sudoPasswordModalLabel">Enter Sudo Password</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="sudoPasswordForm">
+                    <div class="modal-body">
+                        <input type="password" id="sudoPassword" name="sudoPassword" class="form-control"
+                            placeholder="Sudo Password">
+                        <input type="hidden" id="networkId" name="neworkId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
+                        <button type="submit" id="confirmPassword" class="btn btn-primary">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add click event listeners to the "Activate" buttons
+    document.querySelectorAll('.activateButton').forEach(function (button) {
+        button.addEventListener('click', function () {
+            // Store the network id in the hidden input field in the form
+            document.getElementById('networkId').value = this.dataset.networkId;
+            // Show the modal
+            let sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'));
+            sudoPasswordModal.show();
+        });
+    });
+
+    // Add a submit event listener to the modal
+    document.getElementById('sudoPasswordForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        // Retrieve the network id from the hidden input field in the form
+        let networkId = document.getElementById('networkId').value;
+        // Retrieve the sudo password from the form
+        let sudoPassword = document.getElementById('sudoPassword').value;
+        // Build the URL
+        let baseUrl = "{{ url_for('networks.network_activate',network_id=0) }}";
+        baseUrl = baseUrl.slice(0, -1);
+        let url = baseUrl + networkId;
+        // Make a POST request to the URL
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `sudoPassword=${encodeURIComponent(sudoPassword)}`
+        })
+            .then(response => response.text())
+            .then(data => {
+                // Replace the current page content with the new template
+                document.documentElement.innerHTML = data;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}

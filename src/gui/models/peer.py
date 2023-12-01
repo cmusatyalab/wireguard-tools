@@ -14,7 +14,7 @@ class Peer(db.Model):
     private_key = db.Column(db.String(50))
     address = db.Column(db.String(50))
     listen_port = db.Column(db.Integer)
-    dns = db.Column(db.String(50))
+    dns = db.Column(db.String(50))      # A peer could have a specific DNS requirement bu generally leave it to the network config
     peers_list = db.Column(db.Text)
     network = db.Column(db.Integer)
     post_up = db.Column(db.Text)
