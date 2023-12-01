@@ -73,7 +73,7 @@
                     <h5 class="modal-title" id="sudoPasswordModalLabel">Enter Sudo Password</h5>
                     <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="sudoPasswordForm">
+                <form id="sudoPasswordForm" method="post">
                     <div class="modal-body">
                         <input type="password" id="sudoPassword" name="sudoPassword" class="form-control"
                             placeholder="Sudo Password">
@@ -111,23 +111,19 @@
         // Retrieve the sudo password from the form
         let sudoPassword = document.getElementById('sudoPassword').value;
         // Build the URL
-        let baseUrl = "{{ url_for('networks.network_activate',network_id=0) }}";
-        baseUrl = baseUrl.slice(0, -1);
-        let url = baseUrl + networkId;
+        let buttonLabel = document.querySelector(`button[data-network-id="${networkId}"]`).textContent.trim();
+        // Build the URL
+        let baseUrl = "{{ url_for('networks.networks_all') }}";
+        let url;
+        if (buttonLabel === 'Activate') {
+            url = baseUrl + '/activate/' + networkId;
+        } else if (buttonLabel === 'Deactivate') {
+            url = baseUrl + '/deactivate/' + networkId;
+        }
         // Make a POST request to the URL
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `sudoPassword=${encodeURIComponent(sudoPassword)}`
-        })
-            .then(response => response.text())
-            .then(data => {
-                // Replace the current page content with the new template
-                document.documentElement.innerHTML = data;
-            })
-            .catch(error => console.error('Error:', error));
+        // Set the action attribute of the form
+        this.action = url;
+        this.submit();
     });
 </script>
 {% endblock %}

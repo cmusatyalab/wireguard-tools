@@ -116,7 +116,7 @@ def network_delete(network_id):
     network_list = query_all_networks()
     return render_template("networks.html", message=message, networks=network_list)
 
-@networks.route("/activate/<int:network_id>", methods=["GET", "POST"])
+@networks.route("/activate/<int:network_id>", methods=["POST"])
 def network_activate(network_id):
     if request.method == "POST":
         message = ""
@@ -132,7 +132,8 @@ def network_activate(network_id):
             db.session.commit()
             message += "Network activated successfully"
             network_list = query_all_networks()
-        return render_template("networks.html", message=message, networks=network_list)
+        finally:
+            return render_template("networks.html", message=message, networks=network_list)
 
 @networks.route("/deactivate/<int:network_id>", methods=["GET","POST"])
 def network_deactivate(network_id):
