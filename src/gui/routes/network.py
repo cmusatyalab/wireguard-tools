@@ -118,29 +118,37 @@ def network_delete(network_id):
 
 @networks.route("/activate/<int:network_id>", methods=["POST"])
 def network_activate(network_id):
-    if request.method == "POST":
-        message = ""
-        sudo_password = request.form.get('sudoPassword')
-        network = Network.query.filter_by(id=network_id).first()
-        try:
-            helpers.run_sudo("wg-quick up " + network.config_name, sudo_password)
-        except Exception as e:
-            message += "Error activating network: " + str(e)
-            network_list = query_all_networks()
-        else:
-            network.active = True
-            db.session.commit()
-            message += "Network activated successfully"
-            network_list = query_all_networks()
-        finally:
-            return render_template("networks.html", message=message, networks=network_list)
-
-@networks.route("/deactivate/<int:network_id>", methods=["GET","POST"])
-def network_deactivate(network_id):
+    message = ""
+    sudo_password = request.form.get('sudoPassword')
     network = Network.query.filter_by(id=network_id).first()
-    network.active = False
-    db.session.commit()
-    message = "Network deactivated successfully"
-    network_list = query_all_networks()
-    return render_template("networks.html", message=message, networks=network_list)
+    try:
+        helpers.run_sudo("wg-quick up " + network.config_name, sudo_password)
+    except Exception as e:
+        message += "Error activating network: " + str(e)
+        network_list = query_all_networks()
+    else:
+        network.active = True
+        db.session.commit()
+        message += "Network activated successfully"
+        network_list = query_all_networks()
+    finally:
+        return render_template("networks.html", message=message, networks=network_list)
+
+@networks.route("/deactivate/<int:network_id>", methods=["POST"])
+def network_deactivate(network_id):
+    message = ""
+    sudo_password = request.form.get('sudoPassword')
+    network = Network.query.filter_by(id=network_id).first()
+    try:
+        helpers.run_sudo("wg-quick down " + network.config_name, sudo_password)
+    except Exception as e:
+        message += "Error activating network: " + str(e)
+        network_list = query_all_networks()
+    else:
+        network.active = False
+        db.session.commit()
+        message += "Network activated successfully"
+        network_list = query_all_networks()
+    finally:
+        return render_template("networks.html", message=message, networks=network_list)
 
