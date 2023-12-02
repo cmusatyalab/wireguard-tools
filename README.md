@@ -35,6 +35,12 @@ Finally, move to the src/ directory and run the program
     python3 run.py
 ```
 
+## Troubleshooting
+
+If you have problems connecting to the web site, first check to make sure you have port 5000 (default) or whichever port you chose open.
+
+The webserver will work on windows, but the automated server setup will only activate on a Debian-based linux system.
+
 ## Acknowledgements
 
 We would like to thank Carnegie Mellon University for the WireGuard-Tools code that this project is based on. Their work has been invaluable in helping us get this project off the ground.
