@@ -27,6 +27,16 @@ def create_app():
     # Set the configuration from config.yaml
     app.config.update(config)
 
+    # Check if certificates exist and create them if they don't
+    if not os.path.exists(app.config["PKI_CERT_PATH"]):
+        os.makedirs(app.config["PKI_CERT_PATH"])
+    if not os.path.exists(app.config["PKI_CERT_PATH"] + "/" + app.config["PKI_CERT"]):
+        from .routes import helpers
+        helpers.generate_cert(app.config["PKI_CERT_PATH"], app.config["PKI_CERT"], app.config["PKI_KEY"])
+    if not os.path.exists(app.config["PKI_CERT_PATH"] +"/" + app.config["PKI_KEY"]):
+        helpers.generate_cert(app.config["PKI_CERT_PATH"], app.config["PKI_CERT"], app.config["PKI_KEY"])
+
+
     # Initialize the database with the app
     from .models import db  
 

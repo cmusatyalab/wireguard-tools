@@ -64,6 +64,16 @@ def config_save(config_file_string, directory, filename) -> "bool":
     return True
 
 
+def generate_cert(cert_path, cert_name, key_name):
+    # Generate a new certificate for the server
+    print("Generating new SSL certificate")
+    run_cmd(
+        "openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp521r1" +
+        f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}" +
+        " -subj /CN=wireguard-gui"
+    )
+
+
 def get_adapter_names():
     # Get a list of all the adapters on the machine
     adapters = psutil.net_if_addrs()
@@ -87,6 +97,7 @@ def get_public_ip():
         s.close()
     return ip
 
+
 def run_cmd(command) -> str:
     print(f"Running {command}")
     cmd_lst = command.split()
@@ -98,9 +109,10 @@ def run_cmd(command) -> str:
     print(f"{command} output: {output}")
     return output
 
+
 def run_sudo(command: str, password: str) -> str:
     print(f"Running {command} with sudo")
-    cmd_lst = ['sudo', '-S'] + command.split()
+    cmd_lst = ["sudo", "-S"] + command.split()
     result = sp.run(cmd_lst, input=password.encode(), stdout=sp.PIPE, stderr=sp.PIPE)
     output = result.stdout.decode()
     error = result.stderr.decode()
