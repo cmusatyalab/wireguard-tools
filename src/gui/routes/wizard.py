@@ -118,6 +118,7 @@ def wizard_basic():
         private_key=private_key,
         address=lh_address,
         listen_port=listen_port,
+        lighthouse=True,
         post_up=post_up_string,
         post_down=post_down_string,
         network=new_network.id,

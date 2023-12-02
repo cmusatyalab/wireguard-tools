@@ -55,6 +55,18 @@
                                             value="{{ peer.dns }}">
                                         <label for="dns" class="form-label">DNS</label>
                                     </div>
+                                    {% if peer.is_lighthouse() %}
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="postUp" name="postUp"
+                                            value="{{ peer.post_up }}">
+                                        <label for="postUp" class="form-label">Post Up</label>
+                                    </div>
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="postDown" name="postDown"
+                                            value="{{ peer.post_down }}">
+                                        <label for="postDown" class="form-label">Post Down</label>
+                                    </div>
+                                    {% endif %}
                                     <div class="form-outline">
                                         <select class="form-select" data-mdb-select-init name="network" id="network"
                                             onchange="updateConfigCard()">

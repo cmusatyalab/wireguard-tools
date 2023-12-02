@@ -14,7 +14,8 @@ class Peer(db.Model):
     private_key = db.Column(db.String(50))
     address = db.Column(db.String(50))
     listen_port = db.Column(db.Integer)
-    dns = db.Column(db.String(50))      # A peer could have a specific DNS requirement bu generally leave it to the network config
+    lighthouse = db.Column(db.Boolean, default=False) # Is this a lighthouse peer?
+    dns = db.Column(db.String(50))      # A peer could have a specific DNS requirement but generally leave it to the network config
     peers_list = db.Column(db.Text)
     network = db.Column(db.Integer)
     post_up = db.Column(db.Text)
@@ -43,6 +44,9 @@ class Peer(db.Model):
     def get_public_key(self):
         public_key = WireguardKey(self.private_key).public_key()
         return public_key
+    
+    def is_lighthouse(self):
+        return self.lighthouse
     
 # JSON Schema
 class PeerSchema(ma.Schema):
