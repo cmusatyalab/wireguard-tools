@@ -19,12 +19,13 @@ def create_app():
     # Read config.yaml
     with open('config.yaml') as f:
         config = yaml.safe_load(f)
+    # Replace {basedir} in all keys with the current working directory
+    for key in config:
+        if isinstance(config[key], str):
+            config[key] = config[key].format(basedir=basedir)
   
     # Set the configuration from config.yaml
     app.config.update(config)
-    # Replace {basedir} in SQLALCHEMY_DATABASE_URI and OUTPUT_DIR with the current working directory
-    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].format(basedir=basedir)
-    app.config['OUTPUT_DIR'] = app.config['OUTPUT_DIR'].format(basedir=basedir)
 
     # Initialize the database with the app
     from .models import db  # Move the import here

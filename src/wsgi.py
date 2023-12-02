@@ -10,4 +10,4 @@ if __name__ == "__main__":
     # Start the Flask application using host_ip and port from config.yaml
     host_ip = config['HOST_IP']
     port = config['HOST_PORT']
-    app.run(host=host_ip, port=port)
+    app.run(host=host_ip, port=port, ssl_context=(config['PKI_CERT'], config['PKI_KEY']))

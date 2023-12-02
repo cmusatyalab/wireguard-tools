@@ -4,6 +4,8 @@ SQLALCHEMY_TRACK_MODIFICATIONS: True
 SQLALCHEMY_DATABASE_URI: 'sqlite:///{basedir}/wg.db'
 HOST_IP: '127.0.0.1'
 HOST_PORT: '5000'
+PKI_CERT: '{basedir}/pki/cert.pem'
+PKI_KEY:  '{basedir}/pki/key.pem'  
 
 # Network Configuration
 BASE_IP: '10.100.200.0'
