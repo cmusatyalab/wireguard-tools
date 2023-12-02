@@ -19,3 +19,5 @@ src/migrations/
 # Config file output directory
 src/output
 
+# HTTPS Keys
+src/pki/
