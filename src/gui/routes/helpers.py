@@ -66,7 +66,8 @@ def config_save(config_file_string, directory, filename) -> "bool":
 
 def generate_cert(cert_path, cert_name, key_name):
     # Generate a new certificate for the server
-    print("Generating new SSL certificate")
+    if not exists(cert_path):
+        os.makedirs(cert_path)
     run_cmd(
         "openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp521r1" +
         f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}" +
