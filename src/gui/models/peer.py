@@ -111,6 +111,7 @@ def peer_load_test_db():
             "private_key": "wBIQfi2Z+DFhAW7Z57tqVTyG/z1MQpzNwGlWrAcF2F4=",
             "listen_port": 51820,
             "dns": "10.10.11.53",
+            "lighthouse": True,
             "peers_list": {
                     "AllowedIPs": ["0.0.0.0/0", "::/0"],
                     "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
@@ -126,6 +127,7 @@ def peer_load_test_db():
             "private_key": "KIy+vrfZDJ5KqHm0qrLK58Mqy5iV2OKx+l/vKXfTaXI=",
             "listen_port": 51820,
             "dns": "172.122.88.53",
+            "lighthouse": True,
             "peers_list": {
                     "AllowedIPs": ["0.0.0.0/0", "::/0"],
                     "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
@@ -140,6 +142,7 @@ def peer_load_test_db():
             "address": "192.168.43.1/32",
             "private_key": "aHt3pJBwvbcvlA8sXDCsWuN3tRs20kg8nR8Z4kyayGA=",
             "listen_port": 51820,
+            "lightouse": True,
             "peers_list": {
                     "AllowedIPs": ["192.168.43.0/24"],
                     "PublicKey": "OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8=",
