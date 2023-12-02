@@ -9,26 +9,27 @@ __version__ = "0.1.3b0"
 
 basedir = os.getcwd()
 
+
 def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
     app.basedir = basedir
-    
+
     ## CONFIGURATION ##
 
     # Read config.yaml
-    with open('config.yaml') as f:
+    with open("config.yaml") as f:
         config = yaml.safe_load(f)
     # Replace {basedir} in all keys with the current working directory
     for key in config:
         if isinstance(config[key], str):
             config[key] = config[key].format(basedir=basedir)
-  
     # Set the configuration from config.yaml
     app.config.update(config)
 
     # Initialize the database with the app
-    from .models import db  # Move the import here
+    from .models import db  
+
     db.init_app(app)
     # Initialize Migrate with the app and the database
     migrate = Migrate(app, db)
@@ -39,27 +40,27 @@ def create_app():
 
     ## ROUTES ##
     # Route for the index page
-    @app.route('/')
+    @app.route("/")
     def index():
         # Render the index page with the current UTC time
-        return render_template('index.html', utc_dt=datetime.datetime.utcnow())
+        return render_template("index.html", utc_dt=datetime.datetime.utcnow())
 
     # Route for the about page
-    @app.route('/about')
+    @app.route("/about")
     def about():
         # Render the about page with the current UTC time
-        return render_template('about.html', version=__version__)
+        return render_template("about.html", version=__version__)
 
     # Route for the dashboard page
-    @app.route('/dashboard')
+    @app.route("/dashboard")
     def dashboard():
         # Render the dashboard page with the current UTC time
-        return render_template('dashboard.html', utc_dt=datetime.datetime.utcnow())
-    
+        return render_template("dashboard.html", utc_dt=datetime.datetime.utcnow())
+
     # Route for testing purposes - Delete when dev work completed
-    @app.route('/test')
+    @app.route("/test")
     def test():
-        return render_template('test.html')
+        return render_template("test.html")
 
     # Import the blueprints
     app.register_blueprint(networks)
@@ -69,6 +70,3 @@ def create_app():
     app.register_blueprint(wizard)
 
     return app
-
-
-    
