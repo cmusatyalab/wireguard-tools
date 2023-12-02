@@ -71,7 +71,7 @@ def generate_cert(cert_path, cert_name, key_name):
     run_cmd(
         "openssl req -nodes -x509 -newkey rsa:4096" +
         f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}" +
-        " -subj /CN=wireguard-gui"
+        " -subj /O=ClockWorx/CN=wireguard-gui"
     )
 
 
@@ -106,8 +106,8 @@ def run_cmd(command) -> str:
     output = result.stdout.decode()
     error = result.stderr.decode()
     if error:
-        print(f"{command} Error: {error}")
-    print(f"{command} output: {output}")
+        print(f"\n\n\tError:\n{error}")
+    print(f"\n\n\tOutput:\n{output}")
     return output
 
 
@@ -118,6 +118,6 @@ def run_sudo(command: str, password: str) -> str:
     output = result.stdout.decode()
     error = result.stderr.decode()
     if error:
-        print(f"{command} Error: {error}")
-    print(f"{command} output: {output}")
+        print(f"\n\n\tSudo Error:\n{error}")
+    print(f"\n\n\tSudo Output:\n{output}")
     return output
