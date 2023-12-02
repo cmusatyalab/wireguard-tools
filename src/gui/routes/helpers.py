@@ -69,7 +69,7 @@ def generate_cert(cert_path, cert_name, key_name):
     if not exists(cert_path):
         os.makedirs(cert_path)
     run_cmd(
-        "openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp521r1" +
+        "openssl req -nodes -x509 -newkey rsa:4096" +
         f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}" +
         " -subj /CN=wireguard-gui"
     )
