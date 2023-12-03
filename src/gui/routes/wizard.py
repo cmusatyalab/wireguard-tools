@@ -3,7 +3,7 @@ import json
 from . import helpers
 from flask import Blueprint, current_app, render_template, redirect, url_for, request
 from ..models import db, Config, Network, Peer, subnets
-from wireguard_tools.wireguard_key import WireguardKey
+from wireguard_tools import WireguardKey
 
 
 wizard = Blueprint("wizard", __name__, url_prefix="/wizard")
