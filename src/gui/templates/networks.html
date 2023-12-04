@@ -64,29 +64,6 @@
         <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
             configurations are essentially in an unknown state.</p>
     </div>
-    <!-- Sudo Password Modal -->
-    <div class="modal fade" id="sudoPasswordModal" tabindex="-1" aria-labelledby="sudoPasswordModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sudoPasswordModalLabel">Enter Sudo Password</h5>
-                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="sudoPasswordForm" method="post">
-                    <div class="modal-body">
-                        <input type="password" id="sudoPassword" name="sudoPassword" class="form-control"
-                            placeholder="Sudo Password">
-                        <input type="hidden" id="networkId" name="neworkId">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
-                        <button type="submit" id="confirmPassword" class="btn btn-primary">Confirm</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}
 
