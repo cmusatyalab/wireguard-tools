@@ -15,3 +15,5 @@
 * Dashboard with widgets
 
 * Event Logging
+
+* Server adapter survives reboot or not flag

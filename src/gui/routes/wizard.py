@@ -73,6 +73,9 @@ def wizard_basic():
     private_key = str(new_key)
     public_key = str(new_key.public_key())
 
+    # Get adapter name from rotation
+    adapter_name = "wg0"
+
     # Create a new network object
     # TODO: fix config name rotation
     new_network = Network(
@@ -83,7 +86,7 @@ def wizard_basic():
         peers_list="",
         base_ip=base_ip,
         subnet=subnet,
-        config_name="wg0",
+        adapter_name=adapter_name,
         dns_server=dns,
         description=description,
         config=json.dumps(

@@ -17,7 +17,7 @@ class Network(db.Model):
     subnet = db.Column(db.Integer)
     dns_server = db.Column(db.String(50))   # DNS server setting for peers in this network
     description = db.Column(db.Text)
-    config_name = db.Column(db.String(50))
+    adapter_name = db.Column(db.String(50))
     config = db.Column(db.Text)
     active = db.Column(db.Boolean, default=False)
 
@@ -82,6 +82,7 @@ def network_load_test_db():
         peers_list=json.dumps(["kHuDnIycdQYOVpSSMLqZwfe8D9eQSElSoIdWBFz8+jo=",]),
         base_ip="10.10.11.0",
         subnet="24",
+        adapter_name = "wg0",
         dns_server="10.10.11.1",
         description="A basic /24 network",
         config=json.dumps({
@@ -102,6 +103,7 @@ def network_load_test_db():
         peers_list=json.dumps(["Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y="]),
         base_ip="172.122.88.0",
         subnet="16",
+        adapter_name = "wg0",
         dns_server="1.1.1.1,1.1.2.2",
         description="Another network that could be slightly larger and uses the server as a proxy",
         config=json.dumps({
@@ -121,6 +123,7 @@ def network_load_test_db():
         peers_list=json.dumps(["OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8="]),
         base_ip="192.168.43.0",
         subnet="24",
+        adapter_name = "wg0",
         description="A small, closed network",
         config=json.dumps({
             "public_key" : "OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8=",
