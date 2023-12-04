@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, render_template_string, request
 from gui.models import db, Peer, Network
+from gui.routes import helpers
 import json
 
 # Testing wg input
@@ -26,7 +27,17 @@ sample_config = {
 
 ## FUNCTIONS ##
 
-# print(peer_list)
+def add_peer(peer, network):
+    peer_config = f"wg set {network.config_name} peer {peer.public_key} allowed-ips {peer.address}/32"
+    print(f"Peer config: {peer_config}")
+    try:
+        helpers.run_sudo(peer_config)
+    except Exception as e:
+        print(e)
+        return False
+    else:
+        return True
+
 def query_all_peers():
     peer_query = Peer.query.all()
     for peer in peer_query:
@@ -90,7 +101,11 @@ def peers_add():
         )
         db.session.add(new_peer)
         db.session.commit()
-        message = "Peer added successfully"
+        # Add peer to running server
+        if add_peer(new_peer, network):
+            message = "Peer added successfully"
+        else:
+            message = "Peer added successfully, but failed to add to running server"
         peer_list = query_all_peers()
         return render_template("peers.html", message=message, peer_list=peer_list)
     else:
