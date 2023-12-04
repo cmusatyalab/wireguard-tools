@@ -20,7 +20,13 @@ At present, simply clone this repository onto a Linux machine. A Debian-based li
 git clone https://github.com/radawson/wireguard-gui
 ```
 
-Next, install the requirements with
+After the repository is cloned, change directory into the wireguard-gui directory
+
+```bash
+cd wireguard-gui
+```
+
+Next, install the python requirements with
 
 ```bash
 pip install -r requirements.txt
