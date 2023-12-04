@@ -88,7 +88,7 @@ def peers_add():
         address = request.form["address"]
         dns = request.form["dns"]
         #peer_config = request.form["peer_config"]
-        network = request.form["network"]
+        network = Network.query.filter_by(id=request.form["network"]).first()
 
         new_peer = Peer(
             name=name,
@@ -96,7 +96,7 @@ def peers_add():
             address=address,
             dns=dns,
             #peer_config=peer_config,
-            network=network,
+            network=network.id,
             description=description,
         )
         db.session.add(new_peer)
