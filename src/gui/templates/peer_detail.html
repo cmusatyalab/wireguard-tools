@@ -55,7 +55,7 @@
                                             value="{{ peer.dns }}" onchange="updateConfigCard()">
                                         <label for="dns" class="form-label">DNS</label>
                                     </div>
-                                    {% if peer.is_lighthouse() %}
+                                    {% if peer.lighthouse %}
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="postUp" name="postUp"
                                             value="{{ peer.post_up }}" onchange="updateConfigCard()">
