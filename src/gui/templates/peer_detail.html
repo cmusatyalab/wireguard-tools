@@ -52,18 +52,18 @@
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="dns" name="dns"
-                                            value="{{ peer.dns }}">
+                                            value="{{ peer.dns }}" onchange="updateConfigCard()">
                                         <label for="dns" class="form-label">DNS</label>
                                     </div>
                                     {% if peer.is_lighthouse() %}
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="postUp" name="postUp"
-                                            value="{{ peer.post_up }}">
+                                            value="{{ peer.post_up }}" onchange="updateConfigCard()">
                                         <label for="postUp" class="form-label">Post Up</label>
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="postDown" name="postDown"
-                                            value="{{ peer.post_down }}">
+                                            value="{{ peer.post_down }}" onchange="updateConfigCard()">
                                         <label for="postDown" class="form-label">Post Down</label>
                                     </div>
                                     {% endif %}
@@ -174,9 +174,6 @@
     window.onload = function () {
         updatePublicKey();
         updateConfigCard();
-        // Add event listener for the 'change' event on the #network select element
-        document.getElementById('network').addEventListener('change', updateConfigCard);
-        document.getElementById('dns').addEventListener('change', updateConfigCard);
     };
 
     // Add event listener for the 'click' event on the #btn_copyConfig button
@@ -230,12 +227,14 @@
         if (document.getElementById('listen_port').value != "None") {
             config += "\nListenPort = " + document.getElementById('listen_port').value;
         }
+        {% if peer.is_lighthouse() %}
         if (document.getElementById('postUp').value != "None") {
             config += "\nPostUp = " + document.getElementById('postUp').value;
         }
         if (document.getElementById('postDown').value != "None") {
             config += "\nPostDown = " + document.getElementById('postDown').value;
         }
+        {% endif %}
         if (document.getElementById('dns').value != "None") {
             config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
         } else {
