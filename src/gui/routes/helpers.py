@@ -7,15 +7,15 @@ import psutil
 import socket
 
 
-def check_wireguard():
+def check_wireguard(sudo_password: str):
     if not exists("/etc/wireguard"):
         # check if this is a linux machine
         if sp.check_output(["uname", "-s"]).decode("utf-8").strip() == "Linux":
             # Update Repositories
-            sp.run(["apt", "update"])
-            sp.run(["sudo", "apt", "full-upgrade"])
+            run_sudo("apt update", sudo_password)
+            run_sudo("apt -y full-upgrade", sudo_password)
             # Install Wireguard
-            sp.run(["sudo", "apt", "install", "-y", "wireguard"])
+            run_sudo("apt -y install wireguard", sudo_password)
             return True
         else:
             print("Currently this only works on Linux machines")
@@ -36,7 +36,13 @@ def config_add_peer(config_string: str, peer: Peer) -> str:
 def config_build(peer: Peer, network: Network) -> str:
     # Create the adapter configuration file
     config_file_string = f"[Interface]\nPrivateKey = {peer.private_key}\nAddress = {peer.address}\nListenPort = {peer.listen_port}\nSaveConfig = true\n"
-    if network.dns_server:
+    if peer.post_down:
+        config_file_string += f"PostDown = {peer.post_down}\n"
+    if peer.post_up:
+        config_file_string += f"PostUp = {peer.post_up}\n"
+    if peer.dns:
+        config_file_string += f"DNS = {peer.dns}\n"
+    elif network.dns_server:
         adapter_string += f"DNS = {network.dns_server}\n"
     network_config_string = network.get_config()
     config_file_string += network_config_string
@@ -44,18 +50,29 @@ def config_build(peer: Peer, network: Network) -> str:
     return config_file_string
 
 
-def config_save(config_file_string, filepath) -> "bool":
-    location = filepath.split("/")[-1]
+def config_save(config_file_string, directory, filename) -> "bool":
+    print(f"Saving config file {filename} to {directory}")
     # Save the adapter configuration file to the output directory
-    os.makedirs(f"{current_app.config['OUTPUT_DIR']}/{location}", exist_ok=True)
+    os.makedirs(f"{current_app.config['OUTPUT_DIR']}/{directory}", exist_ok=True)
     try:
         config_file = open(
-            f"{current_app.config['OUTPUT_DIR']}/{location}/wg0.conf", "w"
+            f"{current_app.config['OUTPUT_DIR']}/{directory}/{filename}", "w"
         )
         config_file.write(config_file_string)
     except:
         return False
     return True
+
+
+def generate_cert(cert_path, cert_name, key_name):
+    # Generate a new certificate for the server
+    if not exists(cert_path):
+        os.makedirs(cert_path)
+    run_cmd(
+        "openssl req -nodes -x509 -newkey rsa:4096" +
+        f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}" +
+        " -subj /O=ClockWorx/CN=wireguard-gui"
+    )
 
 
 def get_adapter_names():
@@ -80,3 +97,27 @@ def get_public_ip():
     finally:
         s.close()
     return ip
+
+
+def run_cmd(command) -> str:
+    print(f"Running {command}")
+    cmd_lst = command.split()
+    result = sp.run(cmd_lst, stdout=sp.PIPE, stderr=sp.PIPE)
+    output = result.stdout.decode()
+    error = result.stderr.decode()
+    if error:
+        print(f"\n\n\tError:\n{error}")
+    print(f"\n\n\tOutput:\n{output}")
+    return output
+
+
+def run_sudo(command: str, password: str) -> str:
+    print(f"Running {command} with sudo")
+    cmd_lst = ["sudo", "-S"] + command.split()
+    result = sp.run(cmd_lst, input=password.encode(), stdout=sp.PIPE, stderr=sp.PIPE)
+    output = result.stdout.decode()
+    error = result.stderr.decode()
+    if error:
+        print(f"\n\n\tSudo Error:\n{error}")
+    print(f"\n\n\tSudo Output:\n{output}")
+    return output

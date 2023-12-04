@@ -24,7 +24,7 @@
 
         {% for peer in peer_list %}
 
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ peer.name }}</h5>
@@ -32,11 +32,11 @@
                     <p class="card-text">{{ peer.get_public_key() }}</p>
                     <p class="card-text">{{ peer.description }}</p>
                     <div class="card-footer row">
-                        <div class="col-md-8">
+                        <div class="col-md-8 col-sm-12">
                             <a href="{{ url_for('peers.peers_all')}}/{{peer.id}}" class="card-link">
                                 Details</a>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-end">
+                        <div class="col-md-4 col-sm-12 d-flex justify-content-end">
                             {% if peer.active %}
                             <span class="badge bg-success">Active</span>
                             {% else %}

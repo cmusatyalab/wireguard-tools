@@ -52,9 +52,21 @@
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="dns" name="dns"
-                                            value="{{ peer.dns }}">
+                                            value="{{ peer.dns }}" onchange="updateConfigCard()">
                                         <label for="dns" class="form-label">DNS</label>
                                     </div>
+                                    {% if peer.lighthouse %}
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="postUp" name="postUp"
+                                            value="{{ peer.post_up }}" onchange="updateConfigCard()">
+                                        <label for="postUp" class="form-label">Post Up</label>
+                                    </div>
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="postDown" name="postDown"
+                                            value="{{ peer.post_down }}" onchange="updateConfigCard()">
+                                        <label for="postDown" class="form-label">Post Down</label>
+                                    </div>
+                                    {% endif %}
                                     <div class="form-outline">
                                         <select class="form-select" data-mdb-select-init name="network" id="network"
                                             onchange="updateConfigCard()">
@@ -162,8 +174,6 @@
     window.onload = function () {
         updatePublicKey();
         updateConfigCard();
-        // Add event listener for the 'change' event on the #network select element
-        document.getElementById('network').addEventListener('change', updateConfigCard);
     };
 
     // Add event listener for the 'click' event on the #btn_copyConfig button
@@ -176,10 +186,10 @@
 
     // Add event listener for the 'click' event on the #btn_downloadConfig button
     document.getElementById('btn_downloadConfig').addEventListener('click', function () {
-        var configText = document.getElementById('peer_config').value;
-        var blob = new Blob([configText], { type: 'text/plain' });
-        var url = URL.createObjectURL(blob);
-        var link = document.createElement('a');
+        let configText = document.getElementById('peer_config').value;
+        let blob = new Blob([configText], { type: 'text/plain' });
+        let url = URL.createObjectURL(blob);
+        let link = document.createElement('a');
         link.href = url;
         link.download = 'wg0.conf';
         document.body.appendChild(link);
@@ -213,12 +223,17 @@
 
     function updateConfigCard() {
         let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('address').value
-        console.log(document.getElementById('listen_port').value)
-        if (document.getElementById('listen_port').value != "None") {
+        if (document.getElementById('listen_port') && document.getElementById('listen_port').value != "None" && document.getElementById('listen_port').value != "") {
             config += "\nListenPort = " + document.getElementById('listen_port').value;
         }
-        if (document.getElementById('dns').value != "None") {
-            config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
+        if (document.getElementById('postUp') && document.getElementById('postUp').value != "None") {
+            config += "\nPostUp = " + document.getElementById('postUp').value;
+        }
+        if (document.getElementById('postDown') && document.getElementById('postDown').value != "None") {
+            config += "\nPostDown = " + document.getElementById('postDown').value;
+        }
+        if (document.getElementById('dns') && document.getElementById('dns').value != "None" && document.getElementById('dns').value != "") {
+            config += "\nDNS = " + document.getElementById('dns').value;
         } else {
             config += "\n\n";
         }

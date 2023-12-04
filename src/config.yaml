@@ -5,6 +5,11 @@ SQLALCHEMY_DATABASE_URI: 'sqlite:///{basedir}/wg.db'
 HOST_IP: '127.0.0.1'
 HOST_PORT: '5000'
 
+# TLS configuration
+PKI_CERT_PATH: '{basedir}/pki'
+PKI_CERT: 'cert.pem'
+PKI_KEY:  'key.pem'  
+
 # Network Configuration
 BASE_IP: '10.100.200.0'
 BASE_IP6: 'fd00:100:200::'

@@ -48,6 +48,7 @@ platformdirs==3.11.0
 pluggy==1.2.0
 poethepoet==0.16.5
 pre-commit==2.21.0
+psutil==5.9.6
 py==1.11.0
 pycparser==2.21
 Pygments==2.17.1
@@ -59,6 +60,7 @@ pytest-mock==3.11.1
 python-dateutil==2.8.2
 python-slugify==8.0.1
 PyYAML==6.0.1
+qrcode==7.4.2
 requests==2.31.0
 rich==13.7.0
 schema==0.7.5
@@ -81,4 +83,5 @@ virtualenv==20.24.6
 Werkzeug==3.0.0
 wheel==0.41.3
 win-inet-pton==1.1.0
+-e git+https://github.com/radawson/wireguard-gui.git@f175adcffda9adbdd3c25ea81e4a5dae19efb521#egg=wireguard_gui
 -e git+https://github.com/radawson/wireguard-gui.git@d3c317c1c3cc4ad6a240be016fc75f9ddcbeabc4#egg=wireguard_tools

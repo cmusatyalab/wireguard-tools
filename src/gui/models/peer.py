@@ -14,7 +14,8 @@ class Peer(db.Model):
     private_key = db.Column(db.String(50))
     address = db.Column(db.String(50))
     listen_port = db.Column(db.Integer)
-    dns = db.Column(db.String(50))
+    lighthouse = db.Column(db.Boolean, default=False) # Is this a lighthouse peer?
+    dns = db.Column(db.String(50))      # A peer could have a specific DNS requirement but generally leave it to the network config
     peers_list = db.Column(db.Text)
     network = db.Column(db.Integer)
     post_up = db.Column(db.Text)
@@ -43,6 +44,9 @@ class Peer(db.Model):
     def get_public_key(self):
         public_key = WireguardKey(self.private_key).public_key()
         return public_key
+    
+    def is_lighthouse(self):
+        return self.lighthouse
     
 # JSON Schema
 class PeerSchema(ma.Schema):
@@ -107,6 +111,7 @@ def peer_load_test_db():
             "private_key": "wBIQfi2Z+DFhAW7Z57tqVTyG/z1MQpzNwGlWrAcF2F4=",
             "listen_port": 51820,
             "dns": "10.10.11.53",
+            "lighthouse": True,
             "peers_list": {
                     "AllowedIPs": ["0.0.0.0/0", "::/0"],
                     "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
@@ -122,6 +127,7 @@ def peer_load_test_db():
             "private_key": "KIy+vrfZDJ5KqHm0qrLK58Mqy5iV2OKx+l/vKXfTaXI=",
             "listen_port": 51820,
             "dns": "172.122.88.53",
+            "lighthouse": True,
             "peers_list": {
                     "AllowedIPs": ["0.0.0.0/0", "::/0"],
                     "PublicKey": "iISiPbGn4wSPhloFOtDN2BgqfJ1MqKKkmm0WtWc9sFE=",
@@ -136,6 +142,7 @@ def peer_load_test_db():
             "address": "192.168.43.1/32",
             "private_key": "aHt3pJBwvbcvlA8sXDCsWuN3tRs20kg8nR8Z4kyayGA=",
             "listen_port": 51820,
+            "lightouse": True,
             "peers_list": {
                     "AllowedIPs": ["192.168.43.0/24"],
                     "PublicKey": "OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8=",

@@ -1,10 +1,9 @@
 import ipaddress
 import json
-import os
 from . import helpers
 from flask import Blueprint, current_app, render_template, redirect, url_for, request
 from ..models import db, Config, Network, Peer, subnets
-from wireguard_tools.wireguard_key import WireguardKey
+from wireguard_tools import WireguardKey
 
 
 wizard = Blueprint("wizard", __name__, url_prefix="/wizard")
@@ -23,13 +22,14 @@ def setup():
 
 @wizard.route("/basic", methods=["POST"])
 def wizard_basic():
-    # print(request.form)
+    #print(request.form)
     # Get the form data
-    message = ""
+    message = "Build Log:"
     name = request.form["name"]
     description = request.form["description"]
     base_ip = request.form["base_ip"]
     subnet = request.form["subnet"]
+    sudo_password = request.form["sudoPassword"]
     dns = current_app.config["BASE_DNS"]
 
     defaults = {
@@ -74,6 +74,7 @@ def wizard_basic():
     public_key = str(new_key.public_key())
 
     # Create a new network object
+    # TODO: fix config name rotation
     new_network = Network(
         name=name,
         proxy=False,
@@ -82,6 +83,7 @@ def wizard_basic():
         peers_list="",
         base_ip=base_ip,
         subnet=subnet,
+        config_name="wg0",
         dns_server=dns,
         description=description,
         config=json.dumps(
@@ -99,6 +101,7 @@ def wizard_basic():
     # Add the new network to the database
     db.session.add(new_network)
     db.session.commit()
+    message += "\nNetwork added to database"
 
     # Create a new peer object
     # The lighthouse is always the first peer in the network
@@ -115,6 +118,7 @@ def wizard_basic():
         private_key=private_key,
         address=lh_address,
         listen_port=listen_port,
+        lighthouse=True,
         post_up=post_up_string,
         post_down=post_down_string,
         network=new_network.id,
@@ -126,21 +130,38 @@ def wizard_basic():
     # Add the new peer to the database
     db.session.add(new_peer)
     db.session.commit()
+    message += "\nPeer added to database"
 
     # Create the adapter configuration file
     adapter_string = helpers.config_build(new_peer, new_network)
 
-    if helpers.config_save(adapter_string, "server/wg0.conf"):
-        message += "Network created successfully"
+    if helpers.config_save(adapter_string, "server","wg0.conf"):
+        message += "\nNetwork config saved successfully"
     else:
-        message += "Error creating network"
+        message += "\nError creating network config file"
     networks = Network.query.all()
     
     # check if wireguard is installed
-    if helpers.check_wireguard():
-        os.copy("server/wg0.conf", "/etc/wireguard/wg0.conf")
-        message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
+    if helpers.check_wireguard(sudo_password):
+        try:
+            helpers.run_sudo(f"cp {current_app.basedir}/output/server/wg0.conf /etc/wireguard/wg0.conf", sudo_password)
+        except Exception as e:
+            print(e)
+            message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
+        else:
+            message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
     else:
         message += "\nWireguard is not installed on this machine"
         
+    print(message)    
     return render_template("networks.html", networks=networks, message=message)
+
+@wizard.route("/advanced", methods=["POST"])
+def wizard_advanced():
+    message = "Advanced wizard not implemented yet"
+    defaults = {
+        "base_ip": current_app.config["BASE_IP"],
+        "base_port": current_app.config["BASE_PORT"],
+        "dns": current_app.config["BASE_DNS"],
+    }
+    return render_template("wizard_setup.html", message = message, defaults=defaults, subnets=subnets)

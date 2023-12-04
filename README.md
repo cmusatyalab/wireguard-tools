@@ -14,26 +14,44 @@ At present, the development roadmap is here [ROADMAP.md](ROADMAP.md)
 
 ## Installation
 
-At present, simply clone this repository
+At present, simply clone this repository onto a Linux machine. A Debian-based linux build is the only currently supported OS.
 
 ```bash
-    git clone https://github.com/radawson/wireguard-gui
+git clone https://github.com/radawson/wireguard-gui
 ```
 
-Next, install the requirements with
+After the repository is cloned, change directory into the wireguard-gui directory
 
 ```bash
-    pip install -r requirements.txt
+cd wireguard-gui
+```
+
+Next, install the python requirements with
+
+```bash
+pip install -r requirements.txt
 ```
 
 Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address.
 
+***Security warning*** You can also use 0.0.0.0 to listen on all IP addresses, but understand the implications of this.
+
 Finally, move to the src/ directory and run the program
 
 ```bash
-    cd src
-    python run.py
+cd src
+python3 run.py
 ```
+
+## Basic Usage
+
+After you have successfully installed the server, you can navigate to https://[IP Address] and click on "wizard". From here, the fastest way to setup is to type a name and click build.
+
+## Troubleshooting
+
+If you have problems connecting to the web site, first check to make sure you have port 5000 (default) or whichever port you chose open.
+
+The webserver will work on windows, but the automated server setup will only activate on a Debian-based linux system.
 
 ## Acknowledgements
 
