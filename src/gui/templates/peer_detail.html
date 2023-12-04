@@ -176,6 +176,7 @@
         updateConfigCard();
         // Add event listener for the 'change' event on the #network select element
         document.getElementById('network').addEventListener('change', updateConfigCard);
+        document.getElementById('dns').addEventListener('change', updateConfigCard);
     };
 
     // Add event listener for the 'click' event on the #btn_copyConfig button
@@ -228,6 +229,12 @@
         console.log(document.getElementById('listen_port').value)
         if (document.getElementById('listen_port').value != "None") {
             config += "\nListenPort = " + document.getElementById('listen_port').value;
+        }
+        if (document.getElementById('postUp').value != "None") {
+            config += "\nPostUp = " + document.getElementById('postUp').value;
+        }
+        if (document.getElementById('postDown').value != "None") {
+            config += "\nPostDown = " + document.getElementById('postDown').value;
         }
         if (document.getElementById('dns').value != "None") {
             config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
