@@ -69,9 +69,9 @@ def generate_cert(cert_path, cert_name, key_name):
     if not exists(cert_path):
         os.makedirs(cert_path)
     run_cmd(
-        "openssl req -nodes -x509 -newkey rsa:4096" +
-        f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}" +
-        " -subj /O=ClockWorx/CN=wireguard-gui"
+        "openssl req -nodes -x509 -newkey rsa:4096"
+        + f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}"
+        + " -subj /O=ClockWorx/CN=wireguard-gui"
     )
 
 
@@ -97,6 +97,27 @@ def get_public_ip():
     finally:
         s.close()
     return ip
+
+
+def port_open(port: int, sudo_password: str):
+    print(f"Test psutil for port {port}\n\t{port in psutil.net_connections()}")
+    # Check if the port is open
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(2)
+    result = sock.connect_ex(("127.0.0.1", port))
+    if result == 0:
+        return True
+    else:
+        try:
+            run_sudo(f"ufw allow {port}", sudo_password)
+        except Exception as e:
+            print(e)
+            return False
+        return True
+
+
+def port_close(port: int, sudo_password: str):
+    run_sudo(f"ufw deny {port}", sudo_password)
 
 
 def run_cmd(command) -> str:
