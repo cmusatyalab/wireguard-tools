@@ -91,10 +91,10 @@
         <div class="container">
             <!-- TODO fix toast title -->
             {% if message %}
-            <div class="toast fade mx-auto" id="basic-toast" role="alert" aria-live="assertive"
-                aria-atomic="true" data-mdb-toast-init data-mdb-autohide="true" data-mdb-delay="3000"
-                data-mdb-position="top-right" data-mdb-append-to-body="true" data-mdb-stacking="true"
-                data-mdb-width="350px" data-mdb-offset="50" data-mdb-color="primary">
+            <div class="toast fade mx-auto" id="basic-toast" role="alert" aria-live="assertive" aria-atomic="true"
+                data-mdb-toast-init data-mdb-autohide="true" data-mdb-delay="3000" data-mdb-position="top-right"
+                data-mdb-append-to-body="true" data-mdb-stacking="true" data-mdb-width="350px" data-mdb-offset="50"
+                data-mdb-color="primary">
                 <div class="toast-header">
                     <strong class="me-auto">Notification</strong>
                     <small>{{message.type}}</small>
@@ -176,11 +176,31 @@
 
     </footer>
     <!-- Footer -->
+    <!-- Sudo Password Modal -->
+    <div class="modal fade" id="sudoPasswordModal" tabindex="-1" aria-labelledby="sudoPasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sudoPasswordModalLabel">Enter Sudo Password</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="password" id="sudoPassword" class="form-control" placeholder="Sudo Password">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
+                    <button type="button" id="confirmPassword" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MDB -->
     <script type="text/javascript" src="{{url_for('static', filename='js/mdb.min.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/mdb.umd.min.js')}}"></script>
     <!-- MDB PLUGINS -->
-  <script type="text/javascript" src="{{url_for('static', filename='plugins/js/all.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='plugins/js/all.min.js')}}"></script>
     <!-- Custom scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
