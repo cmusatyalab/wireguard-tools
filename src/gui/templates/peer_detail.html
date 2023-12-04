@@ -227,14 +227,12 @@
         if (document.getElementById('listen_port').value != "None") {
             config += "\nListenPort = " + document.getElementById('listen_port').value;
         }
-        {% if peer.is_lighthouse() %}
-        if (document.getElementById('postUp').value != "None") {
+        if (document.getElementById('postUp') && document.getElementById('postUp').value != "None") {
             config += "\nPostUp = " + document.getElementById('postUp').value;
         }
-        if (document.getElementById('postDown').value != "None") {
+        if (document.getElementById('postDown') && document.getElementById('postDown').value != "None") {
             config += "\nPostDown = " + document.getElementById('postDown').value;
         }
-        {% endif %}
         if (document.getElementById('dns').value != "None") {
             config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
         } else {
