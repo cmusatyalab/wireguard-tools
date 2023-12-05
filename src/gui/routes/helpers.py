@@ -7,6 +7,10 @@ import psutil
 import socket
 
 
+def check_active(peer_list):
+    for peer in peer_list:
+        pass
+
 def check_wireguard(sudo_password: str):
     if not exists("/etc/wireguard"):
         # check if this is a linux machine
@@ -69,9 +73,9 @@ def generate_cert(cert_path, cert_name, key_name):
     if not exists(cert_path):
         os.makedirs(cert_path)
     run_cmd(
-        "openssl req -nodes -x509 -newkey rsa:4096" +
-        f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}" +
-        " -subj /O=ClockWorx/CN=wireguard-gui"
+        "openssl req -nodes -x509 -newkey rsa:4096"
+        + f" -keyout {cert_path}/{key_name} -out {cert_path}/{cert_name}"
+        + " -subj /O=ClockWorx/CN=wireguard-gui"
     )
 
 
@@ -97,6 +101,16 @@ def get_public_ip():
     finally:
         s.close()
     return ip
+
+
+def port_open(port: int):
+    # Check if the port is open
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex(("8.8.8.8", port))
+    if result == 0:
+        return True
+    else:
+        return False
 
 
 def run_cmd(command) -> str:

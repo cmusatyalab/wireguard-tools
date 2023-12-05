@@ -14,7 +14,7 @@
                     <h5 class="card-title">{{ peer.name }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
                     <div class="form-outline">
-                        <form method="POST">
+                        <form id="addPeerForm" method="POST">
                             <div class="mb-3 form-outline" data-mdb-input-init>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ peer.name }}">
                                 <label for="name" class="form-label">Node Name</label>
@@ -86,10 +86,12 @@
                                             hidden>{{ network.get_config()}}</textarea>
                                         {% endfor %}
                                     </div>
+                                    <input type="hidden" id="sudoPasswordInput" name="sudoPassword">
                                 </div>
                                 <div class="row ">
                                     <div class="col-4 text-center">
-                                        <button type="submit" class="btn btn-primary">{{s_button}}</button>
+                                        <button type="button" class="btn btn-primary"
+                                            id="btn-{{s_button}}">{{s_button}}</button>
                                     </div>
                                     <div class="col-4 text-center">
                                         <a href="{{url_for('peers.peers_all')}}" type="button"
@@ -174,29 +176,46 @@
     window.onload = function () {
         updatePublicKey();
         updateConfigCard();
+
+
+        // Add listener for add button that calls the sudo modal on base.html
+        document.getElementById('btn-Add').addEventListener('click', function (event) {
+            event.preventDefault();
+            var sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'), {
+                backdrop: 'static',
+                keyboard: false
+            });
+            sudoPasswordModal.show();
+        });
+
+        document.getElementById('confirmPassword').addEventListener('click', function () {
+                document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;
+                document.getElementById('addPeerForm').submit();
+            });
+
+
+        // Add event listener for the 'click' event on the #btn_copyConfig button
+        document.getElementById('btn_copyConfig').addEventListener('click', function () {
+            let config = document.getElementById('peer_config');
+            config.select();
+            config.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+        });
+
+        // Add event listener for the 'click' event on the #btn_downloadConfig button
+        document.getElementById('btn_downloadConfig').addEventListener('click', function () {
+            let configText = document.getElementById('peer_config').value;
+            let blob = new Blob([configText], { type: 'text/plain' });
+            let url = URL.createObjectURL(blob);
+            let link = document.createElement('a');
+            link.href = url;
+            link.download = 'wg0.conf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
     };
-
-    // Add event listener for the 'click' event on the #btn_copyConfig button
-    document.getElementById('btn_copyConfig').addEventListener('click', function () {
-        let config = document.getElementById('peer_config');
-        config.select();
-        config.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-    });
-
-    // Add event listener for the 'click' event on the #btn_downloadConfig button
-    document.getElementById('btn_downloadConfig').addEventListener('click', function () {
-        let configText = document.getElementById('peer_config').value;
-        let blob = new Blob([configText], { type: 'text/plain' });
-        let url = URL.createObjectURL(blob);
-        let link = document.createElement('a');
-        link.href = url;
-        link.download = 'wg0.conf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    });
 
     function generateAndSetPrivateKey() {
         let keypair = wireguard.generateKeypair();

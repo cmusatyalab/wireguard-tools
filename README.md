@@ -53,6 +53,14 @@ If you have problems connecting to the web site, first check to make sure you ha
 
 The webserver will work on windows, but the automated server setup will only activate on a Debian-based linux system.
 
+## Known Issues
+
+* Deleting peers from the running server not working
+
+* Too many sudo requests from the user
+
+* New server configs don't rotate properly
+
 ## Acknowledgements
 
 We would like to thank Carnegie Mellon University for the WireGuard-Tools code that this project is based on. Their work has been invaluable in helping us get this project off the ground.
