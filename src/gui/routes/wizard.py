@@ -108,7 +108,7 @@ def wizard_basic():
 
     # Create a new peer object
     # The lighthouse is always the first peer in the network
-    lh_address = Network.append_ip(base_ip, 1) + "/32"
+    lh_address = Network.append_ip(base_ip, 1) + str(subnet)
 
     # Get adapter names for the machine
     adapters = helpers.get_adapter_names()
