@@ -72,8 +72,6 @@
     // Add click event listeners to the "Activate" buttons
     document.querySelectorAll('.activateButton').forEach(function (button) {
         button.addEventListener('click', function () {
-            // Store the network id in the hidden input field in the form
-            document.getElementById('networkId').value = this.dataset.networkId;
             // Show the modal
             let sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'));
             sudoPasswordModal.show();
