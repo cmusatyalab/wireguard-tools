@@ -83,16 +83,11 @@
 
     // Add a submit event listener to the modal
     document.getElementById('confirmPassword').addEventListener('click', function () {
-        // submit the form
-        document.getElementById('sudoPasswordForm').submit();
-    });
 
-    document.getElementById('sudoPasswordForm').addEventListener('submit', function (event) {
-        event.preventDefault();
+        let sudo_form = document.getElementById('sudoPasswordForm');
+
         // Retrieve the network id from the hidden input field in the form
         let networkId = document.getElementById('networkId').value;
-        // Retrieve the sudo password from the form
-        let sudoPassword = document.getElementById('sudoPassword').value;
         // Build the URL
         let buttonLabel = document.querySelector(`button[data-network-id="${networkId}"]`).textContent.trim();
         // Build the URL
@@ -105,8 +100,8 @@
         }
         // Make a POST request to the URL
         // Set the action attribute of the form
-        this.action = url;
-        this.submit();
+        sudo_form.action = url;
+        sudo_form.submit();
     });
 </script>
 {% endblock %}
