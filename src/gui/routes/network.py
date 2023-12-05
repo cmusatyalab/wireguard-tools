@@ -122,7 +122,7 @@ def network_activate(network_id):
     message = ""
     sudo_password = request.form.get('sudoPassword')
     network = Network.query.filter_by(id=network_id).first()
-    if network.config_name in helpers.get_adapter_names():
+    if network.adapter_name in helpers.get_adapter_names():
         message += "Network already active"
         network.active = True
         db.session.commit()
