@@ -7,6 +7,10 @@ import psutil
 import socket
 
 
+def check_active(peer_list):
+    for peer in peer_list:
+        pass
+
 def check_wireguard(sudo_password: str):
     if not exists("/etc/wireguard"):
         # check if this is a linux machine
