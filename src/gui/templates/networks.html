@@ -83,6 +83,12 @@
 
     // Add a submit event listener to the modal
     document.getElementById('confirmPassword').addEventListener('click', function () {
+        // submit the form
+        document.getElementById('sudoPasswordForm').submit();
+    });
+
+    document.getElementById('sudoPasswordForm').addEventListener('submit', function (event) {
+        event.preventDefault();
         // Retrieve the network id from the hidden input field in the form
         let networkId = document.getElementById('networkId').value;
         // Retrieve the sudo password from the form
@@ -98,48 +104,9 @@
             url = baseUrl + '/deactivate/' + networkId;
         }
         // Make a POST request to the URL
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                sudoPassword: sudoPassword
-            })
-        }).then(function (response) {
-            if (response.ok) {
-                // Reload the page
-                window.location.reload();
-            } else {
-                // Display an error message
-                let sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'));
-                sudoPasswordModal.hide();
-                let sudoPasswordErrorModal = new mdb.Modal(document.getElementById('sudoPasswordErrorModal'));
-                sudoPasswordErrorModal.show();
-            }
-        });
+        // Set the action attribute of the form
+        this.action = url;
+        this.submit();
     });
-
-    // document.getElementById('sudoPasswordForm').addEventListener('submit', function (event) {
-    //     event.preventDefault();
-    //     // Retrieve the network id from the hidden input field in the form
-    //     let networkId = document.getElementById('networkId').value;
-    //     // Retrieve the sudo password from the form
-    //     let sudoPassword = document.getElementById('sudoPassword').value;
-    //     // Build the URL
-    //     let buttonLabel = document.querySelector(`button[data-network-id="${networkId}"]`).textContent.trim();
-    //     // Build the URL
-    //     let baseUrl = "{{ url_for('networks.networks_all') }}";
-    //     let url;
-    //     if (buttonLabel === 'Activate') {
-    //         url = baseUrl + '/activate/' + networkId;
-    //     } else if (buttonLabel === 'Deactivate') {
-    //         url = baseUrl + '/deactivate/' + networkId;
-    //     }
-    //     // Make a POST request to the URL
-    //     // Set the action attribute of the form
-    //     this.action = url;
-    //     this.submit();
-    // });
 </script>
 {% endblock %}
