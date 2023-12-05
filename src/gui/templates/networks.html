@@ -63,6 +63,7 @@
     <div class="container-fluid">
         <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
             configurations are essentially in an unknown state.</p>
+        <input type="hidden" id="networkId">
     </div>
 </div>
 {% endblock %}
@@ -72,6 +73,8 @@
     // Add click event listeners to the "Activate" buttons
     document.querySelectorAll('.activateButton').forEach(function (button) {
         button.addEventListener('click', function () {
+            // Store the network id in the hidden input field in the form
+            document.getElementById('networkId').value = this.dataset.networkId;
             // Show the modal
             let sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'));
             sudoPasswordModal.show();
