@@ -27,14 +27,14 @@ sample_config = {
 
 ## FUNCTIONS ##
 
-def add_peer(peer, network):
+def add_peer(peer, network, sudo_password):
     # Add a new peer to the running server
     # TODO: This subnet may change later
     peer.subnet = 32
     peer_config = f"wg set {network.adapter_name} peer {peer.get_public_key()} allowed-ips {peer.address}/{peer.subnet}"
     print(f"Peer config: {peer_config}")
     try:
-        helpers.run_sudo(peer_config)
+        helpers.run_sudo(peer_config, sudo_password)
     except Exception as e:
         print(e)
         return False
@@ -92,6 +92,7 @@ def peers_add():
         dns = request.form["dns"]
         #peer_config = request.form["peer_config"]
         network = Network.query.filter_by(id=request.form["network"]).first()
+        sudo_password = request.form["sudoPassword"]
 
         new_peer = Peer(
             name=name,
@@ -105,7 +106,7 @@ def peers_add():
         db.session.add(new_peer)
         db.session.commit()
         # Add peer to running server
-        if add_peer(new_peer, network):
+        if add_peer(new_peer, network, sudo_password):
             message = "Peer added successfully"
         else:
             message = "Peer added successfully, but failed to add to running server"
