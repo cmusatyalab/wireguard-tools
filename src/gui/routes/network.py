@@ -130,7 +130,7 @@ def network_activate(network_id):
         network_list = query_all_networks()
         return render_template("networks.html", message=message, networks=network_list)
     try:
-        print(command)
+        print(sudo_password)
         helpers.run_sudo("wg-quick up " + network.adapter_name, sudo_password)
     except Exception as e:
         traceback.print_exc()
