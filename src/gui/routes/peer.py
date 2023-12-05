@@ -28,7 +28,10 @@ sample_config = {
 ## FUNCTIONS ##
 
 def add_peer(peer, network):
-    peer_config = f"wg set {network.config_name} peer {peer.get_public_key()} allowed-ips {peer.address}/32"
+    # Add a new peer to the running server
+    # TODO: This subnet may change later
+    peer.subnet = 32
+    peer_config = f"wg set {network.adapter_name} peer {peer.get_public_key()} allowed-ips {peer.address}/{peer.subnet}"
     print(f"Peer config: {peer_config}")
     try:
         helpers.run_sudo(peer_config)
