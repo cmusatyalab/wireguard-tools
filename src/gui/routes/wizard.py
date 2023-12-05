@@ -156,10 +156,6 @@ def wizard_basic():
     else:
         message += "\nWireguard is not installed on this machine"
         
-    if helpers.port_open(listen_port, sudo_password):
-        message += f"\nPort {listen_port} is open"
-    else:
-        message += f"\nPort {listen_port} is not open. Check firewall settings"
     print(message)    
     return render_template("networks.html", networks=networks, message=message)
 
