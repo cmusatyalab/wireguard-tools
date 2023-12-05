@@ -188,15 +188,11 @@
             sudoPasswordModal.show();
         });
 
-        let element = document.getElementById('confirmPassword');
-        if (element) {
-            element.addEventListener('click', function () {
+        document.getElementById('confirmPassword').addEventListener('click', function () {
                 document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;
                 document.getElementById('addPeerForm').submit();
-            })
-        } else {
-            console.log("No confirm password button found");
-        }
+            });
+
 
         // Add event listener for the 'click' event on the #btn_copyConfig button
         document.getElementById('btn_copyConfig').addEventListener('click', function () {
