@@ -40,6 +40,7 @@ def add_peer(peer, network, sudo_password):
         return False
     else:
         return True
+    
 
 def query_all_peers():
     peer_query = Peer.query.all()
@@ -57,7 +58,7 @@ def query_all_networks():
 ## ROUTES ##
 
 
-@peers.route("/", methods=["GET", "POST", "DELETE", "PATCH"])
+@peers.route("/", methods=["GET", "POST"])
 def peers_all():
     if request.method == "POST":
         message = "Bulk peers added successfully"
