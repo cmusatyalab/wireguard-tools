@@ -139,6 +139,7 @@ def parse_wg_output(output):
                 peers_data[current_peer]["transfer_tx"] = transfer_data[1]
         elif handshake_match and current_peer:
             time_str = handshake_match.group(1)
+            print(f"Time string: {time_str}")
             time_lst = time_str.split(", ")
             days, hours, minutes, seconds = 0, 0, 0, 0
             time_matches = re.findall(r"\d+", time_str)
