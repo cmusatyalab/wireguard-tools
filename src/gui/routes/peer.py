@@ -126,7 +126,10 @@ def peers_add():
         dns = request.form["dns"]
         # peer_config = request.form["peer_config"]
         network = Network.query.filter_by(id=request.form["network"]).first()
-        sudo_password = request.form["sudoPassword"]
+        if request.form.get("sudoPassword"):
+            sudo_password = request.form.get("sudoPassword")
+        else:
+            sudo_password = current_app.config["SUDO_PASSWORD"]
 
         new_peer = Peer(
             name=name,
@@ -160,7 +163,7 @@ def peers_add():
 def peer_delete(peer_id):
     message = f"Deleting peer {peer_id}"
     peer = Peer.query.filter_by(id=peer_id).first()
-    network = Network.query.filter_by(id=request.form["network"]).first()
+    network = Network.query.filter_by(id=peer.network).first()
     if request.form.get("sudoPassword"):
         sudo_password = request.form.get("sudoPassword")
     else:
