@@ -49,6 +49,8 @@ def query_all_peers():
         network = Network.query.filter_by(id=peer.network).first()
         current_peers = helpers.get_peers_status(network)
         print(f"Searching for {peer.public_key} in {current_peers.keys()}")
+        for key in current_peers.keys():
+            print(f"Key: {key}")
         if any(peer.public_key == key for key in current_peers.keys()):
             print(f"Found {peer.public_key}")
             if current_peers[peer.public_key]["latest_handshake"] < 60:
