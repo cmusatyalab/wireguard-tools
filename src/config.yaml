@@ -4,6 +4,8 @@ SQLALCHEMY_TRACK_MODIFICATIONS: True
 SQLALCHEMY_DATABASE_URI: 'sqlite:///{basedir}/wg.db'
 HOST_IP: '127.0.0.1'
 HOST_PORT: '5000'
+# TODO: Fix this to be more secure
+SUDO_PASSWORD: 'password'
 
 # TLS configuration
 PKI_CERT_PATH: '{basedir}/pki'
@@ -28,4 +30,3 @@ OUTPUT_DIR: '{basedir}/output'
 
 # Logging
 LOG_DIR: '{basedir}/logs'
-SUDO_PASSWORD: 'password'
