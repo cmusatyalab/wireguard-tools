@@ -56,10 +56,9 @@ def query_all_peers():
             if str(peer.public_key) == str(key):
                 print(f"Found {peer.public_key}")
                 if "latest_handshake" in current_peers[str(peer.public_key)]:
-                    if (
-                        int(current_peers[str(peer.public_key)]["latest_handshake"])
-                        <= int(current_app.config["PEER_ACTIVITY_TIMEOUT"])
-                    ):
+                    if int(
+                        current_peers[str(peer.public_key)]["latest_handshake"]
+                    ) <= int(current_app.config["PEER_ACTIVITY_TIMEOUT"]):
                         print(f"Peer {peer.public_key} is active")
                         peer.active = True
                     else:
@@ -67,7 +66,7 @@ def query_all_peers():
                 else:
                     print(f"No handshake not found for {peer.public_key}")
                     peer.active = False
-            
+
     return peer_query
 
 
