@@ -60,12 +60,14 @@ def query_all_peers():
                         int(current_peers[str(peer.public_key)]["latest_handshake"])
                         <= int(current_app.config["PEER_ACTIVITY_TIMEOUT"])
                     ):
+                        print(f"Peer {peer.public_key} is active")
                         peer.active = True
                     else:
                         peer.active = False
                 else:
                     print(f"No handshake not found for {peer.public_key}")
                     peer.active = False
+            
     return peer_query
 
 
