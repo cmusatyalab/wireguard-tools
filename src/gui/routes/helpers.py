@@ -93,8 +93,8 @@ def get_adapter_names():
 
     return adapter_names
 
-def get_peers_status(network):
-    output = run_sudo(f"wg show {network.adapter_name}", current_app.config["SUDO_PASSWORD"])
+def get_peers_status(network, sudo_password=current_app.config["SUDO_PASSWORD"]):
+    output = run_sudo(f"wg show {network.adapter_name}", sudo_password )
 
     return parse_wg_output(output)
 

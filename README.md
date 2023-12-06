@@ -34,6 +34,8 @@ pip install -r requirements.txt
 
 Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address.
 
+This is also a good time to make sure that your firewall has port 5000 (default) open.
+
 ***Security warning*** You can also use 0.0.0.0 to listen on all IP addresses, but understand the implications of this.
 
 Finally, move to the src/ directory and run the program

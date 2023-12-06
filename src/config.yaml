@@ -28,3 +28,4 @@ OUTPUT_DIR: '{basedir}/output'
 
 # Logging
 LOG_DIR: '{basedir}/logs'
+SUDO_PASSWORD: 'password'
