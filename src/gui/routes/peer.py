@@ -29,8 +29,6 @@ sample_config = {
 
 def add_peer(peer, network, sudo_password):
     # Add a new peer to the running server
-    # TODO: This subnet may change later
-    peer.subnet = 32
     peer_config = f"wg set {network.adapter_name} peer {peer.get_public_key()} allowed-ips {peer.address}/{peer.subnet}"
     print(f"Peer config: {peer_config}")
     try:
@@ -48,7 +46,12 @@ def query_all_peers():
         peer.public_key = wgt.WireguardKey(
             peer.private_key
         ).public_key()
-    return peer_query
+        network = Network.query.filter_by(id=peer.network).first()
+        current_peers = helpers.get_peers_status(network)
+        if peer.public_key in current_peers:
+            if current_peers[peer.public_key]["latest_handshake"] < 60:
+                peer.active = True
+        return peer_query
 
 def query_all_networks():
     network_query = Network.query.all()
