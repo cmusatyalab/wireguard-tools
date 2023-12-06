@@ -50,9 +50,9 @@ def config_build(peer: Peer, network: Network) -> str:
     if peer.dns:
         config_file_string += f"DNS = {peer.dns}\n\n"
     elif network.dns_server:
-        adapter_string += f"DNS = {network.dns_server}\n\n"
+        config_file_string += f"DNS = {network.dns_server}\n\n"
     else:
-        adapter_string += "\n"
+        config_file_string += "\n"
     config_file_string += network_config_string
 
     return config_file_string
