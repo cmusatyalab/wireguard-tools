@@ -50,9 +50,11 @@ def query_all_peers():
     peer_query = Peer.query.all()
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
+        print(f"Peer public key: {peer.public_key}")
         network = Network.query.filter_by(id=peer.network).first()
         current_peers = helpers.get_peers_status(network)
         for key in current_peers.keys():
+            print(f"Checking {key}")
             if str(peer.public_key) == str(key):
                 print(f"Found {peer.public_key}")
                 if "latest_handshake" in current_peers[str(peer.public_key)]:
