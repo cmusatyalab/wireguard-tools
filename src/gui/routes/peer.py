@@ -58,6 +58,7 @@ def query_all_peers():
                 else:
                     peer.active = False
             else:
+                print(f"Did not find {peer.public_key}")
                 peer.active = False
     return peer_query
 
