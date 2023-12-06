@@ -139,19 +139,17 @@ def parse_wg_output(output):
                 peers_data[current_peer]["transfer_tx"] = transfer_data[1]
         elif handshake_match and current_peer:
             time_str = handshake_match.group(1)
-            print(f"Time string: {time_str}")
-            time_lst = time_str.split(", ")
+            time_lst = time_str[:-4].split(", ")
             days, hours, minutes, seconds = 0, 0, 0, 0
-            time_matches = re.findall(r"\d+", time_str)
             for element in time_lst:
                 if "day" in element:
-                    days = int(time_matches[0])
+                    days = int(element.split()[0])
                 elif "hour" in element:
-                    hours = int(time_matches[1])
+                    hours = int(element.split()[0])
                 elif "minute" in element:
-                    minutes = int(time_matches[2])
+                    minutes = int(element.split()[0])
                 elif "second" in element:
-                    seconds = int(time_matches[3])
+                    seconds = int(element.split()[0])
             total_seconds = days * 86400 + hours * 3600 + minutes * 60 + seconds
             print(f"{current_peer} - time: {total_seconds}")
             peers_data[current_peer]["latest_handshake"] = total_seconds
