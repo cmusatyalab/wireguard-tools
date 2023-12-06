@@ -46,8 +46,11 @@ def add_peer(peer, network, sudo_password):
         return True
 
 
-def query_all_peers():
-    peer_query = Peer.query.all()
+def query_all_peers(network_id=None):
+    if network_id:
+        peer_query = Peer.query.filter_by(network=network_id).all()
+    else:
+        peer_query = Peer.query.all()
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
         print(f"Peer public key: {peer.public_key}")
@@ -100,14 +103,8 @@ def peers_all():
 
     elif request.method == "GET":
         network_id = request.args.get("network_id")
-        if network_id:
-            peer_list = Peer.query.filter_by(network=network_id).all()
-            return render_template(
-                "peers.html", peer_list=peer_list, network_id=network_id
-            )
-        else:
-            peer_list = query_all_peers()
-            return render_template("peers.html", peer_list=peer_list)
+        peer_list = query_all_peers(network_id)
+        return render_template("peers.html", peer_list=peer_list)
     else:
         message = "Invalid request method"
         return render_template("peers.html", message=message, peer_list=peer_list)
