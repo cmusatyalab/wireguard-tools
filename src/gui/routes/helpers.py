@@ -39,7 +39,13 @@ def config_add_peer(config_string: str, peer: Peer) -> str:
 
 def config_build(peer: Peer, network: Network) -> str:
     # Create the adapter configuration file
-    config_file_string = f"[Interface]\nPrivateKey = {peer.private_key}\nAddress = {peer.address}\nListenPort = {peer.listen_port}\nSaveConfig = true\n"
+    if peer.lighthouse:
+        subnet = str(network.subnet)
+        network_config_string = ""
+    else:
+        subnet = str(peer.subnet)
+        network_config_string = network.get_config()
+    config_file_string = f"[Interface]\nPrivateKey = {peer.private_key}\nAddress = {peer.address}/{subnet}\nListenPort = {peer.listen_port}\nSaveConfig = true\n"
     if peer.post_down:
         config_file_string += f"PostDown = {peer.post_down}\n"
     if peer.post_up:
@@ -48,7 +54,6 @@ def config_build(peer: Peer, network: Network) -> str:
         config_file_string += f"DNS = {peer.dns}\n"
     elif network.dns_server:
         adapter_string += f"DNS = {network.dns_server}\n"
-    network_config_string = network.get_config()
     config_file_string += network_config_string
 
     return config_file_string

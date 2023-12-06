@@ -12,13 +12,13 @@ class Peer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     private_key = db.Column(db.String(50))
-    address = db.Column(db.String(50))
+    address = db.Column(db.String(50))  # This is the IP address of the peer without subnet
+    subnet = db.Column(db.Integer, default=32)      # This is the subnet for the Peer address
     listen_port = db.Column(db.Integer)
     lighthouse = db.Column(db.Boolean, default=False) # Is this a lighthouse peer?
     dns = db.Column(db.String(50))      # A peer could have a specific DNS requirement but generally leave it to the network config
     peers_list = db.Column(db.Text)
     network = db.Column(db.Integer)
-    subnet = db.Column(db.Integer)
     post_up = db.Column(db.Text)
     post_down = db.Column(db.Text)
     description = db.Column(db.Text)
