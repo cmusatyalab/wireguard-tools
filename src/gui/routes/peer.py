@@ -48,10 +48,15 @@ def query_all_peers():
         ).public_key()
         network = Network.query.filter_by(id=peer.network).first()
         current_peers = helpers.get_peers_status(network)
-        if peer.public_key in current_peers:
+        print(f"Current peers: {current_peers}")
+        if peer.public_key in current_peers.keys():
             if current_peers[peer.public_key]["latest_handshake"] < 60:
                 peer.active = True
-        return peer_query
+            else:
+                peer.active = False
+        else:
+            peer.active = False
+    return peer_query
 
 def query_all_networks():
     network_query = Network.query.all()
