@@ -1,7 +1,12 @@
-from flask import Blueprint, current_app, render_template, render_template_string, request
+from flask import (
+    Blueprint,
+    current_app,
+    render_template,
+    request,
+)
 from gui.models import db, Peer, Network
 from gui.routes import helpers
-import json
+
 
 # Testing wg input
 import wireguard_tools as wgt
@@ -27,6 +32,7 @@ sample_config = {
 
 ## FUNCTIONS ##
 
+
 def add_peer(peer, network, sudo_password):
     # Add a new peer to the running server
     peer_config = f"wg set {network.adapter_name} peer {peer.get_public_key()} allowed-ips {peer.address}/{peer.subnet}"
@@ -38,31 +44,30 @@ def add_peer(peer, network, sudo_password):
         return False
     else:
         return True
-    
+
 
 def query_all_peers():
     peer_query = Peer.query.all()
     for peer in peer_query:
-        peer.public_key = wgt.WireguardKey(
-            peer.private_key
-        ).public_key()
+        peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
         network = Network.query.filter_by(id=peer.network).first()
         current_peers = helpers.get_peers_status(network)
         for key in current_peers.keys():
             if str(peer.public_key) == str(key):
                 print(f"Found {peer.public_key}")
                 if "latest_handshake" in current_peers[str(peer.public_key)]:
-                    if current_peers[str(peer.public_key)]["latest_handshake"] < current_app.config["PEER_ACTIVITY_TIMEOUT"]:
+                    if (
+                        int(current_peers[str(peer.public_key)]["latest_handshake"])
+                        <= int(current_app.config["PEER_ACTIVITY_TIMEOUT"])
+                    ):
                         peer.active = True
                     else:
                         peer.active = False
                 else:
                     print(f"No handshake not found for {peer.public_key}")
                     peer.active = False
-            else:
-                print(f"Did not find {peer.public_key}")
-                peer.active = False
     return peer_query
+
 
 def query_all_networks():
     network_query = Network.query.all()
@@ -80,10 +85,12 @@ def peers_all():
         return render_template("peers.html", message=message, peer_list=peer_list)
 
     elif request.method == "GET":
-        network_id = request.args.get('network_id')
+        network_id = request.args.get("network_id")
         if network_id:
             peer_list = Peer.query.filter_by(network=network_id).all()
-            return render_template("peers.html", peer_list=peer_list, network_id=network_id)
+            return render_template(
+                "peers.html", peer_list=peer_list, network_id=network_id
+            )
         else:
             peer_list = query_all_peers()
             return render_template("peers.html", peer_list=peer_list)
@@ -105,7 +112,7 @@ def peers_add():
         private_key = request.form["private_key"]
         address = request.form["address"]
         dns = request.form["dns"]
-        #peer_config = request.form["peer_config"]
+        # peer_config = request.form["peer_config"]
         network = Network.query.filter_by(id=request.form["network"]).first()
         sudo_password = request.form["sudoPassword"]
 
@@ -114,7 +121,7 @@ def peers_add():
             private_key=private_key,
             address=address,
             dns=dns,
-            #peer_config=peer_config,
+            # peer_config=peer_config,
             network=network.id,
             description=description,
         )
@@ -135,6 +142,7 @@ def peers_add():
             s_button="Add",
         )
 
+
 @peers.route("/delete/<int:peer_id>", methods=["POST"])
 def peer_delete(peer_id):
     peer = Peer.query.filter_by(id=peer_id).first()
@@ -144,9 +152,10 @@ def peer_delete(peer_id):
     peer_list = query_all_peers()
     return render_template("peers.html", message=message, peer_list=peer_list)
 
+
 @peers.route("/<int:peer_id>", methods=["GET", "POST"])
 def peer_detail(peer_id):
-    #peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
+    # peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
     peer = Peer.query.filter_by(id=peer_id).first()
     print(f"Found: {peer}")
 
@@ -156,17 +165,17 @@ def peer_detail(peer_id):
         peer.private_key = request.form["private_key"]
         peer.address = request.form["address"]
         peer.dns = request.form["dns"]
-        #peer_config = request.form["peer_config"]
+        # peer_config = request.form["peer_config"]
         peer.network = request.form["network"]
         print(f"Peer network ID {peer.network}")
-      
+
         db.session.commit()
         message = "Peer updated successfully"
         peer_list = query_all_peers()
         return render_template("peers.html", message=message, peer_list=peer_list)
 
     elif request.method == "GET":
-            return render_template(
+        return render_template(
             "peer_detail.html",
             networks=query_all_networks(),
             peer=peer,
@@ -175,4 +184,3 @@ def peer_detail(peer_id):
     else:
         message = "Invalid request method"
         return render_template("peer_detail.html", peer=peer, message=message)
-
