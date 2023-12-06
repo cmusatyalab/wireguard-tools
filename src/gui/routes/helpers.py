@@ -152,6 +152,7 @@ def parse_wg_output(output):
                 elif "second" in element:
                     seconds = int(time_matches[3])
             total_seconds = days * 86400 + hours * 3600 + minutes * 60 + seconds
+            print(f"{current_peer} - time: {total_seconds}")
             peers_data[current_peer]["latest_handshake"] = total_seconds
 
     return peers_data
