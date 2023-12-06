@@ -35,10 +35,10 @@ sample_config = {
 
 def add_peer(peer, network, sudo_password):
     # Add a new peer to the running server
-    peer_config = f"wg set {network.adapter_name} peer {peer.get_public_key()} allowed-ips {peer.address}/{peer.subnet}"
-    print(f"Peer config: {peer_config}")
+    peer_cmd = f"wg set {network.adapter_name} peer {peer.get_public_key()} allowed-ips {peer.address}/{peer.subnet}"
+    print(f"Add Peer: {peer_cmd}")
     try:
-        helpers.run_sudo(peer_config, sudo_password)
+        helpers.run_sudo(peer_cmd, sudo_password)
     except Exception as e:
         print(e)
         return False
@@ -76,6 +76,17 @@ def query_all_networks():
     network_query = Network.query.all()
     return network_query
 
+def remove_peer(peer, network, sudo_password):
+    # Remove a peer from the running server
+    peer_cmd = f"wg set {network.adapter_name} peer {peer.get_public_key()} remove"
+    print(f"Remove Peer: {peer_cmd}")
+    try:
+        helpers.run_sudo(peer_cmd, sudo_password)
+    except Exception as e:
+        print(e)
+        return False
+    else:
+        return True
 
 ## ROUTES ##
 
@@ -104,6 +115,7 @@ def peers_all():
 
 @peers.route("/add", methods=["GET", "POST"])
 def peers_add():
+    message = "Adding new peer"
     network_list = query_all_networks()
     new_peer = {}
     new_peer["config"] = sample_config
@@ -132,10 +144,11 @@ def peers_add():
         db.session.commit()
         # Add peer to running server
         if add_peer(new_peer, network, sudo_password):
-            message = "Peer added successfully"
+            message += "\nPeer added successfully"
         else:
-            message = "Peer added successfully, but failed to add to running server"
+            message += "\nPeer added successfully, but failed to add to running server"
         peer_list = query_all_peers()
+        print(message)
         return render_template("peers.html", message=message, peer_list=peer_list)
     else:
         return render_template(
@@ -148,11 +161,22 @@ def peers_add():
 
 @peers.route("/delete/<int:peer_id>", methods=["POST"])
 def peer_delete(peer_id):
+    message = f"Deleting peer {peer_id}"
     peer = Peer.query.filter_by(id=peer_id).first()
-    db.session.delete(peer)
-    db.session.commit()
-    message = "Peer deleted successfully"
+    network = Network.query.filter_by(id=request.form["network"]).first()
+    if request.form.get("sudoPassword"):
+        sudo_password = request.form.get("sudoPassword")
+    else:
+        sudo_password = current_app.config["SUDO_PASSWORD"]
+    # Add peer to running server
+    if remove_peer(peer, network, sudo_password):
+        db.session.delete(peer)
+        db.session.commit()
+        message += "\nPeer deleted successfully"
+    else:
+        message += "\nError removing peer from running server"
     peer_list = query_all_peers()
+    print(message)
     return render_template("peers.html", message=message, peer_list=peer_list)
 
 
