@@ -25,3 +25,6 @@ PEER_ACTIVITY_TIMEOUT: 300
 
 # Data Files
 OUTPUT_DIR: '{basedir}/output'
+
+# Logging
+LOG_DIR: '{basedir}/logs'
