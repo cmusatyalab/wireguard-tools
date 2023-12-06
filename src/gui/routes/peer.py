@@ -51,7 +51,7 @@ def query_all_peers():
         print(f"Searching for {peer.public_key} in {current_peers.keys()}")
         for key in current_peers.keys():
             print(f"Key: {key}")
-            if peer.public_key == key:
+            if str(peer.public_key) == str(key):
                 print(f"Found {peer.public_key}")
                 if current_peers[peer.public_key]["latest_handshake"] < 60:
                     peer.active = True
