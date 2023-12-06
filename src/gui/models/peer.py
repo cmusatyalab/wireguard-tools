@@ -24,6 +24,9 @@ class Peer(db.Model):
     description = db.Column(db.Text)
     active = db.Column(db.Boolean, default=False)
 
+    def get_address(self):
+        return self.address + "/" + str(self.subnet)
+
     def get_peers(self):
         j_config = json.loads(self.peers_list)
         peers = []
