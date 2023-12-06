@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, render_template_string, request
+from flask import Blueprint, current_app, render_template, render_template_string, request
 from gui.models import db, Peer, Network
 from gui.routes import helpers
 import json
@@ -52,7 +52,7 @@ def query_all_peers():
             if str(peer.public_key) == str(key):
                 print(f"Found {peer.public_key}")
                 if "latest_handshake" in current_peers[str(peer.public_key)]:
-                    if current_peers[str(peer.public_key)]["latest_handshake"] < 60:
+                    if current_peers[str(peer.public_key)]["latest_handshake"] < current_app.config["PEER_ACTIVITY_TIMEOUT"]:
                         peer.active = True
                     else:
                         peer.active = False

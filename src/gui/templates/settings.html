@@ -28,6 +28,22 @@
         </div>
     </div>
 </div>
+<hr class="hr" />
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Configuration</h2>
+    </div>
+    <hr class="hr" />
+    <form method="post">
+        {% for key, value in config.items() %}
+        <div class="form-outline my-2" data-mdb-input-init>
+            <input type="text" class="form-control" id="{{key}}" name="{{key}}" value="{{value}}">
+            <label class="form-label" for="{{key}}">{{key}}</label>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">

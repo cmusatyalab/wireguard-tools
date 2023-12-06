@@ -21,6 +21,7 @@ BASE_DNS: ''
 BASE_DNS6: ''
 BASE_KEEPALIVE: '25'
 ADAPTER_PREFIX: 'wg'
+PEER_ACTIVITY_TIMEOUT: 300
 
 # Data Files
 OUTPUT_DIR: '{basedir}/output'
