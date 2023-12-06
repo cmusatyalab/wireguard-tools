@@ -43,6 +43,8 @@ cd src
 python3 run.py
 ```
 
+The package will install the actual wireguard package after the first time you run the wizard, so be patient on that first run.
+
 ## Basic Usage
 
 After you have successfully installed the server, you can navigate to https://[IP Address] and click on "wizard". From here, the fastest way to setup is to type a name and click build.
