@@ -26,10 +26,10 @@ After the repository is cloned, change directory into the wireguard-gui director
 cd wireguard-gui
 ```
 
-Next, install the python requirements with
+Next, install the python requirements with sudo to make them global. Yes, you will get a warning about this.
 
 ```bash
-pip install -r requirements.txt
+sudo pip install -r requirements.txt
 ```
 
 Once the installation is complete, change directory into src.
@@ -69,11 +69,31 @@ The package will install the actual wireguard package after the first time you r
 
 After you have successfully installed the server, you can navigate to https://[IP Address] and click on "wizard". From here, the fastest way to setup is to type a name and click build.
 
+Once the network has been created, you can go to the Peers page and click Add Peer to add new clients.
+
+## Upgrading
+
+To upgrade to a newer version, first is git to pull the latest updates to the repository:
+
+```bash
+git pull
+```
+
+Next, check to see if there are any updates to the database configuration with the following commands:
+
+NOTE: This should be executed in the same src/ directory that you run run.py. These commands initialize the database, migrate the changes, and then upgrade the database to reflect these changes.
+
+```bash
+flask db init     # This initializes the database
+flask db migrate  # This command generates an initial migration
+flask db upgrade  # This applies the migration to the database
+```
+
 ## Troubleshooting
 
-If you have problems connecting to the web site, first check to make sure you have port 5000 (default) or whichever port you chose open.
+If you have problems connecting to the website, first check to make sure you have port 5000 (default) or whichever port you chose open. This is the port that the Flask server runs on by default.
 
-The webserver will work on windows, but the automated server setup will only activate on a Debian-based linux system.
+The webserver will work on windows, but the automated server setup will only activate on a Debian-based Linux system. This is due to the differences in command line interfaces between Windows and Linux.
 
 ## Known Issues
 
