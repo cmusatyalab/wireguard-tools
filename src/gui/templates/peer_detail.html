@@ -178,6 +178,7 @@
         updateConfigCard();
 
     };
+
     // Add listener for add button that calls the sudo modal on base.html
     document.getElementById('btn-Add').addEventListener('click', function (event) {
         event.preventDefault();
@@ -192,7 +193,6 @@
         document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;
         document.getElementById('addPeerForm').submit();
     });
-
 
     // Add event listener for the 'click' event on the #btn_copyConfig button
     document.getElementById('btn_copyConfig').addEventListener('click', function () {
@@ -215,7 +215,6 @@
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     });
-
 
     function generateAndSetPrivateKey() {
         let keypair = wireguard.generateKeypair();
