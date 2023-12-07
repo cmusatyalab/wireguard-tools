@@ -9,7 +9,7 @@ def index():
     # Check to see if the admin user has been created yet
     user_count = User.query.count()
     #if user_count == 0:
-    if 'ADMIN_CREATED' in current_app.config:
+    if 'ADMIN_CREATED' not in current_app.config:
         return redirect(url_for("user.register"),admin=False)
     return render_template("index.html")
 
