@@ -61,7 +61,7 @@ def register():
 
         return redirect(url_for("user.login"))
     else:
-        if request.args.get("admin"):
+        if request.args.get("admin") == "True":
             return render_template("register.html", admin=True)
         else:
             return render_template("register.html")
