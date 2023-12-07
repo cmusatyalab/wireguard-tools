@@ -30,16 +30,34 @@
                     <div class="mb-3 form-outline" data-mdb-input-init>
                         <input class="form-control" type="password" id="password" name="password">
                         <label for="password" class="form-label">Password</label>
+                        <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                     </div>
                     <div class="mb-3 form-outline" data-mdb-input-init>
-                        <input class="form-control" type="password" id="sudoPassword" name="sudoPassword">
-                        <label for="sudoPassword" class="form-label">sudo Password</label>
+                        <input class="form-control" type="password" id="confirm_password" name="confirm_password">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <span toggle="#confirm_password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                     </div>
-
                     <button class="btn btn-primary btn-block btn-lg">Sign Up</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const togglePassword = document.querySelectorAll('.toggle-password');
+    togglePassword.forEach((toggle) => {
+        toggle.addEventListener('click', () => {
+            const passwordField = document.querySelector(toggle.getAttribute('toggle'));
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+    });
+</script>
+
 {% endblock %}
