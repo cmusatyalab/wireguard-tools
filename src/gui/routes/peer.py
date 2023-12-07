@@ -46,15 +46,16 @@ def add_peer(peer, network, sudo_password):
         return True
 
 
-def query_all_peers(network_id="wg0"):
-    if network_id:
+def query_all_peers(network_id=None):
+    if network_id is not None:
         peer_query = Peer.query.filter_by(network=network_id).all()
     else:
         peer_query = Peer.query.all()
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
         network = Network.query.filter_by(id=peer.network).first()
-        current_peers = helpers.get_peers_status(network)
+        print(f"Peer {peer.name} is on network {network.adapter_name}")
+        current_peers = helpers.get_peers_status(network.adapter_name)
         for key in current_peers.keys():
             print(f"Checking {key}")
             if str(peer.public_key) == str(key):
