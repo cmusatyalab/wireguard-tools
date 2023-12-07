@@ -8,7 +8,9 @@ import socket
 import re
 
 
-def check_wireguard(sudo_password: str):
+def check_wireguard(sudo_password=""):
+    if sudo_password == "":
+        sudo_password = current_app.config["SUDO_PASSWORD"]
     if not exists("/etc/wireguard"):
         # check if this is a linux machine
         if sp.check_output(["uname", "-s"]).decode("utf-8").strip() == "Linux":
@@ -93,10 +95,10 @@ def get_adapter_names():
 
     return adapter_names
 
-def get_peers_status(network, sudo_password=""):
+def get_peers_status(network_adapter="all", sudo_password=""):
     if sudo_password == "":
         sudo_password = current_app.config["SUDO_PASSWORD"]
-    output = run_sudo(f"wg show {network.adapter_name}", sudo_password )
+    output = run_sudo(f"wg show {network_adapter}", sudo_password )
 
     return parse_wg_output(output)
 
@@ -172,10 +174,10 @@ def port_open(port: int):
 def run_cmd(command) -> str:
     print(f"Running {command}")
     cmd_lst = command.split()
-    result = sp.run(cmd_lst, stdout=sp.PIPE, stderr=sp.PIPE)
+    result = sp.run(cmd_lst, stderr=sp.PIPE, stdout=sp.PIPE)
     output = result.stdout.decode()
     error = result.stderr.decode()
-    if error:
+    if error != "":
         print(f"\n\n\tError:\n{error}")
     print(f"\n\n\tOutput:\n{output}")
     return output
@@ -184,10 +186,10 @@ def run_cmd(command) -> str:
 def run_sudo(command: str, password: str) -> str:
     print(f"Running {command} with sudo")
     cmd_lst = ["sudo", "-S"] + command.split()
-    result = sp.run(cmd_lst, input=password.encode(), stdout=sp.PIPE, stderr=sp.PIPE)
+    result = sp.run(cmd_lst, input=password.encode(), stderr=sp.PIPE, stdout=sp.PIPE)
     output = result.stdout.decode()
     error = result.stderr.decode()
-    if error:
+    if error != "":
         print(f"\n\n\tSudo Error:\n{error}")
     print(f"\n\n\tSudo Output:\n{output}")
     return output
