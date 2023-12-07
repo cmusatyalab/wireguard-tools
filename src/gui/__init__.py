@@ -4,7 +4,7 @@ import os
 import yaml
 from .routes import main, networks, peers, settings, users, wizard
 
-__version__ = "0.2.0b0"
+version = "0.2.0b0"
 
 basedir = os.getcwd()
 
@@ -13,6 +13,7 @@ def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
     app.basedir = basedir
+    app.__verson__ = version
 
     ## CONFIGURATION ##
 
