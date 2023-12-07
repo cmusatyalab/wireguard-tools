@@ -38,7 +38,7 @@ Once the installation is complete, change directory into src.
 cd src
 ```
 
-Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address. 
+Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address.
 
 ***Security warning*** You can also use 0.0.0.0 to listen on all IP addresses, but understand the implications of this.
 
