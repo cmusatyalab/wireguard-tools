@@ -8,9 +8,8 @@ main = Blueprint('main', __name__)
 def index():
     # Check to see if the admin user has been created yet
     user_count = User.query.count()
-    print(f"User Count: {user_count}")
-    #if user_count == 0:
-    if 'ADMIN_CREATED' not in current_app.config:
+    #print(f"User Count: {user_count}")
+    if user_count == 0:
         return redirect(url_for("user.register", admin=True))
     return render_template("index.html")
 
