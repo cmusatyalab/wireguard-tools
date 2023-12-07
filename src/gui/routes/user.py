@@ -39,6 +39,11 @@ def register():
         email = request.form.get("email")
         username = request.form.get("name")
         password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+
+        if password != confirm_password:
+            flash('Passwords do not match')
+            return redirect(url_for("user.register"))
 
         user = User.query.filter_by(username=username).first()
         if user:
