@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template
+from flask import Blueprint, current_app, redirect, render_template, url_for
 from flask_login import current_user, login_required
 from gui.models import db
 
@@ -6,7 +6,10 @@ main = Blueprint('main', __name__)
 
 @main.route("/")
 def index():
-    # Render the index page with the current UTC time
+    # Check to see if the admin user has been created yet
+    if not current_app.config["ADMIN_CREATED"]:
+        # If not, redirect to the wizard
+        return redirect(url_for("user.register"),admin=False)
     return render_template("index.html")
 
 # Route for the about page
@@ -17,6 +20,7 @@ def about():
 
 # Route for the dashboard page
 @main.route("/dashboard")
+@login_required
 def dashboard():
     # Render the dashboard page with the current UTC time
     return render_template("dashboard.html")
