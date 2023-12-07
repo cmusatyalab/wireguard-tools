@@ -9,7 +9,7 @@ ma = Marshmallow()
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
-    email = db.Column(db.String(50), unique=True)
+    email = db.Column(db.String(50))
     password = db.Column(db.String(250))
 
 
