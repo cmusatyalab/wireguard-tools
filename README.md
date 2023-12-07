@@ -38,15 +38,24 @@ Once the installation is complete, change directory into src.
 cd src
 ```
 
-Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address. The one key you MUST change is the SUDO_PASSWORD. This must be the sudo password for the user that will be running the python script. We DO NOT recommend running the entire python web server with sudo. You will have to have sudo permission to set up the services. If you are only using the datbase for tracking, you could get away without elevating permissions.
+Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address. 
+
+***Security warning*** You can also use 0.0.0.0 to listen on all IP addresses, but understand the implications of this.
+
+The one key in config.yaml you MUST change is the SUDO_PASSWORD. This must be the sudo password for the user that will be running the python script. We DO NOT recommend running the entire python web server with sudo. Your user will have to have sudo permission to set up the WireGuard services. If you are only using the datbase for tracking, you could get away without elevating permissions.
 
 ```bash
 SUDO_PASSWORD: 'changeme'
 ```
 
-This is also a good time to make sure that your firewall has port 5000 (default) open.
+This is also a good time to make sure that your firewall has port 5000 (default) open for the webserver. You will also need to open port 51820 UDP (default) for the WireGuard service.
 
-***Security warning*** You can also use 0.0.0.0 to listen on all IP addresses, but understand the implications of this.
+Examples using ufw:
+
+```bash
+sudo ufw allow 5000/tcp
+sudo ufw allow 51820/udp
+```
 
 Finally, move to the src/ directory and run the program
 
