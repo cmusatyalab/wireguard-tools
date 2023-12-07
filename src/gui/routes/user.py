@@ -39,7 +39,6 @@ def register():
         email = request.form.get("email")
         username = request.form.get("name")
         password = request.form.get("password")
-        admin = request.form.get("admin")
 
         user = User.query.filter_by(username=username).first()
         if user:

@@ -10,7 +10,7 @@ def index():
     user_count = User.query.count()
     #if user_count == 0:
     if 'ADMIN_CREATED' not in current_app.config:
-        return redirect(url_for("user.register", admin=False))
+        return redirect(url_for("user.register", admin=True))
     return render_template("index.html")
 
 # Route for the about page
