@@ -13,7 +13,7 @@ def create_app():
     # Initialize the Flask application
     app = Flask(__name__)
     app.basedir = basedir
-    app.__verson__ = version
+    app.__version__ = version
 
     ## CONFIGURATION ##
 

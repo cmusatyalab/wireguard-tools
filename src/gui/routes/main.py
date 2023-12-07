@@ -13,11 +13,12 @@ def index():
         return redirect(url_for("user.register", admin=True))
     return render_template("index.html")
 
-# Route for the about page
+
 @main.route("/about")
 def about():
-    # Render the about page with the current UTC time
-    return render_template("about.html", version=current_app.__version__)
+    version = current_app.__version__
+    print(version)
+    return render_template("about.html", version=version)
 
 # Route for the dashboard page
 @main.route("/dashboard")
