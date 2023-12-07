@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request
 from flask_migrate import Migrate
-import datetime
 import os
 import yaml
-from .routes import networks, peers, settings, users, wizard
+from .routes import main, networks, peers, settings, users, wizard
 
-__version__ = "0.1.11b2"
+__version__ = "0.2.0b0"
 
 basedir = os.getcwd()
 
@@ -48,31 +47,25 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    # Initialize the login manager with the app
+    from flask_login import LoginManager
+    login_manager = LoginManager()
+    login_manager.login_view = 'user.login'
+    login_manager.init_app(app)
+
+    from .models import User
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        # since the user_id is just the primary key of our user table, use it in the query for the user
+        return User.query.get(int(user_id))
+
     ## ROUTES ##
     # Route for the index page
-    @app.route("/")
-    def index():
-        # Render the index page with the current UTC time
-        return render_template("index.html", utc_dt=datetime.datetime.utcnow())
 
-    # Route for the about page
-    @app.route("/about")
-    def about():
-        # Render the about page with the current UTC time
-        return render_template("about.html", version=__version__)
-
-    # Route for the dashboard page
-    @app.route("/dashboard")
-    def dashboard():
-        # Render the dashboard page with the current UTC time
-        return render_template("dashboard.html", utc_dt=datetime.datetime.utcnow())
-
-    # Route for testing purposes - Delete when dev work completed
-    @app.route("/test")
-    def test():
-        return render_template("test.html")
 
     # Import the blueprints
+    app.register_blueprint(main)
     app.register_blueprint(networks)
     app.register_blueprint(peers)
     app.register_blueprint(settings)
