@@ -17,7 +17,6 @@ def index():
 @main.route("/about")
 def about():
     version = current_app.__version__
-    print(version)
     return render_template("about.html", version=version)
 
 # Route for the dashboard page
