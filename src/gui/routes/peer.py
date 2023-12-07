@@ -50,8 +50,10 @@ def add_peer(peer, network, sudo_password):
 def query_all_peers(network_id=None):
     if network_id is not None:
         peer_query = Peer.query.filter_by(network=network_id).all()
+        print(f"Network {network_id} has {len(peer_query)} peers")
     else:
         peer_query = Peer.query.all()
+        print(f"Found {len(peer_query)} peers")
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
         network = Network.query.filter_by(id=peer.network).first()
@@ -72,13 +74,13 @@ def query_all_peers(network_id=None):
                 else:
                     print(f"No handshake not found for {peer.public_key}")
                     peer.active = False
-
     return peer_query
 
 
 def query_all_networks():
     network_query = Network.query.all()
     return network_query
+
 
 def remove_peer(peer, network, sudo_password):
     # Remove a peer from the running server
@@ -91,6 +93,7 @@ def remove_peer(peer, network, sudo_password):
         return False
     else:
         return True
+
 
 ## ROUTES ##
 

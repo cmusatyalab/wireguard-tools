@@ -204,7 +204,10 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex justify-content-between">
+                    <div id="spinner" class="spinner-border float-start" role="status" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
                     <button type="button" id="confirmPassword" class="btn btn-primary">Confirm</button>
                 </div>
@@ -248,6 +251,14 @@
         function refresh_page() {
             window.location.reload(true);
         }
+
+        function showSpinner() {
+                        // Get the spinner element
+                        var spinner = document.getElementById("spinner");
+
+                        // Show the spinner
+                        spinner.style.display = "block";
+                    }
 
         function updateDateTime() {
             let now = new Date();

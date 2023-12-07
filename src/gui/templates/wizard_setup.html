@@ -130,6 +130,7 @@
     document.getElementById('confirmPassword').addEventListener('click', function () {
         document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;
         document.getElementById('basicBuildForm').submit();
+        showSpinner()
     });
 
     function generateAndSetPrivateKey() {

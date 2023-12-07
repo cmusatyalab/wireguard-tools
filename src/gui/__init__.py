@@ -8,6 +8,13 @@ version = "0.2.0b0"
 
 basedir = os.getcwd()
 
+## TEST DATA ##
+peers_data = {
+    "active": 3,
+    "inactive": 1,
+    "lighthouse": 3
+    }
+
 
 def create_app():
     # Initialize the Flask application
@@ -67,8 +74,6 @@ def create_app():
         return User.query.get(int(user_id))
 
     ## ROUTES ##
-    # Route for the index page
-
 
     # Import the blueprints
     app.register_blueprint(main)
@@ -79,3 +84,5 @@ def create_app():
     app.register_blueprint(wizard)
 
     return app
+
+    
