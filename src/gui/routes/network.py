@@ -1,5 +1,6 @@
 import traceback
 from flask import Blueprint, render_template, request
+from flask_login import login_required
 from gui.models import db, Network, subnets
 from . import helpers
 import json
@@ -28,12 +29,14 @@ def query_all_networks():
 
 ## ROUTES ##
 @networks.route("/", methods=["GET"])
+@login_required
 def networks_all():
     network_list = query_all_networks()
     return render_template("networks.html", networks=network_list)
 
 
 @networks.route("/<int:network_id>", methods=["GET", "POST"])
+@login_required
 def network_detail(network_id):
     # network = next((item for item in network_list if item["id"] == int(network_id)), None)
     network = Network.query.filter_by(id=network_id).first()
@@ -69,6 +72,7 @@ def network_detail(network_id):
 
 
 @networks.route("/add", methods=["GET", "POST"])
+@login_required
 def networks_add():
     new_network = {}
     new_network["public_key"] = ""
@@ -109,6 +113,7 @@ def networks_add():
         )
 
 @networks.route("/delete/<int:network_id>", methods=["POST"])
+@login_required
 def network_delete(network_id):
     network = Network.query.filter_by(id=network_id).first()
     db.session.delete(network)
@@ -118,6 +123,7 @@ def network_delete(network_id):
     return render_template("networks.html", message=message, networks=network_list)
 
 @networks.route("/activate/<int:network_id>", methods=["POST"])
+@login_required
 def network_activate(network_id):
     message = ""
     sudo_password = request.form.get('sudoPassword')
@@ -143,6 +149,7 @@ def network_activate(network_id):
         return render_template("networks.html", message=message, networks=network_list)
 
 @networks.route("/deactivate/<int:network_id>", methods=["POST"])
+@login_required
 def network_deactivate(network_id):
     message = ""
     sudo_password = request.form.get('sudoPassword')

@@ -36,8 +36,9 @@
                 </a>
                 <!-- Left links -->
                 <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                        <a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('networks.networks_all') }}">Networks</a>
@@ -51,8 +52,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('wizard.setup') }}">Wizard</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                        <a class="nav-link" href="{{ url_for('main.about') }}">About</a>
                     </li>
                 </ul>
                 <!-- Left links -->
@@ -64,7 +66,6 @@
                 <a class="text-reset me-3" data-mdb-tooltip-init title="Refresh Page" onclick="refresh_page()">
                     <i class="fas fa-refresh"></i>
                 </a>
-
                 <!-- Notifications -->
                 <div class="dropdown">
                     <a class="text-reset me-3 dropdown-toggle hidden-arrow" href="#" id="navbarDropdownMenuLink"
@@ -78,6 +79,16 @@
                         </li>
                     </ul>
                 </div>
+                <!-- Avatar -->
+                {% if current_user.is_authenticated %}
+                <a class="text-reset me-3" href="{{ url_for('user.logout') }}" data-mdb-tooltip-init title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+                {% else %}
+                <a class="text-reset me-3" href="{{ url_for('user.login') }}" data-mdb-tooltip-init title="Login">
+                    <i class="fas fa-sign-in-alt"></i>
+                </a>
+                {% endif %}
                 <!-- Live time and date -->
                 <div id="liveDateTime" class="navbar-text"></div>
             </div>
@@ -188,7 +199,8 @@
                 <div class="modal-body">
                     <form id="sudoPasswordForm" method="post">
                         <div class="form-outline" data-mdb-input-init>
-                            <input type="password" id="sudoPassword" name="sudoPassword" class="form-control" placeholder="Sudo Password">
+                            <input type="password" id="sudoPassword" name="sudoPassword" class="form-control"
+                                placeholder="Sudo Password">
                         </div>
                     </form>
                 </div>

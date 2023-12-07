@@ -5,7 +5,7 @@ from flask_marshmallow import Marshmallow
 
 ma = Marshmallow()
 
-# Create models
+# Create model
 class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))         

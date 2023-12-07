@@ -1,5 +1,7 @@
 import ipaddress
 import json
+
+from flask_login import login_required
 from . import helpers
 from flask import Blueprint, current_app, render_template, redirect, url_for, request
 from ..models import db, Config, Network, Peer, subnets
@@ -11,6 +13,7 @@ wizard = Blueprint("wizard", __name__, url_prefix="/wizard")
 
 ## ROUTES ##
 @wizard.route("/setup", methods=["GET"])
+@login_required
 def setup():
     defaults = {
         "base_ip": current_app.config["BASE_IP"],
@@ -21,6 +24,7 @@ def setup():
 
 
 @wizard.route("/basic", methods=["POST"])
+@login_required
 def wizard_basic():
     #print(request.form)
     # Get the form data
@@ -161,6 +165,7 @@ def wizard_basic():
     return render_template("networks.html", networks=networks, message=message)
 
 @wizard.route("/advanced", methods=["POST"])
+@login_required
 def wizard_advanced():
     message = "Advanced wizard not implemented yet"
     defaults = {
