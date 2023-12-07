@@ -188,11 +188,15 @@
                 <div class="modal-body">
                     <form id="sudoPasswordForm" method="post">
                         <div class="form-outline" data-mdb-input-init>
-                            <input type="password" id="sudoPassword" name="sudoPassword" class="form-control" placeholder="Sudo Password">
+                            <input type="password" id="sudoPassword" name="sudoPassword" class="form-control"
+                                placeholder="Sudo Password">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <div id="spinner" class="spinner-border" role="status" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
                     <button type="button" id="confirmPassword" class="btn btn-primary">Confirm</button>
                 </div>
@@ -236,6 +240,14 @@
         function refresh_page() {
             window.location.reload(true);
         }
+
+        function showSpinner() {
+                        // Get the spinner element
+                        var spinner = document.getElementById("spinner");
+
+                        // Show the spinner
+                        spinner.style.display = "block";
+                    }
 
         function updateDateTime() {
             let now = new Date();

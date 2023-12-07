@@ -9,6 +9,13 @@ __version__ = "0.1.11b2"
 
 basedir = os.getcwd()
 
+## TEST DATA ##
+peers_data = {
+    "active": 3,
+    "inactive": 1,
+    "lighthouse": 3
+    }
+
 
 def create_app():
     # Initialize the Flask application
@@ -71,7 +78,7 @@ def create_app():
     @app.route("/dashboard")
     def dashboard():
         # Render the dashboard page with the current UTC time
-        return render_template("dashboard.html", utc_dt=datetime.datetime.utcnow())
+        return render_template("dashboard.html", peers=peers_data)
 
     # Route for testing purposes - Delete when dev work completed
     @app.route("/test")
@@ -86,3 +93,5 @@ def create_app():
     app.register_blueprint(wizard)
 
     return app
+
+    

@@ -13,5 +13,18 @@
         <a href="{{ url_for('peers.peers_all') }}" class="btn btn-primary">Peers</a>
     </div>
     <p class="text-danger">Dashboard Widgets under development.</p>
+    <div class="draggable-element shadow-3 col-md-4" data-mdb-draggable-init>
+        <div class="card ">
+            <canvas data-mdb-chart-init data-mdb-chart="pie" data-mdb-dataset-label="Peers"
+                data-mdb-labels="['Active', 'Inactive' , 'Lighthouse' ]" data-mdb-dataset-data="[{{ peers.active }}, {{ peers.inactive }}, {{ peers.lighthouse }}]"
+                data-mdb-dataset-background-color="['rgba(77, 182, 172, 0.5)', 'rgba(233, 30, 99, 0.5)',  'rgba(66, 133, 244, 0.5)']"></canvas>
+            <div class="card-body">
+                <h5 class="card-title">Peers</h5>
+                <p class="card-text">Active: {{ peers.active }}</p>
+                <p class="card-text">Inactive: {{ peers.inactive }}</p>
+                <p class="card-text">Lighthouse: {{ peers.lighthouse }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
