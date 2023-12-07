@@ -32,7 +32,17 @@ Next, install the python requirements with
 pip install -r requirements.txt
 ```
 
-Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address.
+Once the installation is complete, change directory into src.
+
+```bash
+cd src
+```
+
+Next, Make any adjustments you need to make to config.yaml. Note that the default IP address is localhost, 127.0.0.1. If you want to access the web interface remotely, change this to an appropriate IP address. The one key you MUST change is the SUDO_PASSWORD. This must be the sudo password for the user that will be running the python script. We DO NOT recommend running the entire python web server with sudo. You will have to have sudo permission to set up the services. If you are only using the datbase for tracking, you could get away without elevating permissions.
+
+```bash
+SUDO_PASSWORD: 'changeme'
+```
 
 This is also a good time to make sure that your firewall has port 5000 (default) open.
 
@@ -41,7 +51,6 @@ This is also a good time to make sure that your firewall has port 5000 (default)
 Finally, move to the src/ directory and run the program
 
 ```bash
-cd src
 python3 run.py
 ```
 
@@ -59,11 +68,9 @@ The webserver will work on windows, but the automated server setup will only act
 
 ## Known Issues
 
-* Deleting peers from the running server not working
-
 * Too many sudo requests from the user
 
-* New server configs don't rotate properly
+* New server config names don't rotate properly
 
 ## Acknowledgements
 
