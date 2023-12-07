@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center">
-        <h2>Settings</h2>
+        <h2 class="mb-0">Settings</h2>
     </div>
     <hr class="hr" />
     <div class="row form-group align-items-center">
@@ -27,6 +27,25 @@
             <label for="btn_purge_db">Purge all entries from the database </label>
         </div>
     </div>
+</div>
+<hr class="hr" />
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Configuration</h2>
+        <p>Changing these values only updates the current running instance.</p>
+        <p>Update config.yaml to persistently update these values.</p>
+    </div>
+    <hr class="hr" />
+    <form method="post">
+        {% for key, value in config.items() %}
+        <div class="form-outline my-2" data-mdb-input-init>
+            <input type="text" class="form-control" id="{{key}}" name="{{key}}" value="{{value}}">
+            <label class="form-label" for="{{key}}">{{key}}</label>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Update</button>
+        <button class="btn btn-warning">Save</button>
+    </form>
 </div>
 
 <!-- Modal -->

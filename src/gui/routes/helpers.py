@@ -5,11 +5,8 @@ import subprocess as sp
 import os
 import psutil
 import socket
+import re
 
-
-def check_active(peer_list):
-    for peer in peer_list:
-        pass
 
 def check_wireguard(sudo_password: str):
     if not exists("/etc/wireguard"):
@@ -39,16 +36,23 @@ def config_add_peer(config_string: str, peer: Peer) -> str:
 
 def config_build(peer: Peer, network: Network) -> str:
     # Create the adapter configuration file
-    config_file_string = f"[Interface]\nPrivateKey = {peer.private_key}\nAddress = {peer.address}\nListenPort = {peer.listen_port}\nSaveConfig = true\n"
+    if peer.lighthouse:
+        subnet = str(network.subnet)
+        network_config_string = ""
+    else:
+        subnet = str(peer.subnet)
+        network_config_string = network.get_config()
+    config_file_string = f"[Interface]\nPrivateKey = {peer.private_key}\nAddress = {peer.address}/{subnet}\nListenPort = {peer.listen_port}\nSaveConfig = true\n"
     if peer.post_down:
         config_file_string += f"PostDown = {peer.post_down}\n"
     if peer.post_up:
         config_file_string += f"PostUp = {peer.post_up}\n"
     if peer.dns:
-        config_file_string += f"DNS = {peer.dns}\n"
+        config_file_string += f"DNS = {peer.dns}\n\n"
     elif network.dns_server:
-        adapter_string += f"DNS = {network.dns_server}\n"
-    network_config_string = network.get_config()
+        config_file_string += f"DNS = {network.dns_server}\n\n"
+    else:
+        config_file_string += "\n"
     config_file_string += network_config_string
 
     return config_file_string
@@ -89,6 +93,13 @@ def get_adapter_names():
 
     return adapter_names
 
+def get_peers_status(network, sudo_password=""):
+    if sudo_password == "":
+        sudo_password = current_app.config["SUDO_PASSWORD"]
+    output = run_sudo(f"wg show {network.adapter_name}", sudo_password )
+
+    return parse_wg_output(output)
+
 
 def get_public_ip():
     try:
@@ -101,6 +112,51 @@ def get_public_ip():
     finally:
         s.close()
     return ip
+
+
+def parse_wg_output(output):
+    output_lines = output.split("\n")
+    peers_data = {}
+    current_peer = None
+
+    for line in output_lines:
+        peer_match = re.match(r"\s*peer: (\S+)", line)
+        endpoint_match = re.match(r"\s*endpoint: (\S+):(\d+)", line)
+        allowed_ips_match = re.match(r"\s*allowed ips: (\S+)", line)
+        transfer_match = re.match(r"\s*transfer: (\S+)", line)
+        handshake_match = re.match(r"\s*latest handshake: (.+ ago)", line)
+
+        if peer_match:
+            current_peer = peer_match.group(1)
+            peers_data[current_peer] = {}
+        elif endpoint_match and current_peer:
+            peers_data[current_peer]["endpoint"] = endpoint_match.group(1)
+            peers_data[current_peer]["endpoint_port"] = endpoint_match.group(2)
+        elif allowed_ips_match and current_peer:
+            peers_data[current_peer]["allowed_ips"] = allowed_ips_match.group(1)
+        elif transfer_match and current_peer:
+            transfer_data = transfer_match.group(1).split("/")
+            if len(transfer_data) >= 2:
+                peers_data[current_peer]["transfer_rx"] = transfer_data[0]
+                peers_data[current_peer]["transfer_tx"] = transfer_data[1]
+        elif handshake_match and current_peer:
+            time_str = handshake_match.group(1)
+            time_lst = time_str[:-4].split(", ")
+            days, hours, minutes, seconds = 0, 0, 0, 0
+            for element in time_lst:
+                if "day" in element:
+                    days = int(element.split()[0])
+                elif "hour" in element:
+                    hours = int(element.split()[0])
+                elif "minute" in element:
+                    minutes = int(element.split()[0])
+                elif "second" in element:
+                    seconds = int(element.split()[0])
+            total_seconds = days * 86400 + hours * 3600 + minutes * 60 + seconds
+            print(f"{current_peer} - time: {total_seconds}")
+            peers_data[current_peer]["latest_handshake"] = total_seconds
+
+    return peers_data
 
 
 def port_open(port: int):

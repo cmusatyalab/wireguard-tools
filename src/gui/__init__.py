@@ -5,7 +5,7 @@ import os
 import yaml
 from .routes import networks, peers, settings, users, wizard
 
-__version__ = "0.1.8b0"
+__version__ = "0.1.11b2"
 
 basedir = os.getcwd()
 
