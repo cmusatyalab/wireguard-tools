@@ -39,6 +39,7 @@ def register():
         email = request.form.get("email")
         username = request.form.get("name")
         password = request.form.get("password")
+        admin = request.form.get("admin")
 
         user = User.query.filter_by(username=username).first()
         if user:
@@ -61,4 +62,7 @@ def register():
 
         return redirect(url_for("user.login"))
     else:
-        return render_template("register.html")
+        if request.args.get("admin"):
+            return render_template("register.html", admin=True)
+        else:
+            return render_template("register.html")

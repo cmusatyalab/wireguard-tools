@@ -21,9 +21,6 @@
                 <form method="POST" action="{{url_for('user.register')}}">
                     <div class="mb-3 form-outline position-relative" data-mdb-input-init>
                         <input type="text" class="form-control" id="name" name="name"/>
-                        {% if admin %}
-                        admin
-                        {% endif %}
                         </input>
                         <label for="name" class="form-label">User Name</label>
                     </div>
@@ -32,7 +29,7 @@
                         <label for="name" class="form-label">Email</label>
                     </div>
                     <div class="mb-3 form-outline position-relative" data-mdb-input-init>
-                        <i toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></i>
+                        <i toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password trailing"></i>
                         <input class="form-control" type="password" id="password" name="password"/>
                         <label for="password" class="form-label">Password</label>
                     </div>
@@ -40,6 +37,9 @@
                         <input class="form-control" type="password" id="confirm_password" name="confirm_password"/>
                         <label for="confirm_password" class="form-label">Confirm Password</label>
                     </div>
+                    {% if admin %}
+                    <input class="hidden" type="text" id="admin" name="admin" value="true"/>
+                    {% endif %}
                     <button class="btn btn-primary btn-block btn-lg">Sign Up</button>
                 </form>
             </div>
