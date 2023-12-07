@@ -8,7 +8,9 @@ import socket
 import re
 
 
-def check_wireguard(sudo_password: str):
+def check_wireguard(sudo_password=""):
+    if sudo_password == "":
+        sudo_password = current_app.config["SUDO_PASSWORD"]
     if not exists("/etc/wireguard"):
         # check if this is a linux machine
         if sp.check_output(["uname", "-s"]).decode("utf-8").strip() == "Linux":

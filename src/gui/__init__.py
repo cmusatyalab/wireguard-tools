@@ -28,11 +28,10 @@ def create_app():
     app.config.update(config)
 
     # Check if this is a linux system
-    print(os.name)
-    if os.name != "posix":
-        app.config["LINUX"] = False
-    else:
+    if os.name == "posix":
         app.config["LINUX"] = True
+    else:
+        app.config["LINUX"] = False
 
 
     # Check if certificates exist and create them if they don't

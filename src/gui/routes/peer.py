@@ -46,14 +46,13 @@ def add_peer(peer, network, sudo_password):
         return True
 
 
-def query_all_peers(network_id=None):
+def query_all_peers(network_id="wg0"):
     if network_id:
         peer_query = Peer.query.filter_by(network=network_id).all()
     else:
         peer_query = Peer.query.all()
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
-        print(f"Peer public key: {peer.public_key}")
         network = Network.query.filter_by(id=peer.network).first()
         current_peers = helpers.get_peers_status(network)
         for key in current_peers.keys():
@@ -100,7 +99,6 @@ def peers_all():
         message = "Bulk peers added successfully"
         peer_list = query_all_peers()
         return render_template("peers.html", message=message, peer_list=peer_list)
-
     elif request.method == "GET":
         network_id = request.args.get("network_id")
         peer_list = query_all_peers(network_id)
