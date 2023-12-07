@@ -21,6 +21,7 @@ distlib==0.3.7
 docopt==0.6.2
 filelock==3.13.1
 Flask==3.0.0
+Flask-Login==0.6.3
 flask-marshmallow==0.15.0
 Flask-Migrate==4.0.5
 Flask-SQLAlchemy==3.1.1
@@ -83,5 +84,4 @@ virtualenv==20.24.6
 Werkzeug==3.0.0
 wheel==0.41.3
 win-inet-pton==1.1.0
--e git+https://github.com/radawson/wireguard-gui.git@f175adcffda9adbdd3c25ea81e4a5dae19efb521#egg=wireguard_gui
 -e git+https://github.com/radawson/wireguard-gui.git@d3c317c1c3cc4ad6a240be016fc75f9ddcbeabc4#egg=wireguard_tools

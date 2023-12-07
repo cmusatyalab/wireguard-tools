@@ -4,6 +4,7 @@ from flask import (
     render_template,
     request,
 )
+from flask_login import login_required
 from gui.models import db, Peer, Network
 from gui.routes import helpers
 
@@ -98,6 +99,7 @@ def remove_peer(peer, network, sudo_password):
 
 
 @peers.route("/", methods=["GET", "POST"])
+@login_required
 def peers_all():
     if request.method == "POST":
         message = "Bulk peers added successfully"
@@ -113,6 +115,7 @@ def peers_all():
 
 
 @peers.route("/add", methods=["GET", "POST"])
+@login_required
 def peers_add():
     message = "Adding new peer"
     network_list = query_all_networks()
@@ -162,6 +165,7 @@ def peers_add():
 
 
 @peers.route("/delete/<int:peer_id>", methods=["POST"])
+@login_required
 def peer_delete(peer_id):
     message = f"Deleting peer {peer_id}"
     peer = Peer.query.filter_by(id=peer_id).first()
@@ -183,6 +187,7 @@ def peer_delete(peer_id):
 
 
 @peers.route("/<int:peer_id>", methods=["GET", "POST"])
+@login_required
 def peer_detail(peer_id):
     # peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
     peer = Peer.query.filter_by(id=peer_id).first()

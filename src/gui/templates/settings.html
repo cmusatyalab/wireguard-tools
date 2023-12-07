@@ -10,12 +10,20 @@
     <hr class="hr" />
     <div class="row form-group align-items-center">
         <div class="col-sm-2">
-            <a href="{{url_for ('settings.test_db_entries')}}" type="button" class="btn btn-primary"
-                id="btn_load_db">Test
-                Database</a>
+            <a href="{{url_for ('settings.test_db_entries')}}" type="button" class="btn btn-primary" id="btn_load_db">
+                Test Database</a>
         </div>
         <div class="col-sm-10">
             <label for="btn_load_db">Add test entries to the database </label>
+        </div>
+    </div>
+    <div class="row form-group align-items-center">
+        <div class="col-sm-2">
+            <a href="{{url_for ('user.register')}}" type="button" class="btn btn-primary" id="btn_add_user">
+                Add user</a>
+        </div>
+        <div class="col-sm-10">
+            <label for="btn_load_db">Add user</label>
         </div>
     </div>
     <div class="row form-group align-items-center">
