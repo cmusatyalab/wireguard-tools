@@ -1,14 +1,15 @@
 from flask import Blueprint, current_app, redirect, render_template, url_for
 from flask_login import current_user, login_required
-from gui.models import db
+from gui.models import User
 
 main = Blueprint('main', __name__)
 
 @main.route("/")
 def index():
     # Check to see if the admin user has been created yet
-    if not current_app.config["ADMIN_CREATED"]:
-        # If not, redirect to the wizard
+    user_count = User.query.count()
+    if user_count == 0:
+    #if not current_app.config["ADMIN_CREATED"]:
         return redirect(url_for("user.register"),admin=False)
     return render_template("index.html")
 
