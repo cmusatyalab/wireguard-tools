@@ -48,7 +48,9 @@
 {% block scripts %}
 {% if admin %}
 <script>
-    document.getElementById('name').value = 'admin';
+    name_field = document.getElementById('name')
+    name_field.value = 'admin';
+    name_field.readOnly = true;
 </script>
 {% endif %}
 

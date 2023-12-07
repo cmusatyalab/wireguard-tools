@@ -67,7 +67,9 @@ The package will install the actual wireguard package after the first time you r
 
 ## Basic Usage
 
-After you have successfully installed the server, you can navigate to https://[IP Address] and click on "wizard". From here, the fastest way to setup is to type a name and click build.
+After you have successfully installed the server, you can navigate to https://[IP Address] and will have to enter admin user credentials.
+
+Once you are logged in as the admin user, click on "wizard". From here, the fastest way to setup is to type a name and click build.
 
 Once the network has been created, you can go to the Peers page and click Add Peer to add new clients.
 
