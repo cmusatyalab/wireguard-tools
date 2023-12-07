@@ -4,9 +4,10 @@ SQLALCHEMY_TRACK_MODIFICATIONS: True
 SQLALCHEMY_DATABASE_URI: 'sqlite:///{basedir}/wg.db'
 HOST_IP: '127.0.0.1'
 HOST_PORT: '5000'
+BASE_DIR: '{basedir}'
 
 # User Session Management
-SECRET_KEY: 'changeme'
+SECRET_KEY: 'changemechangemechangemechangeme'
 # TODO: Fix this to be more secure
 SUDO_PASSWORD: 'password'
 

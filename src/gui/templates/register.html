@@ -19,20 +19,21 @@
                 {% endif %}
                 {% endwith %}
                 <form method="POST" action="{{url_for('user.register')}}">
-                    <div class="mb-3 form-outline" data-mdb-input-init>
-                        <input type="text" class="form-control" id="name" name="name">
+                    <div class="mb-3 form-outline position-relative" data-mdb-input-init>
+                        <input type="text" class="form-control" id="name" name="name" {% if ! admin %} value="admin"
+                            {% endif %}>
                         <label for="name" class="form-label">User Name</label>
                     </div>
-                    <div class="mb-3 form-outline" data-mdb-input-init>
+                    <div class="mb-3 form-outline position-relative" data-mdb-input-init>
                         <input class="form-control" type="email" id="email" name="email">
                         <label for="name" class="form-label">Email</label>
                     </div>
-                    <div class="mb-3 form-outline" data-mdb-input-init>
+                    <div class="mb-3 form-outline position-relative" data-mdb-input-init>
                         <input class="form-control" type="password" id="password" name="password">
                         <label for="password" class="form-label">Password</label>
                         <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                     </div>
-                    <div class="mb-3 form-outline" data-mdb-input-init>
+                    <div class="mb-3 form-outline position-relative" data-mdb-input-init>
                         <input class="form-control" type="password" id="confirm_password" name="confirm_password">
                         <label for="confirm_password" class="form-label">Confirm Password</label>
                         <span toggle="#confirm_password" class="fa fa-fw fa-eye field-icon toggle-password"></span>

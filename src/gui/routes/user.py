@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from gui.models import db, User
@@ -53,6 +53,11 @@ def register():
 
         db.session.add(new_user)
         db.session.commit()
+        
+        # Add ADMIN_CREATED: true to config.yaml
+        config_path = current_app.config['BASE_DIR']+"/config.yaml"
+        with open(config_path, "a") as config_file:
+            config_file.write("ADMIN_CREATED: true\n")
 
         return redirect(url_for("user.login"))
     else:
