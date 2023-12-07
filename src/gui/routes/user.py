@@ -39,7 +39,6 @@ def register():
         email = request.form.get("email")
         username = request.form.get("name")
         password = request.form.get("password")
-        sudo_password = request.form.get("sudoPassword")
 
         user = User.query.filter_by(username=username).first()
         if user:
@@ -50,7 +49,6 @@ def register():
             email=email,
             username=username,
             password=generate_password_hash(password),          
-            sudo_password=sudo_password
         )
 
         db.session.add(new_user)
