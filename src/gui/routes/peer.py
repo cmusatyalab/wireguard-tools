@@ -163,7 +163,7 @@ def peers_add():
             message += "\nPeer added successfully, but failed to add to running server"
         print(message)
         flash(message.replace('\n','<br>'), "success")
-        return redirect(url_for("peers.peers_detail", peer_id=new_peer.id))
+        return redirect(url_for("peers.peer_detail", peer_id=new_peer.id))
     else:
         return render_template(
             "peer_detail.html",

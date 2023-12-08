@@ -39,8 +39,8 @@
                             <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
                         </div>
                         <div class="col-md-4 col-sm-12">
-                            <a href="{{ url_for('peers.peers_all', network_id=network.id) }}"
-                                class="card-link">Peers</a>
+                            <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers {{
+                                network.peer_count }}</a>
                         </div>
                         <div class="col-md-4 col-sm-12">
                             {% if network.active %}
@@ -75,33 +75,23 @@
         button.addEventListener('click', function () {
             // Store the network id in the hidden input field in the form
             document.getElementById('networkId').value = this.dataset.networkId;
-            // Show the modal
-            let sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'));
-            sudoPasswordModal.show();
+            // Retrieve the network id from the hidden input field in the form
+            let networkId = document.getElementById('networkId').value;
+            // Build the URL
+            let buttonLabel = document.querySelector(`button[data-network-id="${networkId}"]`).textContent.trim();
+            // Build the URL
+            let baseUrl = "{{ url_for('networks.networks_all') }}";
+            let url;
+            if (buttonLabel === 'Activate') {
+                url = baseUrl + '/activate/' + networkId;
+            } else if (buttonLabel === 'Deactivate') {
+                url = baseUrl + '/deactivate/' + networkId;
+            }
+            // Make a POST request to the URL
+            // Set the action attribute of the form
+            this.action = url;
+            this.submit();
         });
-    });
-
-    // Add a submit event listener to the modal
-    document.getElementById('confirmPassword').addEventListener('click', function () {
-
-        let sudo_form = document.getElementById('sudoPasswordForm');
-
-        // Retrieve the network id from the hidden input field in the form
-        let networkId = document.getElementById('networkId').value;
-        // Build the URL
-        let buttonLabel = document.querySelector(`button[data-network-id="${networkId}"]`).textContent.trim();
-        // Build the URL
-        let baseUrl = "{{ url_for('networks.networks_all') }}";
-        let url;
-        if (buttonLabel === 'Activate') {
-            url = baseUrl + '/activate/' + networkId;
-        } else if (buttonLabel === 'Deactivate') {
-            url = baseUrl + '/deactivate/' + networkId;
-        }
-        // Make a POST request to the URL
-        // Set the action attribute of the form
-        sudo_form.action = url;
-        sudo_form.submit();
     });
 </script>
 {% endblock %}

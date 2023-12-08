@@ -139,7 +139,7 @@ def get_peers_status(network_adapter="all", sudo_password=""):
     else:
         # TODO: Implement Windows sudo
         output = ""
-        flash("Command line options not implemented for Windows", "warning")
+        #flash("Command line options not implemented for Windows", "warning")
     return parse_wg_output(output)
 
 
@@ -259,5 +259,5 @@ def run_sudo(command: str, password: str) -> str:
     else:
         # TODO: Implement Windows sudo
         output = "Command line options not implemented for Windows"
-        flash("Sudo command line options not implemented for Windows", "warning")
+        #flash("Sudo command line options not implemented for Windows", "warning")
     return output
