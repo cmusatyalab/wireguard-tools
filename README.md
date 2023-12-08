@@ -83,7 +83,7 @@ git pull
 
 Next, check to see if there are any updates to the database configuration with the following commands:
 
-NOTE: This should be executed in the same src/ directory that you run run.py. These commands initialize the database, migrate the changes, and then upgrade the database to reflect these changes.
+NOTE: This should be executed in the wireguard-gui/src/ directory that you run run.py. These commands initialize the database, migrate the changes, and then upgrade the database to reflect these changes.
 
 ```bash
 flask db init     # This initializes the database
