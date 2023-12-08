@@ -4,15 +4,13 @@
 
 * Server proxy or closed network
 
-* User Logins
+* Dashboard with widgets
 
 ## Planned Features
 
 * Server controller or tracking database option
 
 * SSL certificate management
-
-* Dashboard with widgets
 
 * Event Logging
 
