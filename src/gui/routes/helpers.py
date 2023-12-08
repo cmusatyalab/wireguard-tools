@@ -225,7 +225,7 @@ def remove_peers_all(network_id: int, sudo_password=""):
         )
         message += f"\n\t\tRemoved peer {peer.name} from adapter {network.adapter_name}"
         peer.active = False
-        peer.network_id = 0
+        peer.network = 0
         db.session.commit()
         message += f"\n\t\tUnregistered peer {peer.name} from network"
     return message
