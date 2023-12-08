@@ -37,11 +37,13 @@ def wizard_basic():
     # print(request.form)
     # Get the form data
     message = "Build Log:"
-    name = request.form["name"]
-    description = request.form["description"]
-    base_ip = request.form["base_ip"]
-    subnet = request.form["subnet"]
-    sudo_password = request.form["sudoPassword"]
+    name = request.form.get("name")
+    description = request.form.get("description")
+    base_ip = request.form.get("base_ip")
+    subnet = request.form.get("subnet")
+    sudo_password = request.form.get("sudoPassword")
+    if sudo_password == "":
+        sudo_password = current_app.config["SUDO_PASSWORD"]
     dns = current_app.config["BASE_DNS"]
 
     defaults = {
@@ -54,9 +56,7 @@ def wizard_basic():
     if not name:
         message = "Please enter a name for the network"
         flash(message, "warning")
-        return render_template(
-            "wizard_setup.html", defaults=defaults, subnets=subnets
-        )
+        return render_template("wizard_setup.html", defaults=defaults, subnets=subnets)
     defaults["name"] = name
     # test base_ip string to make sure it is a valid IP address
     try:
@@ -64,9 +64,7 @@ def wizard_basic():
     except ValueError:
         message = "Please enter a valid IP address"
         flash(message, "warning")
-        return render_template(
-            "wizard_setup.html", defaults=defaults, subnets=subnets
-        )
+        return render_template("wizard_setup.html", defaults=defaults, subnets=subnets)
     defaults["base_ip"] = base_ip
     # test subnet to make sure it is a valid subnet
     if int(subnet) not in range(0, 33):
@@ -173,6 +171,9 @@ def wizard_basic():
     else:
         message += "\nWireguard is not installed on this machine"
 
+    # Enable IP forwarding
+    message += helpers.enable_ip_forwarding_v4(sudo_password)
+
     print(message)
     flash(message, "info")
     return render_template("networks.html", networks=networks)
@@ -188,6 +189,4 @@ def wizard_advanced():
         "dns": current_app.config["BASE_DNS"],
     }
     flash(message, "warning")
-    return render_template(
-        "wizard_setup.html", defaults=defaults, subnets=subnets
-    )
+    return render_template("wizard_setup.html", defaults=defaults, subnets=subnets)

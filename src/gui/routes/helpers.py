@@ -74,6 +74,18 @@ def config_save(config_file_string, directory, filename) -> "bool":
     return True
 
 
+def enable_ip_forwarding_v4(sudo_password):
+    message = ""
+    try:
+        run_sudo("sysctl -w net.ipv4.ip_forward=1", sudo_password)
+        run_sudo("sysctl -p", sudo_password)
+        message += f"\nIPv4 forwarding enabled"
+    except Exception as e:
+        message += f"\nError enabling ipv4 forwarding: {e}"
+    print(message)
+    return message
+
+
 def generate_cert(cert_path, cert_name, key_name):
     # Generate a new certificate for the server
     if not exists(cert_path):
@@ -95,6 +107,7 @@ def get_adapter_names():
 
     return adapter_names
 
+
 def get_network(network_id: int) -> Network:
     network = Network(
         name="Invalid Network",
@@ -102,12 +115,12 @@ def get_network(network_id: int) -> Network:
         public_key="",
         peers_list="",
         base_ip="0.0.0.0",
-        subnet = 0,
+        subnet=0,
         dns_server="",
         description="Invalid Network placeholder",
-        adapter_name=""
+        adapter_name="",
     )
-    message=f"Network Lookup using {network_id} which is {type(network_id)}"
+    message = f"Network Lookup using {network_id} which is {type(network_id)}"
     try:
         network = Network.query.get(network_id)
         message += f"\nfound {network.name}"
@@ -117,10 +130,11 @@ def get_network(network_id: int) -> Network:
         print(message)
     return network
 
+
 def get_peers_status(network_adapter="all", sudo_password=""):
     if sudo_password == "":
         sudo_password = current_app.config["SUDO_PASSWORD"]
-    output = run_sudo(f"wg show {network_adapter}", sudo_password )
+    output = run_sudo(f"wg show {network_adapter}", sudo_password)
 
     return parse_wg_output(output)
 
@@ -191,8 +205,9 @@ def port_open(port: int):
         return True
     else:
         return False
-    
-def remove_peers(network_id: int, sudo_password=""):
+
+
+def remove_peers_all(network_id: int, sudo_password=""):
     message = f"Removing peers from network {network_id}"
     if sudo_password == "":
         sudo_password = current_app.config["SUDO_PASSWORD"]
@@ -200,7 +215,10 @@ def remove_peers(network_id: int, sudo_password=""):
     message += f"\n\tNetwork {network.name} found"
     peers = Peer.query.filter_by(network_id=network_id).all()
     for peer in peers:
-        run_sudo(f"wg set {network.adapter_name} peer {peer.public_key} remove", sudo_password)
+        run_sudo(
+            f"wg set {network.adapter_name} peer {peer.public_key} remove",
+            sudo_password,
+        )
         message += f"\n\t\tRemoved peer {peer.name} from adapter {network.adapter_name}"
         peer.active = False
         peer.network_id = 0
