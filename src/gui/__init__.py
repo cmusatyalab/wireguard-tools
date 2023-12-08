@@ -4,7 +4,7 @@ import os
 import yaml
 from .routes import dashboard, main, networks, peers, settings, users, wizard
 
-version = "0.2.0b0"
+version = "0.2.2b0"
 
 basedir = os.getcwd()
 
@@ -35,7 +35,7 @@ def create_app():
     app.config.update(config)
 
     # Check if this is a linux system
-    if os.name == "posix":
+    if str(os.name) == "posix":
         app.config["LINUX"] = True
     else:
         app.config["LINUX"] = False

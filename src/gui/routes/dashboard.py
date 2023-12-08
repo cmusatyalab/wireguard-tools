@@ -18,7 +18,7 @@ def get_lighthouse_count():
     return Peer.query.filter_by(lighthouse=True).count()
 
 def get_orphan_count():
-    return Peer.query.filter_by(network_id=0).count()
+    return Peer.query.filter_by(network=0).count()
 
 ## ROUTES ##
 

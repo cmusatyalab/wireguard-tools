@@ -132,10 +132,9 @@ def get_network(network_id: int) -> Network:
 
 
 def get_peers_status(network_adapter="all", sudo_password=""):
-    if sudo_password == "":
-        sudo_password = current_app.config["SUDO_PASSWORD"]
-    output = run_sudo(f"wg show {network_adapter}", sudo_password)
-
+    output = ""
+    if current_app.config["LINUX"]:
+        output = run_sudo(f"wg show {network_adapter}", sudo_password)
     return parse_wg_output(output)
 
 
