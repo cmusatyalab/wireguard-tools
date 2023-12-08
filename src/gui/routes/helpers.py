@@ -95,6 +95,28 @@ def get_adapter_names():
 
     return adapter_names
 
+def get_network(network_id: int) -> Network:
+    network = Network(
+        name="Invalid Network",
+        lh_ip="0.0.0.0",
+        public_key="",
+        peers_list="",
+        base_ip="0.0.0.0",
+        subnet = 0,
+        dns_server="",
+        description="Invalid Network placeholder",
+        adapter_name="all"
+    )
+    message=f"Network Lookup using {network_id} which is {type(network_id)}"
+    try:
+        network = Network.query.get(network_id)
+        message += f"\nfound {network.name}"
+    except:
+        message += f"\nNetwork {network_id} not found"
+        message += f"\nUsing Invalid Network settings"
+        print(message)
+    return network
+
 def get_peers_status(network_adapter="all", sudo_password=""):
     if sudo_password == "":
         sudo_password = current_app.config["SUDO_PASSWORD"]

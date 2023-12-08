@@ -57,8 +57,8 @@ def query_all_peers(network_id=None):
         print(f"Found {len(peer_query)} peers")
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
-        network = Network.query.filter_by(id=peer.network).first()
-        print(f"Peer {peer.name} is on network {network.adapter_name}")
+        network = helpers.get_network(peer.network)
+        print(f"Peer {peer.name} is on network {network.name}")
         current_peers = helpers.get_peers_status(network.adapter_name)
         for key in current_peers.keys():
             print(f"Checking {key}")

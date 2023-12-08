@@ -45,7 +45,6 @@ def network_detail(network_id):
     if request.method == "POST":
         if request.method == "POST":
             network.name = request.form["name"]
-            network.lighthouse = request.form["lighthouse"]
             network.lh_ip = request.form["lh_ip"]
             network.peers = request.form["peers"]
             network.base_ip = request.form["base_ip"]
