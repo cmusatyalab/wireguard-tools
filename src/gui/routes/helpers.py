@@ -105,7 +105,7 @@ def get_network(network_id: int) -> Network:
         subnet = 0,
         dns_server="",
         description="Invalid Network placeholder",
-        adapter_name="all"
+        adapter_name=""
     )
     message=f"Network Lookup using {network_id} which is {type(network_id)}"
     try:
@@ -195,6 +195,7 @@ def port_open(port: int):
 def remove_peers(network_id: int, sudo_password=""):
     if sudo_password == "":
         sudo_password = current_app.config["SUDO_PASSWORD"]
+    network = get_network(network_id)
     peers = Peer.query.filter_by(network_id=network_id).all()
     for peer in peers:
         run_sudo(f"wg set {network.adapter_name} peer {peer.public_key} remove", sudo_password)
