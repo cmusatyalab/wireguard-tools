@@ -1,6 +1,7 @@
 from flask import (
     Blueprint,
     current_app,
+    flash,
     render_template,
     request,
 )
@@ -56,8 +57,11 @@ def query_all_peers(network_id=None):
         print(f"Found {len(peer_query)} peers")
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
-        network = Network.query.filter_by(id=peer.network).first()
-        print(f"Peer {peer.name} is on network {network.adapter_name}")
+        network = helpers.get_network(peer.network)
+        print(f"Peer {peer.name} is on network {network.name}")
+        if network.name == "Invalid Network placeholder":
+            print(f"Skipping {peer.name} on {network.name}")
+            continue
         current_peers = helpers.get_peers_status(network.adapter_name)
         for key in current_peers.keys():
             print(f"Checking {key}")
@@ -104,14 +108,17 @@ def peers_all():
     if request.method == "POST":
         message = "Bulk peers added successfully"
         peer_list = query_all_peers()
-        return render_template("peers.html", message=message, peer_list=peer_list)
+        flash(message, "success")
+        return render_template("peers.html", peer_list=peer_list)
     elif request.method == "GET":
         network_id = request.args.get("network_id")
         peer_list = query_all_peers(network_id)
         return render_template("peers.html", peer_list=peer_list)
     else:
         message = "Invalid request method"
-        return render_template("peers.html", message=message, peer_list=peer_list)
+        peer_list = query_all_peers()
+        flash(message, "warning")
+        return render_template("peers.html",  peer_list=peer_list)
 
 
 @peers.route("/add", methods=["GET", "POST"])
@@ -154,7 +161,8 @@ def peers_add():
             message += "\nPeer added successfully, but failed to add to running server"
         peer_list = query_all_peers()
         print(message)
-        return render_template("peers.html", message=message, peer_list=peer_list)
+        flash(message, "success")
+        return render_template("peers.html", peer_list=peer_list)
     else:
         return render_template(
             "peer_detail.html",
@@ -170,20 +178,20 @@ def peer_delete(peer_id):
     message = f"Deleting peer {peer_id}"
     peer = Peer.query.filter_by(id=peer_id).first()
     network = Network.query.filter_by(id=peer.network).first()
-    if request.form.get("sudoPassword"):
-        sudo_password = request.form.get("sudoPassword")
-    else:
-        sudo_password = current_app.config["SUDO_PASSWORD"]
+    sudo_password = current_app.config["SUDO_PASSWORD"]
     # Add peer to running server
     if remove_peer(peer, network, sudo_password):
         db.session.delete(peer)
         db.session.commit()
         message += "\nPeer deleted successfully"
+        flash(message, "success")
     else:
         message += "\nError removing peer from running server"
+        flash(message, "danger")
     peer_list = query_all_peers()
     print(message)
-    return render_template("peers.html", message=message, peer_list=peer_list)
+
+    return render_template("peers.html", peer_list=peer_list)
 
 
 @peers.route("/<int:peer_id>", methods=["GET", "POST"])
@@ -206,7 +214,8 @@ def peer_detail(peer_id):
         db.session.commit()
         message = "Peer updated successfully"
         peer_list = query_all_peers()
-        return render_template("peers.html", message=message, peer_list=peer_list)
+        flash(message, "success")
+        return render_template("peers.html",  peer_list=peer_list)
 
     elif request.method == "GET":
         return render_template(
@@ -217,4 +226,5 @@ def peer_detail(peer_id):
         )
     else:
         message = "Invalid request method"
-        return render_template("peer_detail.html", peer=peer, message=message)
+        flash(message, "warning")
+        return render_template("peer_detail.html", peer=peer)

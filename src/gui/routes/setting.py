@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, redirect, request, url_for
+from flask import Blueprint, current_app, flash, render_template, redirect, request, url_for
 from flask_login import login_required
 from ..models import db, Config, Network, Peer, config_load_test_db,network_load_test_db,peer_load_test_db
 
@@ -20,7 +20,8 @@ def test_db_entries():
     network_load_test_db()
     peer_load_test_db()
     message = "Database entries loaded successfully!"
-    return render_template('settings.html', message=message)
+    flash(message, "success")
+    return render_template('settings.html')
 
 @settings.route('/purge_db', methods=['POST'])
 @login_required
@@ -29,4 +30,6 @@ def purge_db():
     db.session.query(Peer).delete()
     db.session.query(Network).delete()
     db.session.commit()
-    return render_template('settings.html', message="Database purged successfully")
+    message = "Database purged successfully!"
+    flash(message, "success")
+    return render_template('settings.html')

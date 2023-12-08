@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from flask_migrate import Migrate
 import os
 import yaml
-from .routes import main, networks, peers, settings, users, wizard
+from .routes import dashboard, main, networks, peers, settings, users, wizard
 
 version = "0.2.1b0"
 
@@ -76,6 +76,7 @@ def create_app():
     ## ROUTES ##
 
     # Import the blueprints
+    app.register_blueprint(dashboard)
     app.register_blueprint(main)
     app.register_blueprint(networks)
     app.register_blueprint(peers)
