@@ -59,6 +59,9 @@ def query_all_peers(network_id=None):
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
         network = helpers.get_network(peer.network)
         print(f"Peer {peer.name} is on network {network.name}")
+        if network.name == "Invalid Network placeholder":
+            print(f"Skipping {peer.name} on {network.name}")
+            continue
         current_peers = helpers.get_peers_status(network.adapter_name)
         for key in current_peers.keys():
             print(f"Checking {key}")
