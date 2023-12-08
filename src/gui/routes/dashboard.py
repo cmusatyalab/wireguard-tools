@@ -25,11 +25,16 @@ def get_orphan_count():
 @dashboard.route("/")
 @login_required
 def index():
+    active = get_active_peer_count()
+    inactive = get_inactive_peer_count() - get_orphan_count()
+    lighthouse = get_lighthouse_count()
+    orphan = get_orphan_count()
+    
     peer_data = {
-        "orphan": get_orphan_count(),
-        "active": get_active_peer_count(),
-        "inactive": get_inactive_peer_count() - get_orphan_count(),
-        "lighthouse": get_lighthouse_count(),
+        "orphan": orphan,
+        "active": active,
+        "inactive": inactive,
+        "lighthouse": lighthouse,
         
     }
     message = "Dashboard widgets are under construction"
