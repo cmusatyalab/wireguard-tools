@@ -99,7 +99,7 @@ The webserver will work on windows, but the automated server setup will only act
 
 ## Known Issues
 
-* Too many sudo requests from the user
+* sudo password storage
 
 * New server config names don't rotate properly
 
