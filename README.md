@@ -106,3 +106,10 @@ The webserver will work on windows, but the automated server setup will only act
 ## Acknowledgements
 
 We would like to thank Carnegie Mellon University for the WireGuard-Tools code that this project is based on. Their work has been invaluable in helping us get this project off the ground.
+
+## Coffee
+
+We like coffee. More coffee means more coding, and we like coding too!
+If you'd like to help us stay awake, you could buy us a coffee:
+
+bitcoin - bc1q8zcmp3xd8yh82q55e54wpntjjnaan4wk97plsw
