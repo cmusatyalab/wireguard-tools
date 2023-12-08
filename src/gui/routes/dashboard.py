@@ -26,10 +26,11 @@ def get_orphan_count():
 @login_required
 def index():
     peer_data = {
+        "orphan": get_orphan_count(),
         "active": get_active_peer_count(),
-        "inactive": get_inactive_peer_count(),
+        "inactive": get_inactive_peer_count() - get_orphan_count(),
         "lighthouse": get_lighthouse_count(),
-        "orphan": get_orphan_count()
+        
     }
     message = "Dashboard widgets are under construction"
     flash(message, "info")
