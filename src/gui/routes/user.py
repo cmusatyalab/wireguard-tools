@@ -10,7 +10,7 @@ users = Blueprint("user", __name__)
 @users.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("name")
+        username = request.form.get("name").lower()
         email = request.form.get('email')
         password = request.form.get('password')
         remember = True if request.form.get('remember') else False
@@ -37,7 +37,7 @@ def logout():
 def register():
     if request.method == "POST":
         email = request.form.get("email")
-        username = request.form.get("name")
+        username = request.form.get("name").lower()
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
 
@@ -58,7 +58,8 @@ def register():
 
         db.session.add(new_user)
         db.session.commit()
-
+        message = f"User {new_user.username} added successfully"
+        flash(message, "success")
         return redirect(url_for("user.login"))
     else:
         if request.args.get("admin") == "True":

@@ -1,8 +1,8 @@
 import traceback
-from flask import Blueprint, render_template, request
+from flask import Blueprint, flash, render_template, request
 from flask_login import login_required
 from gui.models import db, Network, subnets
-from . import helpers
+from gui.routes import helpers
 import json
 
 networks = Blueprint("networks", __name__, url_prefix="/networks")
@@ -45,7 +45,6 @@ def network_detail(network_id):
     if request.method == "POST":
         if request.method == "POST":
             network.name = request.form["name"]
-            network.lighthouse = request.form["lighthouse"]
             network.lh_ip = request.form["lh_ip"]
             network.peers = request.form["peers"]
             network.base_ip = request.form["base_ip"]
@@ -53,10 +52,11 @@ def network_detail(network_id):
             network.config = request.form["config"]
 
         db.session.commit()
-        message = "network updated successfully"
+        message = "Network updated successfully"
         network_list = query_all_networks()
+        flash (message, "success")
         return render_template(
-            "networks.html", message=message, network_list=network_list
+            "networks.html", network_list=network_list
         )
 
     elif request.method == "GET":
@@ -68,7 +68,8 @@ def network_detail(network_id):
         )
     else:
         message = "Invalid request method"
-        return render_template("network_detail.html", network=network, subnets=subnets, message=message)
+        flash(message, "warning")
+        return render_template("network_detail.html", network=network, subnets=subnets)
 
 
 @networks.route("/add", methods=["GET", "POST"])
@@ -101,8 +102,9 @@ def networks_add():
         )
         db.session.add(new_network)
         db.session.commit()
-        message = "network added successfully"
+        message = "Network added successfully"
         network_list = query_all_networks()
+        flash(message, "success")
         return render_template("networks.html", message=message, networks=network_list)
     else:
         return render_template(
@@ -120,12 +122,13 @@ def network_delete(network_id):
     db.session.commit()
     message = "Network deleted successfully"
     network_list = query_all_networks()
-    return render_template("networks.html", message=message, networks=network_list)
+    flash(message, "success")
+    return render_template("networks.html", networks=network_list)
 
 @networks.route("/activate/<int:network_id>", methods=["POST"])
 @login_required
 def network_activate(network_id):
-    message = ""
+    message = f"Activating network {network_id}"
     sudo_password = request.form.get('sudoPassword')
     network = Network.query.filter_by(id=network_id).first()
     if network.adapter_name in helpers.get_adapter_names():
@@ -133,25 +136,27 @@ def network_activate(network_id):
         network.active = True
         db.session.commit()
         network_list = query_all_networks()
-        return render_template("networks.html", message=message, networks=network_list)
+        flash(message, "info")
+        return render_template("networks.html",  networks=network_list)
     try:
         helpers.run_sudo("wg-quick up " + network.adapter_name, sudo_password)
     except Exception as e:
         traceback.print_exc()
         message += "Error activating network: " + str(e)
-        network_list = query_all_networks()
+        flash(message, "danger")
     else:
         network.active = True
         db.session.commit()
         message += "Network activated successfully"
-        network_list = query_all_networks()
+        flash(message, "success")
     finally:
+        network_list = query_all_networks()
         return render_template("networks.html", message=message, networks=network_list)
 
 @networks.route("/deactivate/<int:network_id>", methods=["POST"])
 @login_required
 def network_deactivate(network_id):
-    message = ""
+    message = f"Deactivating network {network_id}"
     sudo_password = request.form.get('sudoPassword')
     network = Network.query.filter_by(id=network_id).first()
     try:
@@ -159,12 +164,13 @@ def network_deactivate(network_id):
     except Exception as e:
         traceback.print_exc()
         message += "Error activating network: " + str(e)
-        network_list = query_all_networks()
+        flash(message, "danger")
     else:
         network.active = False
         db.session.commit()
-        message += "Network activated successfully"
-        network_list = query_all_networks()
+        message += "Network activated successfully"  
+        flash(message, "success")   
     finally:
+        network_list = query_all_networks()
         return render_template("networks.html", message=message, networks=network_list)
 
