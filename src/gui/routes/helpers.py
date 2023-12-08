@@ -135,6 +135,9 @@ def get_peers_status(network_adapter="all", sudo_password=""):
     output = ""
     if current_app.config["LINUX"]:
         output = run_sudo(f"wg show {network_adapter}", sudo_password)
+    else:
+        # TODO: Implement Windows sudo
+        output = ""
     return parse_wg_output(output)
 
 
@@ -212,10 +215,10 @@ def remove_peers_all(network_id: int, sudo_password=""):
         sudo_password = current_app.config["SUDO_PASSWORD"]
     network = get_network(network_id)
     message += f"\n\tNetwork {network.name} found"
-    peers = Peer.query.filter_by(network_id=network_id).all()
+    peers = Peer.query.filter_by(network=network.id).all()
     for peer in peers:
         run_sudo(
-            f"wg set {network.adapter_name} peer {peer.public_key} remove",
+            f"wg set {network.adapter_name} peer {str(peer.get_public_key())} remove",
             sudo_password,
         )
         message += f"\n\t\tRemoved peer {peer.name} from adapter {network.adapter_name}"
@@ -239,12 +242,17 @@ def run_cmd(command) -> str:
 
 
 def run_sudo(command: str, password: str) -> str:
-    print(f"Running {command} with sudo")
-    cmd_lst = ["sudo", "-S"] + command.split()
-    result = sp.run(cmd_lst, input=password.encode(), stderr=sp.PIPE, stdout=sp.PIPE)
-    output = result.stdout.decode()
-    error = result.stderr.decode()
-    if error != "":
-        print(f"\n\n\tSudo Error:\n{error}")
-    print(f"\n\n\tSudo Output:\n{output}")
+    output = ""
+    if current_app.config["LINUX"]:  
+        print(f"Running {command} with sudo")
+        cmd_lst = ["sudo", "-S"] + command.split()
+        result = sp.run(cmd_lst, input=password.encode(), stderr=sp.PIPE, stdout=sp.PIPE)
+        output = result.stdout.decode()
+        error = result.stderr.decode()
+        if error != "":
+            print(f"\n\n\tSudo Error:\n{error}")
+        print(f"\n\n\tSudo Output:\n{output}")
+    else:
+        # TODO: Implement Windows sudo
+        output = "Command line options not implemented for Windows"
     return output
