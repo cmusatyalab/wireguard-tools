@@ -191,6 +191,14 @@ def port_open(port: int):
         return True
     else:
         return False
+    
+def remove_peers(network_id: int, sudo_password=""):
+    if sudo_password == "":
+        sudo_password = current_app.config["SUDO_PASSWORD"]
+    peers = Peer.query.filter_by(network_id=network_id).all()
+    for peer in peers:
+        run_sudo(f"wg set {network.adapter_name} peer {peer.public_key} remove", sudo_password)
+    return True
 
 
 def run_cmd(command) -> str:
