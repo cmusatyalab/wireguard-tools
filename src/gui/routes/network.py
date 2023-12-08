@@ -118,9 +118,10 @@ def networks_add():
 @login_required
 def network_delete(network_id):
     network = Network.query.filter_by(id=network_id).first()
+    message = helpers.remove_peers(network)
     db.session.delete(network)
     db.session.commit()
-    message = "Network deleted successfully"
+    message += f"\nNetwork deleted successfully"
     network_list = query_all_networks()
     flash(message, "success")
     return render_template("networks.html", networks=network_list)

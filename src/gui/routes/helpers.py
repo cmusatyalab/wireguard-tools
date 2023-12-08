@@ -1,5 +1,5 @@
 from flask import current_app
-from gui.models import Network, Peer
+from gui.models import db, Network, Peer
 from os.path import exists
 import subprocess as sp
 import os
@@ -193,13 +193,20 @@ def port_open(port: int):
         return False
     
 def remove_peers(network_id: int, sudo_password=""):
+    message = f"Removing peers from network {network_id}"
     if sudo_password == "":
         sudo_password = current_app.config["SUDO_PASSWORD"]
     network = get_network(network_id)
+    message += f"\n\tNetwork {network.name} found"
     peers = Peer.query.filter_by(network_id=network_id).all()
     for peer in peers:
         run_sudo(f"wg set {network.adapter_name} peer {peer.public_key} remove", sudo_password)
-    return True
+        message += f"\n\t\tRemoved peer {peer.name} from adapter {network.adapter_name}"
+        peer.active = False
+        peer.network_id = 0
+        db.session.commit()
+        message += f"\n\t\tUnregistered peer {peer.name} from network"
+    return message
 
 
 def run_cmd(command) -> str:
