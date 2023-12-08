@@ -3,7 +3,15 @@ import json
 
 from flask_login import login_required
 from . import helpers
-from flask import Blueprint, current_app, render_template, redirect, url_for, request
+from flask import (
+    Blueprint,
+    current_app,
+    flash,
+    render_template,
+    redirect,
+    url_for,
+    request,
+)
 from ..models import db, Config, Network, Peer, subnets
 from wireguard_tools import WireguardKey
 
@@ -26,7 +34,7 @@ def setup():
 @wizard.route("/basic", methods=["POST"])
 @login_required
 def wizard_basic():
-    #print(request.form)
+    # print(request.form)
     # Get the form data
     message = "Build Log:"
     name = request.form["name"]
@@ -45,8 +53,9 @@ def wizard_basic():
     # Test inputs
     if not name:
         message = "Please enter a name for the network"
+        flash(message, "warning")
         return render_template(
-            "wizard_setup.html", defaults=defaults, subnets=subnets, message=message
+            "wizard_setup.html", defaults=defaults, subnets=subnets
         )
     defaults["name"] = name
     # test base_ip string to make sure it is a valid IP address
@@ -54,16 +63,16 @@ def wizard_basic():
         ipaddress.ip_address(base_ip)
     except ValueError:
         message = "Please enter a valid IP address"
+        flash(message, "warning")
         return render_template(
-            "wizard_setup.html", defaults=defaults, subnets=subnets, message=message
+            "wizard_setup.html", defaults=defaults, subnets=subnets
         )
     defaults["base_ip"] = base_ip
     # test subnet to make sure it is a valid subnet
     if int(subnet) not in range(0, 33):
         message = "Please enter a valid subnet"
-        return render_template(
-            "wizard_setup.html", defaults=defaults, subnets=subnets, message=message
-        )
+        flash(message, "warning")
+        return render_template("wizard_setup.html", defaults=defaults, subnets=subnets)
     listen_port = defaults["base_port"]
 
     # Append CIDR subnet to base_ip
@@ -143,16 +152,19 @@ def wizard_basic():
     # Create the adapter configuration file
     adapter_string = helpers.config_build(new_peer, new_network)
 
-    if helpers.config_save(adapter_string, "server","wg0.conf"):
+    if helpers.config_save(adapter_string, "server", "wg0.conf"):
         message += "\nNetwork config saved successfully"
     else:
         message += "\nError creating network config file"
     networks = Network.query.all()
-    
+
     # check if wireguard is installed
     if helpers.check_wireguard(sudo_password):
         try:
-            helpers.run_sudo(f"cp {current_app.basedir}/output/server/wg0.conf /etc/wireguard/wg0.conf", sudo_password)
+            helpers.run_sudo(
+                f"cp {current_app.basedir}/output/server/wg0.conf /etc/wireguard/wg0.conf",
+                sudo_password,
+            )
         except Exception as e:
             print(e)
             message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
@@ -160,9 +172,11 @@ def wizard_basic():
             message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
     else:
         message += "\nWireguard is not installed on this machine"
-        
-    print(message)    
-    return render_template("networks.html", networks=networks, message=message)
+
+    print(message)
+    flash(message, "info")
+    return render_template("networks.html", networks=networks)
+
 
 @wizard.route("/advanced", methods=["POST"])
 @login_required
@@ -173,4 +187,7 @@ def wizard_advanced():
         "base_port": current_app.config["BASE_PORT"],
         "dns": current_app.config["BASE_DNS"],
     }
-    return render_template("wizard_setup.html", message = message, defaults=defaults, subnets=subnets)
+    flash(message, "warning")
+    return render_template(
+        "wizard_setup.html", defaults=defaults, subnets=subnets
+    )
