@@ -17,15 +17,25 @@ def get_inactive_peer_count():
 def get_lighthouse_count():
     return Peer.query.filter_by(lighthouse=True).count()
 
+def get_orphan_count():
+    return Peer.query.filter_by(network=0).count()
+
 ## ROUTES ##
 
 @dashboard.route("/")
 @login_required
 def index():
+    active = get_active_peer_count()
+    inactive = get_inactive_peer_count() - get_orphan_count()
+    lighthouse = get_lighthouse_count()
+    orphan = get_orphan_count()
+    
     peer_data = {
-        "active": get_active_peer_count(),
-        "inactive": get_inactive_peer_count(),
-        "lighthouse": get_lighthouse_count()
+        "orphan": orphan,
+        "active": active,
+        "inactive": inactive,
+        "lighthouse": lighthouse,
+        
     }
     message = "Dashboard widgets are under construction"
     flash(message, "info")

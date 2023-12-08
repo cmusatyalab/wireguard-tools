@@ -8,7 +8,6 @@ BASE_DIR: '{basedir}'
 
 # User Session Management
 SECRET_KEY: 'changemechangemechangemechangeme'
-# TODO: Fix this to be more secure
 SUDO_PASSWORD: 'password'
 
 # TLS configuration

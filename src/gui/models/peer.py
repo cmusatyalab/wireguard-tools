@@ -45,7 +45,7 @@ class Peer(db.Model):
             peers.append(wg_config)
         return peers
     
-    def get_public_key(self):
+    def get_public_key(self) -> WireguardKey:
         public_key = WireguardKey(self.private_key).public_key()
         return public_key
     
