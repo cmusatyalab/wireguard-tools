@@ -6,6 +6,7 @@ from .routes import dashboard, main, networks, peers, settings, users, wizard
 
 version = "0.2.2b0"
 
+
 basedir = os.getcwd()
 
 ## TEST DATA ##

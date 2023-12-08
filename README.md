@@ -83,7 +83,7 @@ git pull
 
 Next, check to see if there are any updates to the database configuration with the following commands:
 
-NOTE: This should be executed in the same src/ directory that you run run.py. These commands initialize the database, migrate the changes, and then upgrade the database to reflect these changes.
+NOTE: This should be executed in the wireguard-gui/src/ directory that you run run.py. These commands initialize the database, migrate the changes, and then upgrade the database to reflect these changes.
 
 ```bash
 flask db init     # This initializes the database
@@ -106,3 +106,10 @@ The webserver will work on windows, but the automated server setup will only act
 ## Acknowledgements
 
 We would like to thank Carnegie Mellon University for the WireGuard-Tools code that this project is based on. Their work has been invaluable in helping us get this project off the ground.
+
+## Coffee
+
+We like coffee. More coffee means more coding, and we like coding too!
+If you'd like to help us stay awake, you could buy us a coffee:
+
+bitcoin - bc1q8zcmp3xd8yh82q55e54wpntjjnaan4wk97plsw
