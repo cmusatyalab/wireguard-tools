@@ -2,8 +2,10 @@ from flask import (
     Blueprint,
     current_app,
     flash,
+    redirect,
     render_template,
     request,
+    url_for,
 )
 from flask_login import login_required
 from gui.models import db, Peer, Network
@@ -159,10 +161,9 @@ def peers_add():
             message += "\nPeer added successfully"
         else:
             message += "\nPeer added successfully, but failed to add to running server"
-        peer_list = query_all_peers()
         print(message)
-        flash(message, "success")
-        return render_template("peers.html", peer_list=peer_list)
+        flash(message.replace('\n','<br>'), "success")
+        return redirect(url_for("peers.peers_detail", peer_id=new_peer.id))
     else:
         return render_template(
             "peer_detail.html",
