@@ -173,7 +173,7 @@ def wizard_basic():
     message += helpers.enable_ip_forwarding_v4(sudo_password)
 
     print(message)
-    flash(message.replace("\n","<br>"), "info")
+    flash(message, "info")
     return render_template("networks.html", networks=networks)
 
 
@@ -186,5 +186,5 @@ def wizard_advanced():
         "base_port": current_app.config["BASE_PORT"],
         "dns": current_app.config["BASE_DNS"],
     }
-    flash(message.replace("\n","<br>"), "warning")
+    flash(message, "warning")
     return render_template("wizard_setup.html", defaults=defaults, subnets=subnets)

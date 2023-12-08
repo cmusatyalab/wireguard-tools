@@ -131,6 +131,11 @@ def get_network(network_id: int) -> Network:
     print(message)
     return network
 
+def get_peer_count(network_id: int) -> int:
+    with db.session.no_autoflush:
+        count = Peer.query.filter_by(network=network_id).count()
+        print(count)
+        return count
 
 def get_peers_status(network_adapter="all", sudo_password=""):
     output = ""
@@ -141,6 +146,7 @@ def get_peers_status(network_adapter="all", sudo_password=""):
         output = ""
         #flash("Command line options not implemented for Windows", "warning")
     return parse_wg_output(output)
+
 
 
 def get_public_ip():
