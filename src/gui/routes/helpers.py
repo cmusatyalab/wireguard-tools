@@ -109,17 +109,7 @@ def get_adapter_names():
 
 
 def get_network(network_id: int) -> Network:
-    network = Network(
-        name="Invalid Network",
-        lh_ip="0.0.0.0",
-        public_key="",
-        peers_list="",
-        base_ip="0.0.0.0",
-        subnet=0,
-        dns_server="",
-        description="Invalid Network placeholder",
-        adapter_name="",
-    )
+    network = Network()
     message = f"Network Lookup using {network_id} which is {type(network_id)}"
     try:
         network = Network.query.get(network_id)
@@ -127,7 +117,18 @@ def get_network(network_id: int) -> Network:
     except:
         message += f"\nNetwork {network_id} not found"
         message += f"\nUsing Invalid Network settings"
-        print(message)
+        network = Network(
+            name="Invalid Network",
+            lh_ip="0.0.0.0",
+            public_key="",
+            peers_list="",
+            base_ip="0.0.0.0",
+            subnet=0,
+            dns_server="",
+            description="Invalid Network placeholder",
+            adapter_name="",
+        )
+    print(message)
     return network
 
 
@@ -243,10 +244,12 @@ def run_cmd(command) -> str:
 
 def run_sudo(command: str, password: str) -> str:
     output = ""
-    if current_app.config["LINUX"]:  
+    if current_app.config["LINUX"]:
         print(f"Running {command} with sudo")
         cmd_lst = ["sudo", "-S"] + command.split()
-        result = sp.run(cmd_lst, input=password.encode(), stderr=sp.PIPE, stdout=sp.PIPE)
+        result = sp.run(
+            cmd_lst, input=password.encode(), stderr=sp.PIPE, stdout=sp.PIPE
+        )
         output = result.stdout.decode()
         error = result.stderr.decode()
         if error != "":
