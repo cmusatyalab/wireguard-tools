@@ -2,17 +2,15 @@ import ipaddress
 import json
 
 from flask_login import login_required
-from . import helpers
+from gui.routes import helpers
 from flask import (
     Blueprint,
     current_app,
     flash,
     render_template,
-    redirect,
-    url_for,
     request,
 )
-from ..models import db, Config, Network, Peer, subnets
+from ..models import db, Network, Peer, subnets
 from wireguard_tools import WireguardKey
 
 
@@ -175,7 +173,7 @@ def wizard_basic():
     message += helpers.enable_ip_forwarding_v4(sudo_password)
 
     print(message)
-    flash(message, "info")
+    flash(message.replace("\n","<br>"), "info")
     return render_template("networks.html", networks=networks)
 
 
@@ -188,5 +186,5 @@ def wizard_advanced():
         "base_port": current_app.config["BASE_PORT"],
         "dns": current_app.config["BASE_DNS"],
     }
-    flash(message, "warning")
+    flash(message.replace("\n","<br>"), "warning")
     return render_template("wizard_setup.html", defaults=defaults, subnets=subnets)

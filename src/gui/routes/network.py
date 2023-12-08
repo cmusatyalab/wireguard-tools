@@ -54,7 +54,7 @@ def network_detail(network_id):
         db.session.commit()
         message = "Network updated successfully"
         network_list = query_all_networks()
-        flash (message, "success")
+        flash (message.replace("\n","<br>"), "success")
         return render_template(
             "networks.html", network_list=network_list
         )
@@ -68,7 +68,7 @@ def network_detail(network_id):
         )
     else:
         message = "Invalid request method"
-        flash(message, "warning")
+        flash(message.replace("\n","<br>"), "warning")
         return render_template("network_detail.html", network=network, subnets=subnets)
 
 
@@ -104,7 +104,7 @@ def networks_add():
         db.session.commit()
         message = "Network added successfully"
         network_list = query_all_networks()
-        flash(message, "success")
+        flash(message.replace("\n","<br>"), "success")
         return render_template("networks.html", message=message, networks=network_list)
     else:
         return render_template(
@@ -123,7 +123,7 @@ def network_delete(network_id):
     db.session.commit()
     message += f"\nNetwork deleted successfully"
     network_list = query_all_networks()
-    flash(message, "success")
+    flash(message.replace("\n","<br>"), "success")
     return render_template("networks.html", networks=network_list)
 
 @networks.route("/activate/<int:network_id>", methods=["POST"])
@@ -137,19 +137,19 @@ def network_activate(network_id):
         network.active = True
         db.session.commit()
         network_list = query_all_networks()
-        flash(message, "info")
+        flash(message.replace("\n","<br>"), "info")
         return render_template("networks.html",  networks=network_list)
     try:
         helpers.run_sudo("wg-quick up " + network.adapter_name, sudo_password)
     except Exception as e:
         traceback.print_exc()
         message += "Error activating network: " + str(e)
-        flash(message, "danger")
+        flash(message.replace("\n","<br>"), "danger")
     else:
         network.active = True
         db.session.commit()
         message += "Network activated successfully"
-        flash(message, "success")
+        flash(message.replace("\n","<br>"), "success")
     finally:
         network_list = query_all_networks()
         return render_template("networks.html", message=message, networks=network_list)
@@ -165,12 +165,12 @@ def network_deactivate(network_id):
     except Exception as e:
         traceback.print_exc()
         message += "Error activating network: " + str(e)
-        flash(message, "danger")
+        flash(message.replace("\n","<br>"), "danger")
     else:
         network.active = False
         db.session.commit()
         message += "Network activated successfully"  
-        flash(message, "success")   
+        flash(message.replace("\n","<br>"), "success")   
     finally:
         network_list = query_all_networks()
         return render_template("networks.html", message=message, networks=network_list)

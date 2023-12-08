@@ -177,7 +177,7 @@ def peers_add():
 def peer_delete(peer_id):
     message = f"Deleting peer {peer_id}"
     peer = Peer.query.filter_by(id=peer_id).first()
-    network = Network.query.filter_by(id=peer.network).first()
+    network = helpers.get_network(peer.network)
     sudo_password = current_app.config["SUDO_PASSWORD"]
     # Add peer to running server
     if remove_peer(peer, network, sudo_password):

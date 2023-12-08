@@ -5,14 +5,13 @@
 {% block content %}
 <div class="container-fluid">
     <h2>Peer Details</h2>
-
     <hr class="hr" />
     <div class="row ">
         <div class="col-md-7 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ peer.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.public_key }}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted" id="publicKey">{{ peer.get_public_key() }}</h6>
                     <div class="form-outline">
                         <form id="addPeerForm" method="POST">
                             <div class="mb-3 form-outline" data-mdb-input-init>
@@ -27,7 +26,6 @@
 
                             <div class="card">
                                 <h6 class="card-header">Configuration</h6>
-
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="private_key" name="private_key"
@@ -179,21 +177,6 @@
 
     };
 
-    // Add listener for add button that calls the sudo modal on base.html
-    document.getElementById('btn-Add').addEventListener('click', function (event) {
-        event.preventDefault();
-        var sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'), {
-            backdrop: 'static',
-            keyboard: false
-        });
-        sudoPasswordModal.show();
-    });
-
-    document.getElementById('confirmPassword').addEventListener('click', function () {
-        document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;
-        document.getElementById('addPeerForm').submit();
-    });
-
     // Add event listener for the 'click' event on the #btn_copyConfig button
     document.getElementById('btn_copyConfig').addEventListener('click', function () {
         let config = document.getElementById('peer_config');
@@ -261,7 +244,6 @@
         config += network_peer + "\n";
         document.getElementById('peer_config').value = config;
         generateQRCode(config);
-        // document.getElementById('configCard').innerText = config;
     }
 
     function updatePublicKey() {
