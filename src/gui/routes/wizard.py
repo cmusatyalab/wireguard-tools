@@ -145,32 +145,33 @@ def wizard_basic():
     db.session.commit()
     message += "\nPeer added to database"
 
-    # Create the adapter configuration file
-    adapter_string = helpers.config_build(new_peer, new_network)
+    if current_app.config["MODE"] == "server":
+        # Create the adapter configuration file
+        adapter_string = helpers.config_build(new_peer, new_network)
 
-    if helpers.config_save(adapter_string, "server", "wg0.conf"):
-        message += "\nNetwork config saved successfully"
-    else:
-        message += "\nError creating network config file"
-    networks = Network.query.all()
-
-    # check if wireguard is installed
-    if helpers.check_wireguard(sudo_password):
-        try:
-            helpers.run_sudo(
-                f"cp {current_app.basedir}/output/server/wg0.conf /etc/wireguard/wg0.conf",
-                sudo_password,
-            )
-        except Exception as e:
-            print(e)
-            message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
+        if helpers.config_save(adapter_string, "server", "wg0.conf"):
+            message += "\nNetwork config saved successfully"
         else:
-            message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
-    else:
-        message += "\nWireguard is not installed on this machine"
+            message += "\nError creating network config file"
+        networks = Network.query.all()
 
-    # Enable IP forwarding
-    message += helpers.enable_ip_forwarding_v4(sudo_password)
+        # check if wireguard is installed
+        if helpers.check_wireguard(sudo_password):
+            try:
+                helpers.run_sudo(
+                    f"cp {current_app.basedir}/output/server/wg0.conf /etc/wireguard/wg0.conf",
+                    sudo_password,
+                )
+            except Exception as e:
+                print(e)
+                message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
+            else:
+                message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
+        else:
+            message += "\nWireguard is not installed on this machine"
+
+        # Enable IP forwarding
+        message += helpers.enable_ip_forwarding_v4(sudo_password)
 
     print(message)
     flash(message, "info")

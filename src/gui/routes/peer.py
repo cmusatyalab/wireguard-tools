@@ -157,7 +157,7 @@ def peers_add():
         db.session.add(new_peer)
         db.session.commit()
         # Add peer to running server
-        if add_peer(new_peer, network, sudo_password):
+        if current_app.config['MODE'] == "server" and add_peer(new_peer, network, sudo_password):
             message += "\nPeer added successfully"
         else:
             message += "\nPeer added successfully, but failed to add to running server"

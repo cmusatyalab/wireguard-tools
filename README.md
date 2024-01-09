@@ -48,6 +48,8 @@ The one key in config.yaml you MUST change is the SUDO_PASSWORD. This must be th
 SUDO_PASSWORD: 'changeme'
 ```
 
+The MODE key in the config file determines whether this server will run as a wireguard server (hub) or as a database for configuration files. The options for this key are 'server' or 'database'
+
 This is also a good time to make sure that your firewall has port 5000 (default) open for the webserver. You will also need to open port 51820 UDP (default) for the WireGuard service.
 
 Examples using ufw:
