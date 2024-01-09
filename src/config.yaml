@@ -6,6 +6,9 @@ HOST_IP: '127.0.0.1'
 HOST_PORT: '5000'
 BASE_DIR: '{basedir}'
 
+# MODE can be database or server
+MODE: 'database'
+
 # User Session Management
 SECRET_KEY: 'changemechangemechangemechangeme'
 SUDO_PASSWORD: 'password'
