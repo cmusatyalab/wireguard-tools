@@ -11,4 +11,4 @@ from .wireguard_config import WireguardConfig, WireguardPeer
 from .wireguard_device import WireguardDevice
 from .wireguard_key import WireguardKey
 
-__all__ = ["WireguardConfig", "WireguardPeer", "WireguardDevice", "WireguardKey"]
+__all__ = ["WireguardConfig", "WireguardDevice", "WireguardKey", "WireguardPeer"]
