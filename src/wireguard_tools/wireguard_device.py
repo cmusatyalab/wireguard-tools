@@ -22,12 +22,10 @@ class WireguardDevice(ABC):
         return None
 
     @abstractmethod
-    def get_config(self) -> WireguardConfig:
-        ...
+    def get_config(self) -> WireguardConfig: ...
 
     @abstractmethod
-    def set_config(self, config: WireguardConfig) -> None:
-        ...
+    def set_config(self, config: WireguardConfig) -> None: ...
 
     @classmethod
     def get(cls, ifname: str) -> WireguardDevice:
