@@ -4,7 +4,7 @@
 # github_url = "https://github.com/cmusatyalab/wireguard-tools/"
 
 [version]
-current = "0.4.5"
+current = "0.4.5.post.dev0"
 regex = '''
   (?P<major>\d+)
   \.

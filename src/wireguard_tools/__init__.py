@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-__version__ = "0.4.5"
+__version__ = "0.4.5.post.dev0"
 
 from .wireguard_config import WireguardConfig, WireguardPeer
 from .wireguard_device import WireguardDevice
