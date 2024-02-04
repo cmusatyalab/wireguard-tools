@@ -1,6 +1,7 @@
 import json
 import ipaddress
-from .database import db, Peer
+from .database import db
+from .peer import Peer
 from flask_marshmallow import Marshmallow
 
 ma = Marshmallow()
@@ -10,7 +11,7 @@ class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))         
     proxy = db.Column(db.Boolean, default=False)     
-    lighthouse = db.Column(db.Integer, db.ForeignKey('Peer.id'))
+    lighthouse = db.Column(db.Integer, db.ForeignKey(Peer.id), nullable=True)  # Lighthouse peer for this network
     public_key = db.Column(db.String(50))
     peers_list = db.Column(db.Text)
     base_ip = db.Column(db.String(50))
