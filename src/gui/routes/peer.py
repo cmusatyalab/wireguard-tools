@@ -127,6 +127,7 @@ def peers_add():
     message = "Adding new peer"
     network_list = query_all_networks()
     new_peer = {}
+    new_peer["id"] = 0
     new_peer["config"] = sample_config
     new_peer["public_key"] = ""
     new_peer["network"] = 1
