@@ -25,7 +25,7 @@
                                 <label for="description" class="form-label">Description</label>
                             </div>
                             <div class="form-check form-switch" data-mdb-check-init>
-                                <input class="form-check-input" type="checkbox" role="switch" id="lighthouse" name="lighthouse"/>
+                                <input class="form-check-input" type="checkbox" role="switch" id="lighthouse" name="lighthouse" {% if peer.lighthouse %} checked {% endif %}/>
                                 <label class="form-check-label" for="lighthouse">This is a network lighthouse</label>
                               </div>
 
