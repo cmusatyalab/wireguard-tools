@@ -79,8 +79,8 @@ def networks_add():
     new_network["public_key"] = ""
     new_network["name"] = 1
     if request.method == "POST":
-        name = request.form["name"]
-        lighthouse = request.form["lighthouse"]
+        name = request.form.get("name")
+        lighthouse = request.form.get("lighthouse")
         lh_ip = request.form["lh_ip"]
         lh_port = request.form["lh_port"]
         public_key = request.form["public_key"]
