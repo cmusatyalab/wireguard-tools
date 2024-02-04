@@ -181,12 +181,7 @@
 
     // Add listener for add button that calls the sudo modal on base.html
     document.getElementById('btn-Add').addEventListener('click', function (event) {
-        event.preventDefault();
-        var sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'), {
-            backdrop: 'static',
-            keyboard: false
-        });
-        sudoPasswordModal.show();
+        document.getElementById('addPeerForm').submit();
     });
 
     document.getElementById('confirmPassword').addEventListener('click', function () {
