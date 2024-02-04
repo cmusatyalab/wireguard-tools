@@ -131,13 +131,16 @@ def peers_add():
     new_peer["public_key"] = ""
     new_peer["network"] = 1
     if request.method == "POST":
-        name = request.form["name"]
-        description = request.form["description"]
-        private_key = request.form["private_key"]
-        address = request.form["address"]
-        dns = request.form["dns"]
+        name = request.form.get("name")
+        description = request.form.get("description")
+        private_key = request.form.get("private_key")
+        address = request.form.get("address")
+        dns = request.form.get("dns")
         # peer_config = request.form["peer_config"]
-        network = Network.query.filter_by(id=request.form["network"]).first()
+        if request.form.get("network"):
+            network = Network.get(request.form.get("network"))
+        else:
+            network = Network.get(1)
         if request.form.get("sudoPassword"):
             sudo_password = request.form.get("sudoPassword")
         else:
