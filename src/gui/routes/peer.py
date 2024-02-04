@@ -192,7 +192,10 @@ def peer_update(peer_id):
     peer.address = request.form.get("address")
     peer.dns = request.form.get("dns")
     peer.network = request.form.get("network")
-    peer.lighthouse = request.form.get("lighthouse")
+    if request.form.get("lighthouse") == "on":
+        peer.lighthouse = True
+    else:
+        peer.lighthouse = False
     print(f"Lighthouse: {peer.lighthouse}")
     # Add peer to running server
     if current_app.config["ROLE"] == 'server':
