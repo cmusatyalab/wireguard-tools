@@ -90,7 +90,7 @@ def networks_add():
         
         lh_ip = lighthouse.endpoint_host
         lh_port = lighthouse.listen_port
-        public_key = lighthouse.public_key
+        public_key = lighthouse.get_public_key()
         base_ip = request.form.get("base_ip")
         subnet = request.form.get("subnet")
         dns = request.form.get("dns")
