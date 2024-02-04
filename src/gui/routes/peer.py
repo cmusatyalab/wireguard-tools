@@ -140,7 +140,10 @@ def peers_add():
         if request.form.get("network"):
             network = Network.query.get(request.form.get("network"))
         else:
-            network = Network.query.get(1)
+            if Network.query.get(1) is None:
+                network.id = 0
+            else:
+                network = Network.query.get(1)
         if request.form.get("sudoPassword"):
             sudo_password = request.form.get("sudoPassword")
         else:
@@ -159,7 +162,7 @@ def peers_add():
         db.session.commit()
         message += "\nPeer added to database"
         # Add peer to running server
-        if current_app.config["ROLE"] == 'server':
+        if current_app.config["ROLE"] == 'server' or network.id < 1:
             if add_peer(new_peer, network, sudo_password):
                 message += "\nPeer added to running server"
             else:
