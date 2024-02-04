@@ -102,7 +102,7 @@ def networks_add():
         new_network = Network(
             name=name,
             proxy=False,
-            lh_ip=lh_ip,
+            lighthouse=lighthouse.id,
             public_key=public_key,
             peers_list="",
             base_ip=base_ip,
