@@ -37,4 +37,3 @@ LOG_DIR: '{basedir}/logs'
 # Role
 # server or database
 ROLE: 'server'
-```
