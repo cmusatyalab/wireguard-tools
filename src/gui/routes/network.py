@@ -64,6 +64,7 @@ def network_detail(network_id):
             "network_detail.html",
             subnets=subnets,
             network=network,
+            lighthouses = helpers.get_lighthouses(),
             s_button="Update",
         )
     else:
@@ -81,7 +82,12 @@ def networks_add():
     lighthouses = helpers.get_lighthouses()
     if request.method == "POST":
         name = request.form.get("name")
-        lighthouse = request.form.get("lighthouse")
+        # lighthouse is the object in lighthouses with the id from request.form.get("lighthouse")
+        lighthouse = next(
+            (item for item in lighthouses if item.id == int(request.form.get("lighthouse"))),
+            None,
+        )
+        
         lh_ip = request.form.get("lh_ip")
         lh_port = request.form.get("lh_port")
         public_key = request.form.get("public_key")

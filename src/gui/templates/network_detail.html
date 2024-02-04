@@ -28,7 +28,7 @@
                             <div class="mb-3 form-outline">
                                 <select class="form-select" data-mdb-select-init id="lighthouse" name="lighthouse">
                                     {% for lighthouse in lighthouses %}
-                                    <option value="{{ lighthouse.id }}" {% if lighthouse.id==network.lighthouse
+                                    <option value="{{ lighthouse.id }}" {% if network.lighthouse==lighthouse.id
                                         %}selected{% endif %}>{{
                                         lighthouse.name }}</option>
                                     {% endfor %}
