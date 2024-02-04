@@ -33,3 +33,8 @@ OUTPUT_DIR: '{basedir}/output'
 
 # Logging
 LOG_DIR: '{basedir}/logs'
+
+# Role
+# server or database
+ROLE: 'server'
+```
