@@ -107,6 +107,9 @@ def get_adapter_names():
 
     return adapter_names
 
+def get_lighthouses():
+    return Peer.query.filter_by(lighthouse=True).all()
+
 
 def get_network(network_id: int) -> Network:
     network = Network()

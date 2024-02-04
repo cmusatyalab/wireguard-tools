@@ -1,5 +1,5 @@
 import traceback
-from flask import Blueprint, flash, render_template, request
+from flask import Blueprint, current_app, flash, render_template, request
 from flask_login import login_required
 from gui.models import db, Network, subnets
 from gui.routes import helpers
@@ -78,28 +78,44 @@ def networks_add():
     new_network = {}
     new_network["public_key"] = ""
     new_network["name"] = 1
+    lighthouses = helpers.get_lighthouses()
     if request.method == "POST":
         name = request.form.get("name")
         lighthouse = request.form.get("lighthouse")
-        lh_ip = request.form["lh_ip"]
-        lh_port = request.form["lh_port"]
-        public_key = request.form["public_key"]
-        peers = request.form["peers"]
-        base_ip = request.form["base_ip"]
-        description = request.form["description"]
-        config = request.form["config"]
+        lh_ip = request.form.get("lh_ip")
+        lh_port = request.form.get("lh_port")
+        public_key = request.form.get("public_key")
+        base_ip = request.form.get("base_ip")
+        subnet = request.form.get("subnet")
+        dns = request.form.get("dns")
+        description = request.form.get("description")
+        allowed_ips = request.form.get("allowed_ips")
 
+        # Create a new network object
+        # TODO: fix config name rotation
         new_network = Network(
             name=name,
-            lighthouse=lighthouse,
+            proxy=False,
             lh_ip=lh_ip,
-            lh_port=lh_port,
             public_key=public_key,
-            peers=peers,
+            peers_list="",
             base_ip=base_ip,
+            subnet=subnet,
+            dns_server=dns,
             description=description,
-            config=config,
+            config=json.dumps(
+                {
+                    "public_key": public_key,
+                    "preshared_key": None,
+                    "endpoint_host": lh_ip,
+                    "endpoint_port": lh_port,
+                    "persistent_keepalive": current_app.config["BASE_KEEPALIVE"],
+                    "allowed_ips": allowed_ips,
+                }
+            ),
         )
+        if request.form.get('adapter_name'):
+            new_network.adapter_name = request.form.get('adapter_name')
         db.session.add(new_network)
         db.session.commit()
         message = "Network added successfully"
@@ -111,6 +127,7 @@ def networks_add():
             "network_detail.html",
             network=new_network,
             subnets=subnets,
+            lighthouses=lighthouses,
             s_button="Add",
         )
 
