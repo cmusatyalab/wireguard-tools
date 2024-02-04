@@ -18,7 +18,7 @@ class Peer(db.Model):
     lighthouse = db.Column(db.Boolean, default=False) # Is this a lighthouse peer?
     dns = db.Column(db.String(50))      # A peer could have a specific DNS requirement but generally leave it to the network config
     peers_list = db.Column(db.Text)
-    network = db.Column(db.Integer)
+    network = db.Column(db.Integer) # Network ID
     post_up = db.Column(db.Text)
     post_down = db.Column(db.Text)
     description = db.Column(db.Text)

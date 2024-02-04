@@ -26,7 +26,7 @@
                             </div>
                             <div class="form-check form-switch" data-mdb-check-init>
                                 <input class="form-check-input" type="checkbox" role="switch" id="lighthouse" name="lighthouse"/>
-                                <label class="form-check-label" for="lighthouse">Default switch checkbox input</label>
+                                <label class="form-check-label" for="lighthouse">This is a network lighthouse</label>
                               </div>
 
                             <div class="card">
@@ -183,10 +183,20 @@
 
     };
 
-    // Add listener for add button that calls the sudo modal on base.html
-    document.getElementById('btn-Add').addEventListener('click', function (event) {
-        document.getElementById('addPeerForm').submit();
-    });
+    let btnAdd = document.getElementById('btn-Add');
+    if (btnAdd) {
+        btnAdd.addEventListener('click', function (event) {
+            document.getElementById('addPeerForm').submit();
+        });
+    }
+
+    let btnUpdate = document.getElementById('btn-Update');
+    if (btnUpdate) {
+        btnUpdate.addEventListener('click', function (event) {
+            document.getElementById('addPeerForm').action = "{{url_for('peers.peer_update',peer_id=peer.id)}}";
+            document.getElementById('addPeerForm').submit();
+        });
+    }
 
     document.getElementById('confirmPassword').addEventListener('click', function () {
         document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;

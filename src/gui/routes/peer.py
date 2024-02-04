@@ -178,6 +178,33 @@ def peers_add():
             peer=new_peer,
             s_button="Add",
         )
+    
+@peers.route("/update/<int:peer_id>", methods=["POST"])
+@login_required
+def peer_update(peer_id):
+    message = f"Updating peer {peer_id}"
+    peer = Peer.query.get(peer_id)
+    network = Network.query.get(peer.network)
+    sudo_password = current_app.config["SUDO_PASSWORD"]
+    peer.name = request.form.get("name")
+    peer.description = request.form.get("description")
+    peer.private_key = request.form.get("private_key")
+    peer.address = request.form.get("address")
+    peer.dns = request.form.get("dns")
+    peer.network = request.form.get("network")
+    peer.lighthouse = request.form.get("lighthouse")
+    print(f"Lighthouse: {peer.lighthouse}")
+    # Add peer to running server
+    if current_app.config["ROLE"] == 'server':
+       pass
+       message += "\nError updating peer on running server"
+    else:
+        db.session.commit()
+        message += "\nPeer updated in database"
+    peer_list = query_all_peers()
+    print(message)
+    flash(message, "success")
+    return render_template("peers.html", peer_list=peer_list)
 
 
 @peers.route("/delete/<int:peer_id>", methods=["POST"])
