@@ -141,7 +141,7 @@ def peers_add():
             network = Network.query.get(request.form.get("network"))
         else:
             if Network.query.get(1) is None:
-                network = {'id': 0}
+                network = Network(id=0, name="Invalid Network placeholder")
             else:
                 network = Network.query.get(1)
         if request.form.get("sudoPassword"):
