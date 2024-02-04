@@ -25,15 +25,16 @@
                                 <label for="description" class="form-label">Description</label>
                             </div>
                             <div class="form-check form-switch" data-mdb-check-init>
-                                <input class="form-check-input" type="checkbox" role="switch" id="lighthouse" name="lighthouse" {% if peer.lighthouse %} checked {% endif %}/>
+                                <input class="form-check-input" type="checkbox" role="switch" id="lighthouse"
+                                    name="lighthouse" {% if peer.lighthouse %} checked {% endif %} />
                                 <label class="form-check-label" for="lighthouse">This is a network lighthouse</label>
-                              </div>
+                            </div>
 
                             <div class="card">
                                 <h6 class="card-header">Configuration</h6>
 
-                                <div class="mb-3 form-outline" data-mdb-input-init>
-                                    <div class="input-group">
+                                <div class="form-outline">
+                                    <div class="mb-3 input-group" data-mdb-input-init>
                                         <input type="text" class="form-control" id="private_key" name="private_key"
                                             value="{{ peer.private_key }}" oninput="updatePublicKey()">
                                         <label for="private_key" class="form-label">PrivateKey</label>
@@ -43,7 +44,6 @@
                                             <i class="fas fa-key"></i>
                                         </button>
                                     </div>
-
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="address" name="address"
                                             value="{{ peer.address }}" onchange="updateConfigCard()">

@@ -88,9 +88,9 @@ def networks_add():
             None,
         )
         
-        lh_ip = request.form.get("lh_ip")
-        lh_port = request.form.get("lh_port")
-        public_key = request.form.get("public_key")
+        lh_ip = lighthouse.ip
+        lh_port = lighthouse.port
+        public_key = lighthouse.public_key
         base_ip = request.form.get("base_ip")
         subnet = request.form.get("subnet")
         dns = request.form.get("dns")
@@ -109,10 +109,10 @@ def networks_add():
             subnet=subnet,
             dns_server=dns,
             description=description,
+            allowed_ips=allowed_ips,
             config=json.dumps(
                 {
                     "public_key": public_key,
-                    "preshared_key": None,
                     "endpoint_host": lh_ip,
                     "endpoint_port": lh_port,
                     "persistent_keepalive": current_app.config["BASE_KEEPALIVE"],
