@@ -141,7 +141,7 @@ def peers_add():
             network = Network.query.get(request.form.get("network"))
         else:
             if Network.query.get(1) is None:
-                network.id = 0
+                network = {'id': 0}
             else:
                 network = Network.query.get(1)
         if request.form.get("sudoPassword"):
