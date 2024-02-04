@@ -138,9 +138,9 @@ def peers_add():
         dns = request.form.get("dns")
         # peer_config = request.form["peer_config"]
         if request.form.get("network"):
-            network = Network.get(request.form.get("network"))
+            network = int(request.form.get("network"))
         else:
-            network = Network.get(1)
+            network = 1
         if request.form.get("sudoPassword"):
             sudo_password = request.form.get("sudoPassword")
         else:
@@ -152,7 +152,7 @@ def peers_add():
             address=address,
             dns=dns,
             # peer_config=peer_config,
-            network=network.id,
+            network=network,
             description=description,
         )
         db.session.add(new_peer)
