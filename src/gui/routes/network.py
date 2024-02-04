@@ -115,6 +115,7 @@ def networks_add():
                     "public_key": public_key,
                     "endpoint_host": lh_ip,
                     "endpoint_port": lh_port,
+                    "pre_shared_key": None,
                     "persistent_keepalive": current_app.config["BASE_KEEPALIVE"],
                     "allowed_ips": allowed_ips,
                 }
