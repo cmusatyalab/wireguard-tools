@@ -12,7 +12,7 @@ class Peer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     private_key = db.Column(db.String(50))
-    endpoint_ip = db.Column(db.String(50))
+    endpoint_host = db.Column(db.String(50))
     network_ip = db.Column(
         db.String(50)
     )  # This is the IP address of the peer without subnet
@@ -69,7 +69,7 @@ class PeerSchema(ma.Schema):
             "id",
             "name",
             "private_key",
-            "endpoint_ip",
+            "endpoint_host",
             "network_ip",
             "subnet",
             "listen_port",

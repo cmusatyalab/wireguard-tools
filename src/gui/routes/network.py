@@ -88,7 +88,7 @@ def networks_add():
             None,
         )
         
-        lh_ip = lighthouse.ip
+        lh_ip = lighthouse.endpoint_ip
         lh_port = lighthouse.port
         public_key = lighthouse.public_key
         base_ip = request.form.get("base_ip")

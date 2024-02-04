@@ -118,7 +118,7 @@ def peers_all():
         message = "Invalid request method"
         peer_list = query_all_peers()
         flash(message, "warning")
-        return render_template("peers.html",  peer_list=peer_list)
+        return render_template("peers.html", peer_list=peer_list)
 
 
 @peers.route("/add", methods=["GET", "POST"])
@@ -135,7 +135,16 @@ def peers_add():
         name = request.form.get("name")
         description = request.form.get("description")
         private_key = request.form.get("private_key")
-        address = request.form.get("address")
+        if request.form.get("lighthouse") == "on":
+            lighthouse = True
+        else:
+            lighthouse = False
+        if request.form.get("listen_port"):
+            listen_port = request.form.get("listen_port")
+        else:
+            listen_port = 51820
+        network_ip = request.form.get("network_ip")
+        subnet = request.form.get("subnet")
         dns = request.form.get("dns")
         # peer_config = request.form["peer_config"]
         if request.form.get("network"):
@@ -153,17 +162,22 @@ def peers_add():
         new_peer = Peer(
             name=name,
             private_key=private_key,
-            address=address,
+            network_ip=network_ip,
+            subnet=subnet,
+            listen_port=listen_port,
+            lighthouse=lighthouse,
             dns=dns,
             # peer_config=peer_config,
             network=network.id,
             description=description,
         )
+        if request.form.get("endpoint_ip"):
+            new_peer.endpoint_host = request.form.get("endpoint_host")
         db.session.add(new_peer)
         db.session.commit()
         message += "\nPeer added to database"
         # Add peer to running server
-        if current_app.config["ROLE"] == 'server' or network.id < 1:
+        if current_app.config["ROLE"] == "server" or network.id < 1:
             if add_peer(new_peer, network, sudo_password):
                 message += "\nPeer added to running server"
             else:
@@ -179,7 +193,8 @@ def peers_add():
             peer=new_peer,
             s_button="Add",
         )
-    
+
+
 @peers.route("/update/<int:peer_id>", methods=["POST"])
 @login_required
 def peer_update(peer_id):
@@ -190,7 +205,10 @@ def peer_update(peer_id):
     peer.name = request.form.get("name")
     peer.description = request.form.get("description")
     peer.private_key = request.form.get("private_key")
-    peer.address = request.form.get("address")
+    peer.network_ip = request.form.get("network_ip")
+    peer.subnet = request.form.get("subnet")
+    if request.form.get("listen_port"):
+        peer.listen_port = request.form.get("listen_port")
     peer.dns = request.form.get("dns")
     peer.network = request.form.get("network")
     if request.form.get("lighthouse") == "on":
@@ -199,9 +217,9 @@ def peer_update(peer_id):
         peer.lighthouse = False
     print(f"Lighthouse: {peer.lighthouse}")
     # Add peer to running server
-    if current_app.config["ROLE"] == 'server':
-       pass
-       message += "\nError updating peer on running server"
+    if current_app.config["ROLE"] == "server":
+        pass
+        message += "\nError updating peer on running server"
     else:
         db.session.commit()
         message += "\nPeer updated in database"
@@ -218,8 +236,8 @@ def peer_delete(peer_id):
     peer = Peer.query.filter_by(id=peer_id).first()
     network = Network.query.filter_by(id=peer.network).first()
     sudo_password = current_app.config["SUDO_PASSWORD"]
-    # Add peer to running server
-    if current_app.config["ROLE"] == 'server':
+    # Remove peer from running server
+    if current_app.config["ROLE"] == "server":
         if remove_peer(peer, network, sudo_password):
             db.session.delete(peer)
             db.session.commit()
@@ -239,37 +257,16 @@ def peer_delete(peer_id):
     return render_template("peers.html", peer_list=peer_list)
 
 
-@peers.route("/<int:peer_id>", methods=["GET", "POST"])
+@peers.route("/<int:peer_id>", methods=["GET"])
 @login_required
 def peer_detail(peer_id):
     # peer = next((item for item in peer_list if item["id"] == int(peer_id)), None)
     peer = Peer.query.filter_by(id=peer_id).first()
     print(f"Found: {peer}")
 
-    if request.method == "POST":
-        peer.name = request.form["name"]
-        peer.description = request.form["description"]
-        peer.private_key = request.form["private_key"]
-        peer.address = request.form["address"]
-        peer.dns = request.form["dns"]
-        # peer_config = request.form["peer_config"]
-        peer.network = request.form["network"]
-        print(f"Peer network ID {peer.network}")
-
-        db.session.commit()
-        message = "Peer updated successfully"
-        peer_list = query_all_peers()
-        flash(message, "success")
-        return render_template("peers.html",  peer_list=peer_list)
-
-    elif request.method == "GET":
-        return render_template(
-            "peer_detail.html",
-            networks=query_all_networks(),
-            peer=peer,
-            s_button="Update",
-        )
-    else:
-        message = "Invalid request method"
-        flash(message, "warning")
-        return render_template("peer_detail.html", peer=peer)
+    return render_template(
+        "peer_detail.html",
+        networks=query_all_networks(),
+        peer=peer,
+        s_button="Update",
+    )
