@@ -138,9 +138,9 @@ def peers_add():
         dns = request.form.get("dns")
         # peer_config = request.form["peer_config"]
         if request.form.get("network"):
-            network = int(request.form.get("network"))
+            network = Network.query.get(request.form.get("network"))
         else:
-            network = 1
+            network = Network.query.get(1)
         if request.form.get("sudoPassword"):
             sudo_password = request.form.get("sudoPassword")
         else:
@@ -152,17 +152,19 @@ def peers_add():
             address=address,
             dns=dns,
             # peer_config=peer_config,
-            network=network,
+            network=network.id,
             description=description,
         )
         db.session.add(new_peer)
         db.session.commit()
+        message += "\nPeer added to database"
         # Add peer to running server
-        if add_peer(new_peer, network, sudo_password):
-            message += "\nPeer added successfully"
-        else:
-            message += "\nPeer added successfully, but failed to add to running server"
-        peer_list = query_all_peers()
+        if current_app.config["ROLE"] == 'server':
+            if add_peer(new_peer, network, sudo_password):
+                message += "\nPeer added to running server"
+            else:
+                message += ", but failed to add to running server"
+            peer_list = query_all_peers()
         print(message)
         flash(message, "success")
         return render_template("peers.html", peer_list=peer_list)
