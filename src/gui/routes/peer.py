@@ -188,14 +188,20 @@ def peer_delete(peer_id):
     network = Network.query.filter_by(id=peer.network).first()
     sudo_password = current_app.config["SUDO_PASSWORD"]
     # Add peer to running server
-    if remove_peer(peer, network, sudo_password):
+    if current_app.config["ROLE"] == 'server':
+        if remove_peer(peer, network, sudo_password):
+            db.session.delete(peer)
+            db.session.commit()
+            message += "\nPeer deleted successfully"
+            flash(message, "success")
+        else:
+            message += "\nError removing peer from running server"
+            flash(message, "danger")
+    else:
         db.session.delete(peer)
         db.session.commit()
         message += "\nPeer deleted successfully"
         flash(message, "success")
-    else:
-        message += "\nError removing peer from running server"
-        flash(message, "danger")
     peer_list = query_all_peers()
     print(message)
 
