@@ -5,7 +5,6 @@
 {% block content %}
 <div class="container-fluid">
     <h2>Peer Details</h2>
-
     <hr class="hr" />
     <div class="row ">
         <div class="col-md-7 col-sm-12">
@@ -32,9 +31,9 @@
 
                             <div class="card">
                                 <h6 class="card-header">Configuration</h6>
-
                                 <div class="form-outline">
                                     <div class="mb-3 input-group" data-mdb-input-init>
+
                                         <input type="text" class="form-control" id="private_key" name="private_key"
                                             value="{{ peer.private_key }}" oninput="updatePublicKey()">
                                         <label for="private_key" class="form-label">PrivateKey</label>
@@ -94,7 +93,7 @@
                                 </div>
                                 <div class="row ">
                                     <div class="col-4 text-center">
-                                        <button type="button" class="btn btn-primary"
+                                        <button type="submit" class="btn btn-primary"
                                             id="btn-{{s_button}}">{{s_button}}</button>
                                     </div>
                                     <div class="col-4 text-center">
@@ -270,7 +269,6 @@
         config += network_peer + "\n";
         document.getElementById('peer_config').value = config;
         generateQRCode(config);
-        // document.getElementById('configCard').innerText = config;
     }
 
     function updatePublicKey() {

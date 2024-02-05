@@ -2,8 +2,10 @@ from flask import (
     Blueprint,
     current_app,
     flash,
+    redirect,
     render_template,
     request,
+    url_for,
 )
 from flask_login import login_required
 from gui.models import db, Peer, Network
@@ -184,8 +186,8 @@ def peers_add():
                 message += ", but failed to add to running server"
             peer_list = query_all_peers()
         print(message)
-        flash(message, "success")
-        return render_template("peers.html", peer_list=peer_list)
+        flash(message.replace('\n','<br>'), "success")
+        return redirect(url_for("peers.peer_detail", peer_id=new_peer.id))
     else:
         return render_template(
             "peer_detail.html",
@@ -234,7 +236,7 @@ def peer_update(peer_id):
 def peer_delete(peer_id):
     message = f"Deleting peer {peer_id}"
     peer = Peer.query.filter_by(id=peer_id).first()
-    network = Network.query.filter_by(id=peer.network).first()
+    network = helpers.get_network(peer.network)
     sudo_password = current_app.config["SUDO_PASSWORD"]
     # Remove peer from running server
     if current_app.config["ROLE"] == "server":

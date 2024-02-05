@@ -23,6 +23,7 @@ def create_app():
     app.basedir = basedir
     app.__version__ = version
 
+    
     ## CONFIGURATION ##
 
     # Read config.yaml
@@ -50,6 +51,10 @@ def create_app():
         helpers.generate_cert(app.config["PKI_CERT_PATH"], app.config["PKI_CERT"], app.config["PKI_KEY"])
     if not os.path.exists(app.config["PKI_CERT_PATH"] +"/" + app.config["PKI_KEY"]):
         helpers.generate_cert(app.config["PKI_CERT_PATH"], app.config["PKI_CERT"], app.config["PKI_KEY"])
+
+    @app.context_processor
+    def inject_mode():
+        return dict(mode=app.config["MODE"])
 
     # Initialize the database with the app
     from .models import db  

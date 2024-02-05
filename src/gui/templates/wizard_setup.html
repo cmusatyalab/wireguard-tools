@@ -86,7 +86,6 @@
                         <input type="text" class="form-control" id="public_key" name="public_key" value="">
                         <label for="public_key" class="form-label">Public Key</label>
                     </div>
-                    <input type="hidden" id="sudoPasswordInputA" name="sudoPassword">
                     <button type="submit" method="post" class="btn btn-primary">Build</button>
                     <a href="{{url_for('main.index')}}" type="button" class="btn btn-secondary">Cancel</a>
                 </form>
@@ -118,21 +117,6 @@
 {% block scripts %}
 <script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
 <script>
-    document.getElementById('buildButton').addEventListener('click', function (event) {
-        event.preventDefault();
-        var sudoPasswordModal = new mdb.Modal(document.getElementById('sudoPasswordModal'), {
-            backdrop: 'static',
-            keyboard: false
-        });
-        sudoPasswordModal.show();
-    });
-
-    document.getElementById('confirmPassword').addEventListener('click', function () {
-        document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;
-        document.getElementById('basicBuildForm').submit();
-        showSpinner()
-    });
-
     function generateAndSetPrivateKey() {
         let keypair = wireguard.generateKeypair();
         let privateKey = keypair.privateKey;
