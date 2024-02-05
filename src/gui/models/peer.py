@@ -1,11 +1,7 @@
 from .database import db
-from flask_marshmallow import Marshmallow
 import json
 
 from wireguard_tools import WireguardKey
-
-ma = Marshmallow()
-
 
 # Create models
 class Peer(db.Model):
@@ -61,31 +57,18 @@ class Peer(db.Model):
     def is_lighthouse(self):
         return self.lighthouse
 
-
-# JSON Schema
-class PeerSchema(ma.Schema):
-    class Meta:
-        fields = (
-            "id",
-            "name",
-            "private_key",
-            "endpoint_host",
-            "network_ip",
-            "subnet",
-            "listen_port",
-            "lighthouse",
-            "dns",
-            "peers_list",
-            "network",
-            "description",
-            "post_up",
-            "post_down",
-            "active",
-        )
-
-
-peer_schema = PeerSchema()
-peers_schema = PeerSchema(many=True)
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "network_ip": self.network_ip,
+            "private_key": self.private_key,
+            "dns": self.dns,
+            "peers_list": self.peers_list,
+            "network": self.network,
+            "description": self.description,
+            "active": self.active,
+        }
 
 
 def peer_load_test_db():

@@ -9,46 +9,10 @@
         <a href="{{ url_for('peers.peers_add') }}" class="btn btn-primary">Add Peer</a>
     </div>
     <hr class="hr" />
-    <div class="row card-group">
-        {% if peer_list|length == 0 %}
-        <div class="col-md">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">No Peers Found{% if network_id %} for network {{network_id}} {% endif %}
-                    </h5>
-                    <p class="card-text">No peers have been configured. Click the button above to add peers.</p>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% for peer in peer_list %}
-
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ peer.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ peer.address }}</h6>
-                    <p class="card-text">{{ peer.get_public_key() }}</p>
-                    <p class="card-text">{{ peer.description }}</p>
-                    <div class="card-footer row">
-                        <div class="col-md-8 col-sm-12">
-                            <a href="{{ url_for('peers.peers_all')}}/{{peer.id}}" class="card-link">
-                                Details</a>
-                        </div>
-                        <div class="col-md-4 col-sm-12 d-flex justify-content-end">
-                            {% if peer.active %}
-                            <span class="badge bg-success">Active</span>
-                            {% else %}
-                            <span class="badge bg-danger">Inactive</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+    <!-- data table -->
+    <div id="peers-datatable" data-mdb-loading="true">
     </div>
+
 </div>
 <br>
 <div class="container-fluid">
@@ -62,7 +26,129 @@
 <script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
 <script>
     window.onload = function () {
-
+        loadPeers();
     }
+
+    function loadPeers() {
+        fetch("{{ url_for('peers.peer_api',peer_id=0)}}")
+            .then((response) => response.json())
+            .then((data) => {
+                peersTable.update(
+                    {
+                        rows: data.map((peer) => ({
+                            ...peer,
+                            public_key: wireguard.getPublicKey(peer.private_key),
+                            active: `
+                            <span class="badge bg-danger" data-mdb-index="${peer.id}">Inactive</span>
+                            `,
+                            actions: `
+                            <a role="button" class="activate-peer-button text-warning" data-mdb-index="${peer.id}">
+                                <i class="fa fa-power-off"></i>
+                            </a>
+                            <a role="button" class="edit-peer-button text-muted ms-2" data-mdb-index="${peer.id}">
+                                <i class="fa fa-pen-to-square"></i>
+                            </a>
+                            <a role="button" class="delete-peer-button text-muted ms-2" data-mdb-index="${peer.id}">
+                                <i class="fa fa-trash-alt"></i>
+                            </a>
+                            `,
+                        })),
+                    },
+                    { loading: false }
+                );
+            });
+    }
+
+    const table = document.getElementById('peers-datatable');
+
+    const setupButtons = (action) => {
+        document.getElementsByClassName(`${action}-peer-button`).forEach((button) => {
+            if (action === 'activate') {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    console.log(`activate peer: ${index}`);
+                });
+            } else if (action === 'edit') {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    console.log(`edit peer: ${index}`);
+                });
+            } else if (action === 'delete') {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    console.log(`delete peer: ${index}`);
+                });
+            } else {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    console.log(`${action} message: ${index}`, messages[index]);
+                });
+            }
+        });
+    };
+
+    const columns = [
+        { label: 'Activation', field: 'active' },
+        { label: 'Name', field: 'name', sort: false },
+        { label: 'Public Key', field: 'public_key', sort: false },
+        { label: 'Net IP', field: 'network_ip', sort: true },
+        { label: 'Endpoint IP:Port', field: 'endpoint_ip', sort: false },
+        { label: 'Actions', field: 'actions' },
+    ];
+
+    const messages = [
+        {
+            from: 'admin@mdbootstrap.com',
+            title: 'MDBootstrap spring sale',
+            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sed metus ultricies, sollicitudin est nec, blandit turpis. Fusce venenatis nisi volutpat, pharetra elit eu, ullamcorper metus. Vestibulum dapibus laoreet aliquam. Maecenas sed magna ut libero consequat elementum. Maecenas euismod pellentesque pulvinar. Morbi sit amet turpis eget dolor rutrum eleifend. Sed bibendum diam nec diam posuere pulvinar. Cras ac bibendum arcu.',
+            date: '11/12/2019',
+        },
+        {
+            from: 'user@mdbootstrap.com',
+            title: 'How to purchase MDB5 package?',
+            message: 'Quisque tempor ligula eu lobortis scelerisque. Mauris tristique mi a erat egestas, quis dictum nibh iaculis. Sed gravida sodales egestas. In tempus mollis libero sit amet lacinia. Duis non augue sed leo imperdiet efficitur faucibus vitae elit. Mauris eu cursus ligula. Praesent posuere efficitur cursus.',
+            date: '10/12/2019',
+        },
+        {
+            from: 'user@mdbootstrap.com',
+            title: 'Licence renewal',
+            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sed metus ultricies, sollicitudin est nec, blandit turpis. Fusce venenatis nisi volutpat, pharetra elit eu, ullamcorper metus. Vestibulum dapibus laoreet aliquam. Maecenas sed magna ut libero consequat elementum. Maecenas euismod pellentesque pulvinar. Morbi sit amet turpis eget dolor rutrum eleifend. Sed bibendum diam nec diam posuere pulvinar. Cras ac bibendum arcu.',
+            date: '09/12/2019',
+        },
+        {
+            from: 'admin@mdbootstrap.com',
+            title: 'Black friday offer',
+            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sed metus ultricies, sollicitudin est nec, blandit turpis. Fusce venenatis nisi volutpat, pharetra elit eu, ullamcorper metus. Vestibulum dapibus laoreet aliquam. Maecenas sed magna ut libero consequat elementum. Maecenas euismod pellentesque pulvinar. Morbi sit amet turpis eget dolor rutrum eleifend. Sed bibendum diam nec diam posuere pulvinar. Cras ac bibendum arcu.',
+            date: '08/12/2019',
+        },
+    ];
+
+    table.addEventListener('rowClicked.mdb.datatable', (e) => {
+        const { index } = e;
+        const { message, title, from } = messages[index];
+        modalHeader.innerText = title;
+        modalBody.innerHTML = `
+    <h6 class="mb-4">From: <strong>${from}</strong></h6>
+    <p>${message}</p>
+  `;
+
+        modalInstance.show();
+    });
+
+    table.addEventListener('render.mdb.datatable', () => {
+        setupButtons('activate');
+        setupButtons('edit');
+        setupButtons('delete');
+    })
+
+    const peersTable = new mdb.Datatable(
+        table,
+        { columns, },
+        { loading: true }
+    );
 </script>
 {% endblock %}

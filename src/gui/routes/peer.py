@@ -2,6 +2,7 @@ from flask import (
     Blueprint,
     current_app,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -272,3 +273,29 @@ def peer_detail(peer_id):
         peer=peer,
         s_button="Update",
     )
+
+@peers.route("/api/<int:peer_id>", methods=["POST","GET", "PATCH", "DELETE"])
+@login_required
+def peer_api(peer_id):
+    if request.method == "GET":
+        if peer_id == 0:
+            return jsonify([peer.to_dict() for peer in Peer.query.all()])
+        return jsonify(Peer.query.get(peer_id))
+    elif request.method == "POST":
+        return add_peer(peer_id)
+    elif request.method == "PATCH":
+        peer = Peer.query.get(peer_id)
+        # logic to update peer
+        # If server
+
+        # If database
+        db.session.commit()
+        flash("Peer updated successfully", "success")
+        return jsonify(peer)
+    elif request.method == "DELETE":
+        peer = Peer.query.get(peer_id)
+        # If server
+        # If database
+        return remove_peer(peer_id)
+    else:
+        return jsonify("Invalid request method")

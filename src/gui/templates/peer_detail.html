@@ -46,7 +46,12 @@
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="network_ip" name="network_ip"
                                             value="{{ peer.network_ip }}" onchange="updateConfigCard()">
-                                        <label for="network_ip" class="form-label">Address</label>
+                                        <label for="network_ip" class="form-label">VPN IP</label>
+                                    </div>
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="endpoint_ip" name="endpoint_ip"
+                                            value="{{ peer.endpoint_ip }}" onchange="updateConfigCard()">
+                                        <label for="endpoint_ip" class="form-label">Endpoint IP</label>
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="listen_port" name="listen_port"
