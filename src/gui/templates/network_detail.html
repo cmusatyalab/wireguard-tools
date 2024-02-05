@@ -52,20 +52,20 @@
                                     </select>
                                     <label for="subnet" class="form-label select-label">CIDR Subnet</label>
                                 </div>
-                                <div class="col-md-4 mb-3 form-check">
-                                    <input class="form-check-input" type="checkbox" id="proxy" name="proxy" value="{{ network.proxy }}" />
-                                    <label for="proxy" class="form-label">Proxy</label>
-                                </div>
-                                <div class="col-md-4 mb-3 form-check">
-                                    <select class="form-select" data-mdb-select-init id="adapter_name" name="adapter_name" value="{{ network.adapter_name }}" >
-                                        {% for adapter in adapters %}
-                                        <option value="{{ adapter }}" {% if adapter==network.adapter_name %}selected{% endif %}>
-                                            {{ adapter }}</option>
-                                        {% endfor %}    
-                                    </select>
-                                    <label for="adapter_name" class="form-label">Host Adapter Name</label>
-                                </div>
+
                             </div>
+                            <div class="mb-3 form-outline">
+                                <select class="form-select" data-mdb-select-init id="adapter_name" name="adapter_name">
+                                    {% for adapter in adapters %}
+                                    <option value="{{ adapter }}" {% if adapter==network.adapter_name %}selected{% endif
+                                        %}>
+                                        {{ adapter }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="adapter_name" class="form-label select-label ">Host Adapter Name</label>
+                            </div>
+
+
                             <div class="mb-3 form-outline" data-mdb-input-init>
                                 <input type="text" class="form-control" id="dns" name="dns"
                                     value="{{ network.dns_server }}" />

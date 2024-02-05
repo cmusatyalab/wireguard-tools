@@ -86,6 +86,7 @@ def networks_add():
     new_network["public_key"] = ""
     new_network["name"] = 1
     lighthouses = helpers.get_lighthouses()
+    adapters = helpers.get_adapter_names()
     if request.method == "POST":
         name = request.form.get("name")
         # lighthouse is the object in lighthouses with the id from request.form.get("lighthouse")
@@ -103,6 +104,7 @@ def networks_add():
         description = request.form.get("description")
         allowed_ips = request.form.get("allowed_ips")
         config = request.form.get("config")
+        adapter_name = request.form.get("adapter_name")
 
         # Create a new network object
         # TODO: fix config name rotation
@@ -123,7 +125,7 @@ def networks_add():
                     "public_key": public_key,
                     "endpoint_host": lh_ip,
                     "endpoint_port": lh_port,
-                    "pre_shared_key": None,
+                    "preshared_key": None,
                     "persistent_keepalive": current_app.config["BASE_KEEPALIVE"],
                     "allowed_ips": allowed_ips,
                 }
@@ -135,7 +137,6 @@ def networks_add():
         db.session.commit()
         message = "Network added successfully"
         network_list = query_all_networks()
-        adapters = helpers.get_adapter_names()
         flash(message, "success")
         return render_template("networks.html",  networks=network_list)
     else:

@@ -179,12 +179,12 @@ def peers_add():
         db.session.commit()
         message += "\nPeer added to database"
         # Add peer to running server
-        if current_app.config["ROLE"] == "server" or network.id < 1:
+        if current_app.config["MODE"] == "server" and network.id > 0:
             if add_peer(new_peer, network, sudo_password):
                 message += "\nPeer added to running server"
             else:
                 message += ", but failed to add to running server"
-            peer_list = query_all_peers()
+            
         print(message)
         flash(message.replace('\n','<br>'), "success")
         return redirect(url_for("peers.peer_detail", peer_id=new_peer.id))
@@ -219,7 +219,7 @@ def peer_update(peer_id):
         peer.lighthouse = False
     print(f"Lighthouse: {peer.lighthouse}")
     # Add peer to running server
-    if current_app.config["ROLE"] == "server":
+    if current_app.config["MODE"] == "server":
         pass
         message += "\nError updating peer on running server"
     else:
@@ -239,7 +239,7 @@ def peer_delete(peer_id):
     network = helpers.get_network(peer.network)
     sudo_password = current_app.config["SUDO_PASSWORD"]
     # Remove peer from running server
-    if current_app.config["ROLE"] == "server":
+    if current_app.config["MODE"] == "server":
         if remove_peer(peer, network, sudo_password):
             db.session.delete(peer)
             db.session.commit()
