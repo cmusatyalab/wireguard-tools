@@ -179,7 +179,6 @@
     window.onload = function () {
         updatePublicKey();
         updateConfigCard();
-
     };
 
     let btnAdd = document.getElementById('btn-Add');
@@ -202,7 +201,6 @@
         document.getElementById('addPeerForm').submit();
     });
 
-    // Add event listener for the 'click' event on the #btn_copyConfig button
     document.getElementById('btn_copyConfig').addEventListener('click', function () {
         let config = document.getElementById('peer_config');
         config.select();
@@ -210,7 +208,6 @@
         document.execCommand("copy");
     });
 
-    // Add event listener for the 'click' event on the #btn_downloadConfig button
     document.getElementById('btn_downloadConfig').addEventListener('click', function () {
         let configText = document.getElementById('peer_config').value;
         let blob = new Blob([configText], { type: 'text/plain' });
@@ -248,7 +245,7 @@
     }
 
     function updateConfigCard() {
-        let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('address').value
+        let config = "[Interface]\nPrivateKey = " + document.getElementById('private_key').value + "\nAddress = " + document.getElementById('network_ip').value
         if (document.getElementById('listen_port') && document.getElementById('listen_port').value != "None" && document.getElementById('listen_port').value != "") {
             config += "\nListenPort = " + document.getElementById('listen_port').value;
         }
@@ -259,7 +256,7 @@
             config += "\nPostDown = " + document.getElementById('postDown').value;
         }
         if (document.getElementById('dns') && document.getElementById('dns').value != "None" && document.getElementById('dns').value != "") {
-            config += "\nDNS = " + document.getElementById('dns').value;
+            config += "\nDNS = " + document.getElementById('dns').value + "\n\n";
         } else {
             config += "\n\n";
         }
@@ -267,6 +264,7 @@
         document.getElementById('network').value = selectedNetworkId;
         let network_peer = document.getElementById("nc-" + selectedNetworkId).value;
         config += network_peer + "\n";
+        console.log(config)
         document.getElementById('peer_config').value = config;
         generateQRCode(config);
     }

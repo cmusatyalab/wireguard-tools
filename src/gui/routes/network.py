@@ -1,7 +1,7 @@
 import traceback
 from flask import Blueprint, current_app, flash, render_template, request
 from flask_login import login_required
-from gui.models import db, Network, subnets
+from gui.models import db, Network, Peer, subnets
 from gui.routes import helpers
 import json
 
@@ -148,6 +148,39 @@ def networks_add():
             adapters=adapters,
             s_button="Add",
         )
+    
+@networks.route("/update/<int:network_id>", methods=["POST"])
+@login_required
+def network_update(network_id):
+    network_list = query_all_networks()
+    message = f"Updating network {network_id}"
+    network = Network.query.get(network_id)
+    lh = Peer.query.get(network.lighthouse)
+    sudo_password = current_app.config["SUDO_PASSWORD"]
+    network.name = request.form.get("name")
+    network.proxy = request.form.get("proxy")
+    network.lighthouse = request.form.get("lighthouse")
+    network.public_key = request.form.get("public_key")
+    network.peers_list = request.form.get("peers_list")
+    network.base_ip = request.form.get("base_ip")
+    network.subnet = request.form.get("subnet")
+    network.dns_server = request.form.get("dns")
+    network.description = request.form.get("description")
+    network.persistent_keepalive = request.form.get("persistent_keepalive")
+    network.adapter_name = request.form.get("adapter_name")
+    network.allowed_ips = request.form.get("allowed_ips")
+
+    # Add peer to running server
+    if current_app.config["MODE"] == "server":
+        pass
+        message += "\nError updating peer on running server"
+    else:
+        db.session.commit()
+        message += "\nNetwork updated in database"
+
+    print(message)
+    flash(message, "success")
+    return render_template("networks.html", network_list=network_list)
 
 
 @networks.route("/delete/<int:network_id>", methods=["POST"])

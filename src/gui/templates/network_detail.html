@@ -11,7 +11,7 @@
             <h5 class="card-title">{{ network.name }}</h5>
             <h6 class="card-subtitle mb-2 text-muted" id="address">{{ network.base_ip }}/{{network.subnet}}</h6>
             <div class="form-outline">
-                <form method="POST">
+                <form method="POST" id="networkForm">
                     <div class="mb-3 form-outline" data-mdb-input-init>
                         <input type="text" class="form-control" id="name" name="name" value="{{ network.name }}" />
                         <label for="name" class="form-label">Network Name</label>
@@ -82,12 +82,11 @@
                                     value="{{ network.proxy }}" />
                                 <label for="proxy" class="form-label">Proxy</label>
                             </div>
-
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-4 text-center">
-                            <button type="submit" class="btn btn-primary">{{s_button}}</button>
+                            <button type="submit" id="btn-{{s_button}}" class="btn btn-primary">{{s_button}}</button>
                         </div>
                         <div class="col-4 text-center">
                             <a href="{{url_for('networks.networks_all')}}" type="button"
@@ -142,5 +141,22 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
+<script src="{{url_for('static',filename='js/wireguard.js')}}">
+
+    let btnAdd = document.getElementById('btn-Add');
+    if (btnAdd) {
+        btnAdd.addEventListener('click', function (event) {
+            document.getElementById('addPeerForm').submit();
+        });
+    }
+
+    let btnUpdate = document.getElementById('btn-Update');
+    if (btnUpdate) {
+        btnUpdate.addEventListener('click', function (event) {
+            document.getElementById('addPeerForm').action = "{{url_for('networks.network_update',network_id=network.id)}}";
+            document.getElementById('addPeerForm').submit();
+        });
+    }
+
+</script>
 {% endblock %}

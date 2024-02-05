@@ -23,8 +23,8 @@ class Network(db.Model):
         db.String(50)
     )  # DNS server setting for peers in this network
     description = db.Column(db.Text)
+    persistent_keepalive = db.Column(db.Integer)
     adapter_name = db.Column(db.String(50))
-    config = db.Column(db.Text)
     allowed_ips = db.Column(db.String(50))
     active = db.Column(db.Boolean, default=False)
 
@@ -40,20 +40,14 @@ class Network(db.Model):
         return result
 
     def get_config(self):
-        j_config = json.loads(self.config)
-        wg_config = f"[Peer]\nPublicKey = {j_config['public_key']}\n"
-        allowed_ips = j_config["allowed_ips"]
-        if len(allowed_ips) > 0:
-            wg_config += f"AllowedIPs = {j_config['allowed_ips']}\n"
-        if j_config["endpoint_host"]:
-            wg_config += (
-                f"Endpoint = {j_config['endpoint_host']}:{j_config['endpoint_port']}\n"
-            )
-        if j_config["persistent_keepalive"]:
-            wg_config += f"PersistentKeepalive = {j_config['persistent_keepalive']}\n"
-        if j_config["preshared_key"]:
-            wg_config += f"PresharedKey = {j_config['preshared_key']}\n"
-
+        lh = Peer.query.get(self.lighthouse)
+        wg_config = f"[Peer]\nPublicKey = {self.public_key}\n"
+        if len(self.allowed_ips) > 0:
+            wg_config += f"AllowedIPs = {self.allowed_ips}\n"
+        if lh.endpoint_host:
+            wg_config += f"Endpoint = {lh.endpoint_host}:{lh.listen_port}\n"
+        if self.persistent_keepalive:
+            wg_config += f"PersistentKeepalive = {self.persistent_keepalive}\n"
         return wg_config
 
 
