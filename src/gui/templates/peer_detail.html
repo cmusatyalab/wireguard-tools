@@ -23,11 +23,17 @@
                                     value="{{ peer.description }}">
                                 <label for="description" class="form-label">Description</label>
                             </div>
+                            <div class="form-check form-switch" data-mdb-check-init>
+                                <input class="form-check-input" type="checkbox" role="switch" id="lighthouse"
+                                    name="lighthouse" {% if peer.lighthouse %} checked {% endif %} />
+                                <label class="form-check-label" for="lighthouse">This is a network lighthouse</label>
+                            </div>
 
                             <div class="card">
                                 <h6 class="card-header">Configuration</h6>
-                                <div class="mb-3 form-outline" data-mdb-input-init>
-                                    <div class="input-group">
+                                <div class="form-outline">
+                                    <div class="mb-3 input-group" data-mdb-input-init>
+
                                         <input type="text" class="form-control" id="private_key" name="private_key"
                                             value="{{ peer.private_key }}" oninput="updatePublicKey()">
                                         <label for="private_key" class="form-label">PrivateKey</label>
@@ -37,11 +43,10 @@
                                             <i class="fas fa-key"></i>
                                         </button>
                                     </div>
-
                                     <div class="mb-3 form-outline" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="address" name="address"
-                                            value="{{ peer.address }}" onchange="updateConfigCard()">
-                                        <label for="address" class="form-label">Address</label>
+                                        <input type="text" class="form-control" id="network_ip" name="network_ip"
+                                            value="{{ peer.network_ip }}" onchange="updateConfigCard()">
+                                        <label for="network_ip" class="form-label">Address</label>
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="listen_port" name="listen_port"
@@ -176,6 +181,26 @@
         updateConfigCard();
 
     };
+
+    let btnAdd = document.getElementById('btn-Add');
+    if (btnAdd) {
+        btnAdd.addEventListener('click', function (event) {
+            document.getElementById('addPeerForm').submit();
+        });
+    }
+
+    let btnUpdate = document.getElementById('btn-Update');
+    if (btnUpdate) {
+        btnUpdate.addEventListener('click', function (event) {
+            document.getElementById('addPeerForm').action = "{{url_for('peers.peer_update',peer_id=peer.id)}}";
+            document.getElementById('addPeerForm').submit();
+        });
+    }
+
+    document.getElementById('confirmPassword').addEventListener('click', function () {
+        document.getElementById('sudoPasswordInput').value = document.getElementById('sudoPassword').value;
+        document.getElementById('addPeerForm').submit();
+    });
 
     // Add event listener for the 'click' event on the #btn_copyConfig button
     document.getElementById('btn_copyConfig').addEventListener('click', function () {

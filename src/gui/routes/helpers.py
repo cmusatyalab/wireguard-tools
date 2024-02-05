@@ -107,6 +107,9 @@ def get_adapter_names():
 
     return adapter_names
 
+def get_lighthouses():
+    return Peer.query.filter_by(lighthouse=True).all()
+
 
 def get_network(network_id: int) -> Network:
     network = Network()
@@ -119,13 +122,14 @@ def get_network(network_id: int) -> Network:
         message += f"\nUsing Invalid Network settings"
         network = Network(
             name="Invalid Network",
-            lh_ip="0.0.0.0",
+            lighthouse=0,
             public_key="",
             peers_list="",
             base_ip="0.0.0.0",
             subnet=0,
             dns_server="",
             description="Invalid Network placeholder",
+            allowed_ips="",
             adapter_name="",
         )
     print(message)

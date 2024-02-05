@@ -1,5 +1,5 @@
 import traceback
-from flask import Blueprint, flash, render_template, request
+from flask import Blueprint, current_app, flash, render_template, request
 from flask_login import login_required
 from gui.models import db, Network, subnets
 from gui.routes import helpers
@@ -69,6 +69,7 @@ def network_detail(network_id):
             "network_detail.html",
             subnets=subnets,
             network=network,
+            lighthouses = helpers.get_lighthouses(),
             adapters=adapters,
             s_button="Update",
         )
@@ -83,29 +84,53 @@ def network_detail(network_id):
 def networks_add():
     new_network = {}
     new_network["public_key"] = ""
-    new_network["name"] = ""
+    new_network["name"] = 1
+    lighthouses = helpers.get_lighthouses()
     if request.method == "POST":
         name = request.form.get("name")
-        lighthouse = request.form.get("lighthouse")
-        lh_ip = request.form.get("lh_ip")
-        adapter_name = request.form.get("adapter_name")
-        public_key = request.form.get("public_key")
-        peers = request.form.get("peers")
+        # lighthouse is the object in lighthouses with the id from request.form.get("lighthouse")
+        lighthouse = next(
+            (item for item in lighthouses if item.id == int(request.form.get("lighthouse"))),
+            None,
+        )
+        
+        lh_ip = lighthouse.endpoint_host
+        lh_port = lighthouse.listen_port
+        public_key = lighthouse.get_public_key()
         base_ip = request.form.get("base_ip")
+        subnet = request.form.get("subnet")
+        dns = request.form.get("dns")
         description = request.form.get("description")
+        allowed_ips = request.form.get("allowed_ips")
         config = request.form.get("config")
 
+        # Create a new network object
+        # TODO: fix config name rotation
         new_network = Network(
             name=name,
-            lighthouse=lighthouse,
-            lh_ip=lh_ip,
+            proxy=False,
+            lighthouse=lighthouse.id,
             adapter_name=adapter_name,
             public_key=public_key,
-            peers=peers,
+            peers_list="",
             base_ip=base_ip,
+            subnet=subnet,
+            dns_server=dns,
             description=description,
-            config=config,
+            allowed_ips=allowed_ips,
+            config=json.dumps(
+                {
+                    "public_key": public_key,
+                    "endpoint_host": lh_ip,
+                    "endpoint_port": lh_port,
+                    "pre_shared_key": None,
+                    "persistent_keepalive": current_app.config["BASE_KEEPALIVE"],
+                    "allowed_ips": allowed_ips,
+                }
+            ),
         )
+        if request.form.get('adapter_name'):
+            new_network.adapter_name = request.form.get('adapter_name')
         db.session.add(new_network)
         db.session.commit()
         message = "Network added successfully"
@@ -118,6 +143,7 @@ def networks_add():
             "network_detail.html",
             network=new_network,
             subnets=subnets,
+            lighthouses=lighthouses,
             adapters=adapters,
             s_button="Add",
         )
