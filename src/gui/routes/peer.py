@@ -209,6 +209,8 @@ def peer_update(peer_id):
     peer.description = request.form.get("description")
     peer.private_key = request.form.get("private_key")
     peer.network_ip = request.form.get("network_ip")
+    peer.endpoint_host = request.form.get("endpoint_ip")
+    peer.listen_port = request.form.get("listen_port")
     peer.subnet = request.form.get("subnet")
     if request.form.get("listen_port"):
         peer.listen_port = request.form.get("listen_port")

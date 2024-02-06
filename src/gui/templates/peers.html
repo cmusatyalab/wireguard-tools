@@ -43,7 +43,7 @@
                             `,
                             actions: `
                             <a role="button" class="activate-peer-button text-warning" data-mdb-index="${peer.id}">
-                                <i class="fa fa-power-off"></i>
+                                <i class="fas fa-power-off"></i>
                             </a>
                             <a role="button" class="edit-peer-button text-muted ms-2" data-mdb-index="${peer.id}">
                                 <i class="fa fa-pen-to-square"></i>
@@ -73,7 +73,9 @@
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const index = button.getAttribute('data-mdb-index');
-                    console.log(`edit peer: ${index}`);
+                    let base_url = "{{ url_for('peers.peer_detail',peer_id=0)}}";
+                    let url = base_url.replace(0, index)
+                    window.location.href = url;
                 });
             } else if (action === 'delete') {
                 button.addEventListener('click', (e) => {

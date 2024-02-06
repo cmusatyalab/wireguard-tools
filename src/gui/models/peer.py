@@ -3,6 +3,7 @@ import json
 
 from wireguard_tools import WireguardKey
 
+
 # Create models
 class Peer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,12 +37,12 @@ class Peer(db.Model):
         for peer in j_config:
             wg_config = f"[Peer]\nPublicKey = {peer['public_key']}\n"
             allowed_ips = peer["allowed_ips"]
-            if len(allowed_ips) > 0:
-                wg_config += f"AllowedIPs = {peer['allowed_ips']}\n"
             if peer["endpoint_host"]:
                 wg_config += (
                     f"Endpoint = {peer['endpoint_host']}:{peer['endpoint_port']}\n"
                 )
+            if len(allowed_ips) > 0:
+                wg_config += f"AllowedIPs = {peer['allowed_ips']}\n"
             if peer["persistent_keepalive"]:
                 wg_config += f"PersistentKeepalive = {peer['persistent_keepalive']}\n"
             if peer["preshared_key"]:
@@ -170,6 +171,7 @@ def peer_load_test_db():
             "description": "Auto-generated peer for the lighthouse",
         },
     ]
+    
     for peer in peer_list:
         peer["peers_list"] = json.dumps(peer["peers_list"])
     db.session.bulk_insert_mappings(Peer, peer_list)

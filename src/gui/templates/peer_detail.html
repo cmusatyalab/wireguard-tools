@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="endpoint_ip" name="endpoint_ip"
-                                            value="{{ peer.endpoint_ip }}" onchange="updateConfigCard()">
+                                            value="{{ peer.endpoint_host }}" onchange="updateConfigCard()">
                                         <label for="endpoint_ip" class="form-label">Endpoint IP</label>
                                     </div>
                                     <div class="mb-3 form-outline" data-mdb-input-init>
@@ -113,6 +113,7 @@
                                         </button>
                                     </div>
                                     {% endif %}
+                                </div>
                                 </div>
                         </form>
                     </div>
