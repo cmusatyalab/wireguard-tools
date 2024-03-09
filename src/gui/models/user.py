@@ -12,6 +12,10 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50))
     password = db.Column(db.String(250))
 
+    def to_dict(self):
+        dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return dict_
+
 
 # JSON Schema
 class UserSchema(ma.Schema):
@@ -21,6 +25,8 @@ class UserSchema(ma.Schema):
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+
+
 
 
 def user_load_test_db():

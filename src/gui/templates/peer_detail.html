@@ -114,7 +114,7 @@
                                     </div>
                                     {% endif %}
                                 </div>
-                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -266,10 +266,16 @@
         } else {
             config += "\n\n";
         }
-        let selectedNetworkId = document.getElementById('network').value;
-        document.getElementById('network').value = selectedNetworkId;
-        let network_peer = document.getElementById("nc-" + selectedNetworkId).value;
-        config += network_peer + "\n";
+        // Don't show peer configs for lighthouse peers
+        console.log(document.getElementById('lighthouse').attributes)
+        if (document.getElementById('lighthouse').checked) {
+            console.log("switch on")
+        } else {
+            let selectedNetworkId = document.getElementById('network').value;
+            document.getElementById('network').value = selectedNetworkId;
+            let network_peer = document.getElementById("nc-" + selectedNetworkId).value;
+            config += network_peer + "\n";
+        }
         console.log(config)
         document.getElementById('peer_config').value = config;
         generateQRCode(config);

@@ -38,6 +38,7 @@
                         rows: data.map((peer) => ({
                             ...peer,
                             public_key: wireguard.getPublicKey(peer.private_key),
+                            endpoint_ip: `${peer.endpoint_host}:${peer.listen_port}`,
                             active: `
                             <span class="badge bg-danger" data-mdb-index="${peer.id}">Inactive</span>
                             `,
@@ -67,7 +68,9 @@
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const index = button.getAttribute('data-mdb-index');
-                    console.log(`activate peer: ${index}`);
+                    let base_url = "{{ url_for('peers.peer_api',peer_id=0)}}";
+                    let url = base_url.replace(0, index);
+                    console.log(`activate peer: ${index} at ${url}`);
                 });
             } else if (action === 'edit') {
                 button.addEventListener('click', (e) => {
@@ -81,7 +84,17 @@
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const index = button.getAttribute('data-mdb-index');
-                    console.log(`delete peer: ${index}`);
+                    let base_url = "{{ url_for('peers.peer_api',peer_id=0)}}";
+                    let url = base_url.replace(0, index);
+                    console.log(`delete peer: ${index} at ${url}`);
+                    fetch(url, {
+                        method: 'DELETE',
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            loadPeers();
+                        });
                 });
             } else {
                 button.addEventListener('click', (e) => {
@@ -94,52 +107,13 @@
     };
 
     const columns = [
-        { label: 'Activation', field: 'active' },
+        { label: 'Activation', field: 'active', sort: false },
         { label: 'Name', field: 'name', sort: false },
         { label: 'Public Key', field: 'public_key', sort: false },
         { label: 'Net IP', field: 'network_ip', sort: true },
         { label: 'Endpoint IP:Port', field: 'endpoint_ip', sort: false },
         { label: 'Actions', field: 'actions' },
     ];
-
-    const messages = [
-        {
-            from: 'admin@mdbootstrap.com',
-            title: 'MDBootstrap spring sale',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sed metus ultricies, sollicitudin est nec, blandit turpis. Fusce venenatis nisi volutpat, pharetra elit eu, ullamcorper metus. Vestibulum dapibus laoreet aliquam. Maecenas sed magna ut libero consequat elementum. Maecenas euismod pellentesque pulvinar. Morbi sit amet turpis eget dolor rutrum eleifend. Sed bibendum diam nec diam posuere pulvinar. Cras ac bibendum arcu.',
-            date: '11/12/2019',
-        },
-        {
-            from: 'user@mdbootstrap.com',
-            title: 'How to purchase MDB5 package?',
-            message: 'Quisque tempor ligula eu lobortis scelerisque. Mauris tristique mi a erat egestas, quis dictum nibh iaculis. Sed gravida sodales egestas. In tempus mollis libero sit amet lacinia. Duis non augue sed leo imperdiet efficitur faucibus vitae elit. Mauris eu cursus ligula. Praesent posuere efficitur cursus.',
-            date: '10/12/2019',
-        },
-        {
-            from: 'user@mdbootstrap.com',
-            title: 'Licence renewal',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sed metus ultricies, sollicitudin est nec, blandit turpis. Fusce venenatis nisi volutpat, pharetra elit eu, ullamcorper metus. Vestibulum dapibus laoreet aliquam. Maecenas sed magna ut libero consequat elementum. Maecenas euismod pellentesque pulvinar. Morbi sit amet turpis eget dolor rutrum eleifend. Sed bibendum diam nec diam posuere pulvinar. Cras ac bibendum arcu.',
-            date: '09/12/2019',
-        },
-        {
-            from: 'admin@mdbootstrap.com',
-            title: 'Black friday offer',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sed metus ultricies, sollicitudin est nec, blandit turpis. Fusce venenatis nisi volutpat, pharetra elit eu, ullamcorper metus. Vestibulum dapibus laoreet aliquam. Maecenas sed magna ut libero consequat elementum. Maecenas euismod pellentesque pulvinar. Morbi sit amet turpis eget dolor rutrum eleifend. Sed bibendum diam nec diam posuere pulvinar. Cras ac bibendum arcu.',
-            date: '08/12/2019',
-        },
-    ];
-
-    table.addEventListener('rowClicked.mdb.datatable', (e) => {
-        const { index } = e;
-        const { message, title, from } = messages[index];
-        modalHeader.innerText = title;
-        modalBody.innerHTML = `
-    <h6 class="mb-4">From: <strong>${from}</strong></h6>
-    <p>${message}</p>
-  `;
-
-        modalInstance.show();
-    });
 
     table.addEventListener('render.mdb.datatable', () => {
         setupButtons('activate');

@@ -100,6 +100,10 @@ def remove_peer(peer, network, sudo_password):
         return False
     else:
         return True
+    
+def update_peer(peer):
+    # Update a peer on the running server
+    return False
 
 
 ## ROUTES ##
@@ -286,18 +290,36 @@ def peer_api(peer_id):
     elif request.method == "POST":
         return add_peer(peer_id)
     elif request.method == "PATCH":
+        message = f"Updating peer {peer_id}\n"
         peer = Peer.query.get(peer_id)
         # logic to update peer
         # If server
-
+        if current_app.config["MODE"] == "server":
+            if update_peer(peer):
+                message += "Peer updated on server\n"
+            else:
+                message += "Error updating peer on server\n"
         # If database
+        for key, value in request.json.items():
+            setattr(peer, key, value)
         db.session.commit()
-        flash("Peer updated successfully", "success")
+        message += "Peer updated in database"
+        flash(message, "success")
         return jsonify(peer)
     elif request.method == "DELETE":
+        message = f"Deleting peer {peer_id}\n"
         peer = Peer.query.get(peer_id)
         # If server
+        if current_app.config["MODE"] == "server":
+            if remove_peer(peer_id):
+                message += "Peer removed from server\n"
+            else:
+                message += "Error removing peer from server\n"
         # If database
-        return remove_peer(peer_id)
+        db.session.delete(peer)
+        db.session.commit()
+        message += "Peer removed from database"
+        flash(message, "success")
+        return jsonify(message)
     else:
         return jsonify("Invalid request method")

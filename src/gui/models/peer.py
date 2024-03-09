@@ -59,17 +59,8 @@ class Peer(db.Model):
         return self.lighthouse
 
     def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "network_ip": self.network_ip,
-            "private_key": self.private_key,
-            "dns": self.dns,
-            "peers_list": self.peers_list,
-            "network": self.network,
-            "description": self.description,
-            "active": self.active,
-        }
+        dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return dict_
 
 
 def peer_load_test_db():
@@ -171,7 +162,7 @@ def peer_load_test_db():
             "description": "Auto-generated peer for the lighthouse",
         },
     ]
-    
+
     for peer in peer_list:
         peer["peers_list"] = json.dumps(peer["peers_list"])
     db.session.bulk_insert_mappings(Peer, peer_list)

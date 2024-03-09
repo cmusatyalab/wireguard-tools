@@ -49,6 +49,10 @@ class Network(db.Model):
         if self.persistent_keepalive:
             wg_config += f"PersistentKeepalive = {self.persistent_keepalive}\n"
         return wg_config
+    
+    def to_dict(self):
+        dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return dict_
 
 
 class Network_Config(db.Model):
