@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Carnegie Mellon University
+# Copyright (c) 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 
 from __future__ import annotations

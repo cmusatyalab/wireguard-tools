@@ -188,7 +188,7 @@ configuring an interface only once with just a single peer.
 
 wireguard-tools is MIT licensed
 
-    Copyright (c) 2022-2023 Carnegie Mellon University
+    Copyright (c) 2022-2024 Carnegie Mellon University
 
     Permission is hereby granted, free of charge, to any person obtaining a copy of
     this software and associated documentation files (the "Software"), to deal in
