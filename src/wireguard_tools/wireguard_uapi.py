@@ -28,12 +28,13 @@ class WireguardUAPIDevice(WireguardDevice):
             else Path(uapi_path)
         )
         if not self.uapi_path.exists():
-            raise FileNotFoundError
+            msg = f"Unable to access interface: {uapi_path} not found."
+            raise FileNotFoundError(msg)
 
         super().__init__(self.uapi_path.stem)
 
         self.uapi_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.uapi_socket.connect(str(Path(uapi_path).resolve()))
+        self.uapi_socket.connect(str(self.uapi_path.resolve()))
         self._buffer = ""
 
     def close(self) -> None:
@@ -92,15 +93,15 @@ class WireguardUAPIDevice(WireguardDevice):
             elif key == "protocol_version":
                 version = int(value)
                 if version != 1:
-                    raise RuntimeError(
-                        "WireguardUAPIDevice.get_config unexpected protocol {version}"
+                    msg = (
+                        f"WireguardUAPIDevice.get_config unexpected protocol {version}"
                     )
+                    raise RuntimeError(msg)
             elif key == "errno":
                 errno = int(value)
                 if errno != 0:
-                    raise RuntimeError(
-                        "WireguardUAPIDevice.get_config failed with {errno}"
-                    )
+                    msg = f"WireguardUAPIDevice.get_config failed with {errno}"
+                    raise RuntimeError(msg)
         return config
 
     def set_config(self, config: WireguardConfig) -> None:
