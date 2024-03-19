@@ -9,9 +9,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from contextlib import suppress
-from typing import Iterator
+from typing import TYPE_CHECKING, Iterator
 
-from .wireguard_config import WireguardConfig
+if TYPE_CHECKING:
+    from .wireguard_config import WireguardConfig
 
 
 class WireguardDevice(ABC):

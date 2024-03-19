@@ -7,15 +7,17 @@
 
 from __future__ import annotations
 
-import os
 import socket
 from ipaddress import ip_address, ip_interface
 from pathlib import Path
-from typing import Iterator
+from typing import TYPE_CHECKING, Iterator
 
 from .wireguard_config import WireguardConfig, WireguardPeer
 from .wireguard_device import WireguardDevice
 from .wireguard_key import WireguardKey
+
+if TYPE_CHECKING:
+    import os
 
 WG_UAPI_SOCKET_DIR = Path("/var/run/wireguard")
 
@@ -121,27 +123,28 @@ class WireguardUAPIDevice(WireguardDevice):
                 [
                     f"public_key={peer.public_key.hex}",
                     f"endpoint={peer.endpoint_host}:{peer.endpoint_port}",
-                ]
+                ],
             )
             if peer.preshared_key is not None:
                 uapi.append(f"preshared_key={peer.preshared_key}")
             if peer.persistent_keepalive is not None:
                 uapi.append(
-                    f"persistent_keepalive_interval={peer.persistent_keepalive}"
+                    f"persistent_keepalive_interval={peer.persistent_keepalive}",
                 )
 
             uapi.append("replace_allowed_ips=true")
-            for address in peer.allowed_ips:
-                uapi.append(f"allowed_ip={address}")
+            uapi.extend([f"allowed_ip={address}" for address in peer.allowed_ips])
 
         uapi.append("\n")
         self.uapi_socket.sendall("\n".join(uapi).encode())
 
         response = self._recvmsg()
-        assert len(response) == 1 and response[0][0] == "errno"
+        assert len(response) == 1
+        assert response[0][0] == "errno"
         errno = int(response[0][1])
         if errno != 0:
-            raise RuntimeError(f"WireguardUAPIDevice.set_config failed with {errno}")
+            msg = f"WireguardUAPIDevice.set_config failed with {errno}"
+            raise RuntimeError(msg)
 
     # a wireguard UAPI response message is a series of key=value lines
     # followed by an empty line
@@ -159,6 +162,6 @@ class WireguardUAPIDevice(WireguardDevice):
         return message
 
     @classmethod
-    def list(cls) -> Iterator[WireguardDevice]:
+    def list(cls) -> Iterator[WireguardUAPIDevice]:
         for socket_path in WG_UAPI_SOCKET_DIR.glob("*.sock"):
             yield cls(socket_path.stem)
