@@ -70,7 +70,7 @@ const EVENT_EXIT_EDITOR = 'editorExit.mdb.tableEditor';
 const EVENT_UPDATE = 'update.mdb.tableEditor';
 const EVENT_OPEN_EDITOR = 'editorOpen.mdb.tableEditor';
 
-const SELECT_VALUE_CHANGED_EVENT = 'valueChange.mdb.select';
+const SELECT_VALUE_CHANGED_EVENT = 'valueChanged.mdb.select';
 const POPCONFIRM_CONFIRM_EVENT = 'confirm.mdb.popconfirm';
 
 const DEFAULT_COLUMN = {

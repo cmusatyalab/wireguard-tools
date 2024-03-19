@@ -2,7 +2,7 @@
 /* eslint-disable no-else-return */
 import { createPopper } from '@popperjs/core';
 import ScrollBarHelper from '../../bootstrap/mdb-prefix/util/scrollbar';
-import { typeCheckConfig, element, getUID } from '../../mdb/util/index';
+import { typeCheckConfig, element, getUID, isRTL} from '../../mdb/util/index';
 import { getTimepickerTemplate, getToggleButtonTemplate } from './templates';
 import Data from '../../mdb/dom/data';
 import Manipulator from '../../mdb/dom/manipulator';
@@ -59,6 +59,7 @@ const EVENT_TOUCHEND_DATA_API = `touchend${EVENT_KEY}${DATA_API_KEY}`;
 const EVENT_TOUCHSTART_DATA_API = `touchstart${EVENT_KEY}${DATA_API_KEY}`;
 
 const EVENT_VALUE_CHANGED = `valueChanged${EVENT_KEY}`;
+const EVENT_CLEAR = `clear${EVENT_KEY}`;
 
 const ACTIVE_CLASS = 'active';
 const AM_CLASS = `${NAME}-am`;
@@ -985,6 +986,15 @@ class Timepicker extends BaseComponent {
         }
       }
     );
+
+    EventHandlerMulti.on(
+      this._document,
+      `${EVENT_MOUSEUP_DATA_API} ${EVENT_TOUCHEND_DATA_API}`,
+      () => {
+        _clearAsyncs();
+      }
+    );
+
     EventHandler.on(window, EVENT_KEYDOWN_DATA_API, (e) => {
       const key = e.code;
       const isHourBtnFocused = document.activeElement.classList.contains('timepicker-hour');
@@ -1047,6 +1057,9 @@ class Timepicker extends BaseComponent {
         if (Manipulator.hasClass(target, BUTTON_CLEAR_CLASS)) {
           this._toggleAmPm('PM');
           this.input.value = '';
+
+          EventHandler.trigger(this.input, EVENT_CLEAR);
+
           Manipulator.removeClass(this.input, 'active');
 
           let checkInputValue;
@@ -2043,6 +2056,7 @@ class Timepicker extends BaseComponent {
       ...Default,
       ...dataAttributes,
       ...config,
+      isRTL,
     };
 
     typeCheckConfig(NAME, config, DefaultType);

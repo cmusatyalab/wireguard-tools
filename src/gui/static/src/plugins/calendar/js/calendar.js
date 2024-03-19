@@ -45,7 +45,7 @@ const DELETE_EVENT = 'deleteEvent.mdb.calendar';
 
 const TIMEPICKER_VALUE_CHANGED_EVENT = 'valueChanged.mdb.timepicker';
 const DATEPICKER_VALUE_CHANGED_EVENT = 'valueChanged.mdb.datepicker';
-const SELECT_VALUE_CHANGED_EVENT = 'valueChange.mdb.select';
+const SELECT_VALUE_CHANGED_EVENT = 'valueChanged.mdb.select';
 
 const OPTIONS_TYPE = {
   addEventCaption: 'string',

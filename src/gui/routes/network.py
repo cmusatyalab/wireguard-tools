@@ -82,28 +82,25 @@ def network_detail(network_id):
 @networks.route("/add", methods=["GET", "POST"])
 @login_required
 def networks_add():
-    new_network = {}
-    new_network["public_key"] = ""
-    new_network["name"] = 1
     lighthouses = helpers.get_lighthouses()
     adapters = helpers.get_adapter_names()
     if request.method == "POST":
         name = request.form.get("name")
-        # lighthouse is the object in lighthouses with the id from request.form.get("lighthouse")
-        lighthouse = next(
-            (item for item in lighthouses if item.id == int(request.form.get("lighthouse"))),
-            None,
-        )
-        
-        lh_ip = lighthouse.endpoint_host
-        lh_port = lighthouse.listen_port
-        public_key = lighthouse.get_public_key()
+        message = f"Adding network {name}\n"
+        if request.form.get("lighthouse") == "":
+            message += "No lighthouse selected"
+            private_key = request.form.get("private_key")
+        else:
+            message += f"Lighthouse selected: {request.form.get('lighthouse')}\n"
+            lighthouse = Peer.query.get(request.form.get("lighthouse"))        
+            lh_ip = lighthouse.endpoint_host
+            lh_port = lighthouse.listen_port
+            private_key = lighthouse.private_key
         base_ip = request.form.get("base_ip")
         subnet = request.form.get("subnet")
         dns = request.form.get("dns")
         description = request.form.get("description")
         allowed_ips = request.form.get("allowed_ips")
-        config = request.form.get("config")
         adapter_name = request.form.get("adapter_name")
 
         # Create a new network object
@@ -113,33 +110,25 @@ def networks_add():
             proxy=False,
             lighthouse=lighthouse.id,
             adapter_name=adapter_name,
-            public_key=public_key,
+            private_key=private_key,
             peers_list="",
             base_ip=base_ip,
             subnet=subnet,
             dns_server=dns,
             description=description,
             allowed_ips=allowed_ips,
-            config=json.dumps(
-                {
-                    "public_key": public_key,
-                    "endpoint_host": lh_ip,
-                    "endpoint_port": lh_port,
-                    "preshared_key": None,
-                    "persistent_keepalive": current_app.config["BASE_KEEPALIVE"],
-                    "allowed_ips": allowed_ips,
-                }
-            ),
-        )
+            )
+        
         if request.form.get('adapter_name'):
             new_network.adapter_name = request.form.get('adapter_name')
         db.session.add(new_network)
         db.session.commit()
-        message = "Network added successfully"
+        message += "Network added successfully"
         network_list = query_all_networks()
         flash(message, "success")
         return render_template("networks.html",  networks=network_list)
     else:
+        new_network = {'id':0, 'public_key':'', 'name': ''}
         return render_template(
             "network_detail.html",
             network=new_network,

@@ -7,7 +7,7 @@
     <h2>Peer Details</h2>
     <hr class="hr" />
     <div class="row ">
-        <div class="col-md-7 col-sm-12">
+        <div class="col-md-9 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ peer.name }}</h5>
@@ -28,153 +28,156 @@
                                     name="lighthouse" {% if peer.lighthouse %} checked {% endif %} />
                                 <label class="form-check-label" for="lighthouse">This is a network lighthouse</label>
                             </div>
-
                             <div class="card">
                                 <h6 class="card-header">Configuration</h6>
                                 <div class="form-outline">
                                     <div class="mb-3 input-group" data-mdb-input-init>
-
                                         <input type="text" class="form-control" id="private_key" name="private_key"
                                             value="{{ peer.private_key }}" oninput="updatePublicKey()">
-                                        <label for="private_key" class="form-label">PrivateKey</label>
+                                        <label for="private_key" class="form-label">Private Key</label>
                                         <button class="btn btn-primary " data-mdb-ripple-init type="button"
                                             id="generatePrivateKey" onclick="generateAndSetPrivateKey()"
                                             data-mdb-tooltip-init title="Generate Private Key">
                                             <i class="fas fa-key"></i>
                                         </button>
                                     </div>
-                                    <div class="mb-3 form-outline" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="network_ip" name="network_ip"
-                                            value="{{ peer.network_ip }}" onchange="updateConfigCard()">
-                                        <label for="network_ip" class="form-label">VPN IP</label>
-                                    </div>
-                                    <div class="mb-3 form-outline" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="endpoint_ip" name="endpoint_ip"
-                                            value="{{ peer.endpoint_host }}" onchange="updateConfigCard()">
-                                        <label for="endpoint_ip" class="form-label">Endpoint IP</label>
-                                    </div>
-                                    <div class="mb-3 form-outline" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="listen_port" name="listen_port"
-                                            value="{{ peer.listen_port }}" onchange="updateConfigCard()">
-                                        <label for="listen_port" class="form-label">Listen Port</label>
-                                    </div>
-                                    <div class="mb-3 form-outline" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="dns" name="dns"
-                                            value="{{ peer.dns }}" onchange="updateConfigCard()">
-                                        <label for="dns" class="form-label">DNS</label>
-                                    </div>
-                                    {% if peer.lighthouse %}
-                                    <div class="mb-3 form-outline" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="postUp" name="postUp"
-                                            value="{{ peer.post_up }}" onchange="updateConfigCard()">
-                                        <label for="postUp" class="form-label">Post Up</label>
-                                    </div>
-                                    <div class="mb-3 form-outline" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="postDown" name="postDown"
-                                            value="{{ peer.post_down }}" onchange="updateConfigCard()">
-                                        <label for="postDown" class="form-label">Post Down</label>
-                                    </div>
-                                    {% endif %}
-                                    <div class="form-outline">
-                                        <select class="form-select" data-mdb-select-init name="network" id="network"
-                                            onchange="updateConfigCard()">
-                                            {% for network in networks %}
-                                            <option value="{{ network.id }}" {% if network.id==peer.network %}selected{%
-                                                endif %}>
-                                                {{ network.name }}: {{network.base_ip}}
-                                            </option>
-                                            {% endfor %}
-                                        </select>
-                                        <label for="network" class="form-label select-label">Network</label>
-                                    </div>
-                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                </div>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="public_key" name="public_key"
+                                        value="{{ peer.public_key }}">
+                                    <label for="public_key" class="form-label">Public Key</label>
+                                </div>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="network_ip" name="network_ip"
+                                        value="{{ peer.network_ip }}" onchange="updateConfigCard()">
+                                    <label for="network_ip" class="form-label">VPN IP</label>
+                                </div>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="endpoint_ip" name="endpoint_ip"
+                                        value="{{ peer.endpoint_host }}" onchange="updateConfigCard()">
+                                    <label for="endpoint_ip" class="form-label">Endpoint IP</label>
+                                </div>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="listen_port" name="listen_port"
+                                        value="{{ peer.listen_port }}" onchange="updateConfigCard()">
+                                    <label for="listen_port" class="form-label">Listen Port</label>
+                                </div>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="dns" name="dns" value="{{ peer.dns }}"
+                                        onchange="updateConfigCard()">
+                                    <label for="dns" class="form-label">DNS</label>
+                                </div>
+                                {% if peer.lighthouse %}
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="postUp" name="postUp"
+                                        value="{{ peer.post_up }}" onchange="updateConfigCard()">
+                                    <label for="postUp" class="form-label">Post Up</label>
+                                </div>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="postDown" name="postDown"
+                                        value="{{ peer.post_down }}" onchange="updateConfigCard()">
+                                    <label for="postDown" class="form-label">Post Down</label>
+                                </div>
+                                {% endif %}
+                                <div class="form-outline">
+                                    <select class="form-select" data-mdb-select-init name="network" id="network"
+                                        onchange="updateConfigCard()">
                                         {% for network in networks %}
-                                        <textarea rows="6" cols="32" class="card-text" id="nc-{{network.id}}"
-                                            name="nc-{{network.id}}" disabled
-                                            hidden>{{ network.get_config()}}</textarea>
+                                        <option value="{{ network.id }}" {% if network.id==peer.network %}selected{%
+                                            endif %}>
+                                            {{ network.name }}: {{network.base_ip}}
+                                        </option>
                                         {% endfor %}
-                                    </div>
-                                    <input type="hidden" id="sudoPasswordInput" name="sudoPassword">
+                                    </select>
+                                    <label for="network" class="form-label select-label">Network</label>
                                 </div>
-                                <div class="row ">
-                                    <div class="col-4 text-center">
-                                        <button type="submit" class="btn btn-primary"
-                                            id="btn-{{s_button}}">{{s_button}}</button>
-                                    </div>
-                                    <div class="col-4 text-center">
-                                        <a href="{{url_for('peers.peers_all')}}" type="button"
-                                            class="btn btn-secondary">Back</a>
-                                    </div>
-                                    {% if peer.id %}
-                                    <div class="col-4 text-center">
-                                        <button type="button" class="btn btn-danger" data-mdb-toggle="modal"
-                                            data-mdb-target="#deleteModal">
-                                            Delete
-                                        </button>
-                                    </div>
-                                    {% endif %}
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    {% for network in networks %}
+                                    <textarea rows="6" cols="32" class="card-text" id="nc-{{network.id}}"
+                                        name="nc-{{network.id}}" disabled hidden>{{ network.get_config()}}</textarea>
+                                    {% endfor %}
                                 </div>
+                                <input type="hidden" id="sudoPasswordInput" name="sudoPassword">
                             </div>
-                        </form>
+                            <div class="row ">
+                                <div class="col-4 text-center">
+                                    <button type="submit" class="btn btn-primary"
+                                        id="btn-{{s_button}}">{{s_button}}</button>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <a href="{{url_for('peers.peers_all')}}" type="button"
+                                        class="btn btn-secondary">Back</a>
+                                </div>
+                                {% if peer.id %}
+                                <div class="col-4 text-center">
+                                    <button type="button" class="btn btn-danger" data-mdb-toggle="modal"
+                                        data-mdb-target="#deleteModal">
+                                        Delete
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-5 col-sm-12">
-        <div class="card" id="configCard">
-            <div class="card-body">
-                <h5 class="card-title">Generated Configuration</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Copy the config below or scan the QR code to import the
-                    peer configuration.</h6>
-                <div class="form-outline mb-2">
-                    <textarea rows="16" class="card-text form-control" id="peer_config"></textarea>
-                </div>
-                <div class="container-fluid text-center">
-                    <button class="btn btn-primary" data-mdb-ripple-init type="button" id="btn_copyConfig"
-                        data-mdb-tooltip-init title="Copy Config">
-                        <i class="fas fa-copy"></i>
+</div>
+<div class="col-md-9 col-sm-12">
+    <div class="card" id="configCard">
+        <div class="card-body">
+            <h5 class="card-title">Generated Configuration</h5>
+            <h6 class="card-subtitle mb-3 text-muted">Copy the config below or scan the QR code to import the
+                peer configuration.</h6>
+            <div class="form-outline mb-3">
+                <textarea rows="16" class="card-text form-control" id="peer_config"></textarea>
+            </div>
+            <div class="container-fluid text-center">
+                <button class="btn btn-primary" data-mdb-ripple-init type="button" id="btn_copyConfig"
+                    data-mdb-tooltip-init title="Copy Config">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="btn btn-primary" data-mdb-ripple-init type="button" id="btn_downloadConfig"
+                    data-mdb-tooltip-init title="Download Config">
+                    <i class="fas fa-download"></i>
+                </button>
+                <!-- QR Code -->
+                <div id="qrcode"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    {% if peer.id %}
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
-                    <button class="btn btn-primary" data-mdb-ripple-init type="button" id="btn_downloadConfig"
-                        data-mdb-tooltip-init title="Download Config">
-                        <i class="fas fa-download"></i>
-                    </button>
-                    <!-- QR Code -->
-                    <div id="qrcode"></div>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this peer?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-ripple-init
+                        data-mdb-dismiss="modal">Cancel</button>
+                    <form action="{{ url_for('peers.peer_delete',peer_id=peer.id)}}" method="post">
+                        <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Modal -->
-        {% if peer.id %}
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete this peer?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-mdb-ripple-init
-                            data-mdb-dismiss="modal">Cancel</button>
-                        <form action="{{ url_for('peers.peer_delete',peer_id=peer.id)}}" method="post">
-                            <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
-    <div class="container-fluid">
-        <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
-            configurations are essentially in an unknown state.</p>
-    </div>
+    {% endif %}
+</div>
+<div class="container-fluid">
+    <p>Note: All peer configurations are stored in the database until they are deleted. Inactive peer
+        configurations are essentially in an unknown state.</p>
+</div>
 </div>
 {% endblock %}
 
@@ -273,10 +276,11 @@
         } else {
             let selectedNetworkId = document.getElementById('network').value;
             document.getElementById('network').value = selectedNetworkId;
+
             let network_peer = document.getElementById("nc-" + selectedNetworkId).value;
             config += network_peer + "\n";
         }
-        console.log(config)
+        console.log(`config: ${config}`);
         document.getElementById('peer_config').value = config;
         generateQRCode(config);
     }
@@ -288,6 +292,7 @@
             publicKey = "No Private Key";
         }
         document.getElementById('publicKey').innerText = publicKey;
+        document.getElementById('public_key').value = publicKey;
     }
 
 </script>

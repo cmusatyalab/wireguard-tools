@@ -70,6 +70,7 @@ const EVENT_KEY = `.${DATA_KEY}`;
 const EVENT_CLOSE = `close${EVENT_KEY}`;
 const EVENT_OPEN = `open${EVENT_KEY}`;
 const EVENT_VALUE_CHANGED = `valueChanged${EVENT_KEY}`;
+const EVENT_VIEW_CHANGED = `viewChanged${EVENT_KEY}`;
 const EVENT_CLICK_DATA_API = `click${EVENT_KEY}${DATA_API_KEY}`;
 
 const BACKDROP_OPEN_ANIMATION_CLASS = 'fade-in';
@@ -1353,6 +1354,8 @@ class Datepicker extends BaseComponent {
     this.datesContainer.focus();
     this._updateViewControlsAndAttributes(view);
     this._updateControlsDisabledState();
+
+    EventHandler.trigger(this._element, EVENT_VIEW_CHANGED, { view: this._view });
   }
 
   _updateViewControlsAndAttributes(view) {

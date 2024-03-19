@@ -27,6 +27,11 @@ const defaultInitSelectors = {
     isToggler: false,
     onInit: 'init',
   },
+  select: {
+    name: 'Select',
+    selector: '[data-mdb-select-init]',
+    isToggler: false,
+  },
   datatable: {
     name: 'Datatable',
     selector: '[data-mdb-datatable-init]',
@@ -50,11 +55,6 @@ const defaultInitSelectors = {
   multiRangeSlider: {
     name: 'MultiRangeSlider',
     selector: '[data-mdb-multi-range-slider-init]',
-    isToggler: false,
-  },
-  select: {
-    name: 'Select',
-    selector: '[data-mdb-select-init]',
     isToggler: false,
   },
   timepicker: {
@@ -110,6 +110,7 @@ const defaultInitSelectors = {
     name: 'Navbar',
     selector: '[data-mdb-navbar-init]',
     isToggler: false,
+    onInit: 'init',
   },
   perfectScrollbar: {
     name: 'PerfectScrollbar',

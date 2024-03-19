@@ -115,7 +115,6 @@ class MultiRangeSlider extends BaseComponent {
     this._handleClickEventOnHand();
     this._handleEndMoveEventDocument();
     this._handleClickOnRange();
-    this._setValueEventOnMouseDown();
     this._setTooltipToHand();
   }
 
@@ -182,30 +181,16 @@ class MultiRangeSlider extends BaseComponent {
 
         this._handleMoveEvent(hand, index);
         this._handleEndMoveEvent(hand, ev);
+
+        EventHandler.trigger(hand, EVENT_START, { hand });
       });
     });
   }
 
-  _setValueEventOnMouseDown() {
-    EventHandlerMulti.on(this.connect, 'mousedown touchstart', (ev) => {
-      const { max, min, numberOfRanges } = this._options;
-
-      if (numberOfRanges < 2) {
-        const value =
-          Math.round(
-            (getEventTypeClientX(ev) - this.leftConnectRect) / (ev.target.offsetWidth / (max - min))
-          ) %
-          (max - min);
-
-        EventHandler.trigger(this._element, EVENT_START, {
-          values: { value: value + min, rounded: Math.round(value + min) },
-        });
-      }
-    });
-  }
-
   _setClassHorizontalOrVertical() {
-    Manipulator.addClass(this._element, SELECTOR_MULTI);
+    if (this._element) {
+      Manipulator.addClass(this._element, SELECTOR_MULTI);
+    }
 
     if (this._options.orientation === 'horizontal') {
       Manipulator.addClass(this._element, SELECTOR_HORIZONTAL);

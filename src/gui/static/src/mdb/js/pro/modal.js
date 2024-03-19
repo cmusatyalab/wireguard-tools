@@ -119,18 +119,6 @@ class Modal extends BSModal {
     EventHandler.off(this._element, EVENT_HIDDEN_BS_MODAL);
     EventHandler.off(this._element, EVENT_HIDE_PREVENTED_BS_MODAL);
 
-    this._modalContentRect = null;
-    this._modalContentComputedStyles = null;
-    this._isNonInvasive = null;
-    this._isScrollable = null;
-    this._isBottomRight = null;
-    this._isBottomLeft = null;
-    this._isTopRight = null;
-    this._isTopLeft = null;
-    this._isSideTopModal = null;
-    this._isSideBottomModal = null;
-    this._isSideModal = null;
-    this._isModalBottom = null;
     Manipulator.removeDataAttribute(this._element, `${this.constructor.NAME}-initialized`);
 
     super.dispose();

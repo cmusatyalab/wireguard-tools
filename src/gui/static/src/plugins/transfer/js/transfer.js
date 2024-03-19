@@ -116,13 +116,17 @@ class Transfer {
   }
 
   _setup() {
-    const { initMDB, Ripple } = mdb;
+    const { initMDB, Ripple, Input } = mdb;
 
     this._element.appendChild(this._createSourceContainer());
     this._element.appendChild(this._createArrows());
     this._element.appendChild(this._createTargetContainer());
 
     initMDB({ Ripple });
+
+    this._element.querySelectorAll('.form-outline').forEach((formOutline) => {
+      Input.getOrCreateInstance(formOutline).update();
+    });
   }
 
   _createSourceContainer() {
@@ -185,22 +189,24 @@ class Transfer {
 
     const selectAllDivContainer = element('div');
     selectAllDivContainer.className = 'transfer-header-select-all-container';
+    const checkboxID = getUID('transfer-check-');
 
     if (selectAll) {
-      selectAllDivContainer.appendChild(this._createSelectAll(containerName));
+      selectAllDivContainer.appendChild(this._createSelectAll(containerName, checkboxID));
     }
-    selectAllDivContainer.appendChild(this._createTitle(titleText));
+    selectAllDivContainer.appendChild(this._createTitle(titleText, checkboxID));
     containerHeader.appendChild(selectAllDivContainer);
     containerHeader.appendChild(this._createQuantity(itemsList));
 
     return containerHeader;
   }
 
-  _createSelectAll(containerName) {
+  _createSelectAll(containerName, checkboxID) {
     const selectAll = element('input');
     selectAll.setAttribute('type', 'checkbox');
     selectAll.className = 'transfer-header-select-all form-check-input';
     selectAll.setAttribute('data-mdb-select-all', false);
+    selectAll.id = checkboxID;
 
     EventHandler.on(selectAll, 'click', (e) => {
       const dataToToggle = containerName === 'target' ? this._dataTarget : this._dataSource;
@@ -255,9 +261,11 @@ class Transfer {
     });
   }
 
-  _createTitle(titleText) {
-    const title = element('span');
+  _createTitle(titleText, checkboxID) {
+    const title = element('label');
+    title.className = 'form-check-label';
     title.textContent = titleText;
+    title.setAttribute('for', checkboxID);
 
     return title;
   }
@@ -283,14 +291,14 @@ class Transfer {
     const formOutline = element('div');
     formOutline.className = 'form-outline transfer-search-outline';
     formOutline.setAttribute('data-mdb-input-init', '');
+    formOutline.style.width = 'auto';
 
     const searchInput = element('input');
     searchInput.setAttribute('type', 'search');
     searchInput.className = 'transfer-search form-control';
     searchInput.id = `transfer-search-${containerName}`;
 
-    const eventsList = ['keydown', 'input'];
-    this._addEventsHandlers(eventsList, searchInput, containerName);
+    this._addEventsHandlers('input', searchInput, containerName);
 
     const label = element('label');
     label.className = 'form-label';
@@ -300,22 +308,19 @@ class Transfer {
     formOutline.appendChild(searchInput);
     formOutline.appendChild(label);
 
-    const instance = new mdb.Input(formOutline);
-    instance.init();
+    new mdb.Input(formOutline).init();
 
     return formOutline;
   }
 
-  _addEventsHandlers(eventsList, el, containerName) {
-    eventsList.forEach((event) => {
-      EventHandler.on(el, event, (e) => {
-        const searchKey = e.target.value;
+  _addEventsHandlers(event, el, containerName) {
+    EventHandler.on(el, event, (e) => {
+      const searchKey = e.target.value;
 
-        EventHandler.trigger(this._element, EVENT_SEARCH, { searchValue: searchKey });
+      EventHandler.trigger(this._element, EVENT_SEARCH, { searchValue: searchKey });
 
-        this._findInList(searchKey, containerName);
-        this._createFilteredList(containerName);
-      });
+      this._findInList(searchKey, containerName);
+      this._createFilteredList(containerName);
     });
   }
 

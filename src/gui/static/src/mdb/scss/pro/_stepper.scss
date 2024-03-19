@@ -275,13 +275,16 @@
 
 .stepper-disabled {
   .stepper-head {
-    color: var(--#{$prefix}stepper-disabled-head-color);
     cursor: default;
   }
 
   .stepper-head-icon {
     background-color: var(--#{$prefix}stepper-disabled-head-icon-bg);
     color: var(--#{$prefix}stepper-disabled-head-icon-color);
+  }
+
+  .stepper-head-text {
+    color: var(--#{$prefix}stepper-disabled-head-color);
   }
 }
 

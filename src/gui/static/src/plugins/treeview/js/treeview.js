@@ -692,6 +692,14 @@ class Treeview {
       checked = !checked;
     }
 
+    const childCheckboxes = SelectorEngine.find(SELECTOR_CHECKBOX, el);
+
+    childCheckboxes.forEach((checkbox) => {
+      if (!checkbox.disabled) {
+        checkbox.checked = checked;
+      }
+    });
+
     const parents = SelectorEngine.parents(el, 'li');
 
     const [firstParent] = parents;
@@ -722,14 +730,6 @@ class Treeview {
         parentInput.checked = false;
       });
     }
-
-    const childCheckboxes = SelectorEngine.find(SELECTOR_CHECKBOX, el);
-
-    childCheckboxes.forEach((checkbox) => {
-      if (!checkbox.disabled) {
-        checkbox.checked = checked;
-      }
-    });
 
     EventHandler.trigger(this._element, EVENT_ITEM_SELECTED, {
       items: this.selectedItems,

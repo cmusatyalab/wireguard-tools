@@ -264,6 +264,10 @@
       tr:nth-of-type(odd) {
         background-color: var(--#{$prefix}datatable-accent-bg);
         color: var(--#{$prefix}datatable-striped-color);
+
+        td {
+          background-color: var(--#{$prefix}datatable-accent-bg);
+        }
       }
     }
   }
@@ -272,9 +276,12 @@
     tbody {
       tr {
         transition: var(--#{$prefix}datatable-hover-tbody-tr-transition) !important;
-
         &:hover {
           background-color: var(--#{$prefix}datatable-hover-bg) !important;
+
+          td {
+            background-color: var(--mdb-table-hover-bg);
+          }
         }
       }
     }

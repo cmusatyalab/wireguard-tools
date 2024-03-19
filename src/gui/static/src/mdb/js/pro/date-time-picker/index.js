@@ -162,6 +162,10 @@ class Datetimepicker extends BaseComponent {
     if (this._options.disableFuture) {
       this._handleTimepickerDisableFuture();
     }
+
+    if (this._input.value) {
+      this._handleInput(this._input.value);
+    }
   }
 
   _removeDatepicker() {
@@ -460,6 +464,7 @@ class Datetimepicker extends BaseComponent {
 
     const CLOCK_BTN = SelectorEngine.findOne(`${SELECTOR_TIMEPICKER}-button-toggle`, document.body);
     EventHandler.on(CLOCK_BTN, 'click', () => {
+      this._datepicker._confirmSelection(this._datepicker._headerDate);
       this._datepicker.close();
       this._scrollBar.hide();
       EventHandler.trigger(this._datepicker._element, EVENT_CLOSE_DATEPICKER);

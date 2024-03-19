@@ -80,6 +80,7 @@ const EVENT_VALUE_CHANGED = `valueChanged${EVENT_KEY}`;
 const EVENT_CHANGE_NATIVE = 'change';
 const EVENT_OPENED = `opened${EVENT_KEY}`;
 const EVENT_CLOSED = `closed${EVENT_KEY}`;
+const EVENT_SEARCH = `search${EVENT_KEY}`;
 
 const SELECTOR_LABEL = '.select-label';
 const SELECTOR_INPUT = '.select-input';
@@ -370,8 +371,10 @@ class Select extends BaseComponent {
   _bindComponentEvents() {
     this._listenToComponentKeydown();
     this._listenToWrapperClick();
-    this._listenToClearBtnClick();
-    this._listenToClearBtnKeydown();
+    if (!this._config.disabled) {
+      this._listenToClearBtnClick();
+      this._listenToClearBtnKeydown();
+    }
   }
 
   _setDefaultSelections() {
@@ -396,7 +399,8 @@ class Select extends BaseComponent {
 
   _handleOpenKeydown(event) {
     const key = event.keyCode;
-    const isCloseKey = key === ESCAPE || (key === UP_ARROW && event.altKey) || key === TAB;
+    const isCloseKey =
+      key === ESCAPE || ((key === UP_ARROW || key === DOWN_ARROW) && event.altKey) || key === TAB;
 
     if (key === TAB && this._config.autoSelect && !this.multiple) {
       this._handleAutoSelection(this._activeOption);
@@ -449,7 +453,7 @@ class Select extends BaseComponent {
     }
     const isOpenKey =
       key === ENTER ||
-      (key === DOWN_ARROW && event.altKey) ||
+      ((key === DOWN_ARROW || key === UP_ARROW) && event.altKey) ||
       (key === DOWN_ARROW && this.multiple);
 
     if (isOpenKey) {
@@ -464,6 +468,7 @@ class Select extends BaseComponent {
           this._handleSelection(this._activeOption);
           break;
         case UP_ARROW:
+          if (event.altKey) return;
           this._setPreviousOptionActive();
           this._handleSelection(this._activeOption);
           break;
@@ -654,13 +659,18 @@ class Select extends BaseComponent {
       this._selectionModel.clear();
       selected.deselect();
     }
+
+    if (this._optionsToRender[0].hidden === true) {
+      this._singleOptionSelect(this._optionsToRender[0]);
+    } else {
+      this._emitValueChangeEvent(null);
+      this._emitNativeChangeEvent();
+    }
+
     this._updateInputValue();
     this._updateFakeLabelPosition();
     this._updateLabelPosition();
     this._updateClearButtonVisibility();
-
-    this._emitValueChangeEvent(null);
-    this._emitNativeChangeEvent();
   }
 
   _listenToOptionsClick() {
@@ -971,6 +981,7 @@ class Select extends BaseComponent {
     this._listenToWindowResize();
 
     this._isOpen = true;
+    this._input.setAttribute('aria-expanded', true);
     EventHandler.trigger(this._element, EVENT_OPENED);
 
     this._updateLabelPosition();
@@ -1043,6 +1054,12 @@ class Select extends BaseComponent {
     this.filterInput.addEventListener('input', (event) => {
       const searchTerm = event.target.value;
       const debounceTime = this._config.filterDebounce;
+      const searchEvent = EventHandler.trigger(this._element, EVENT_SEARCH, { value: searchTerm });
+
+      if (searchEvent.defaultPrevented) {
+        return;
+      }
+
       this._debounceFilter(searchTerm, debounceTime);
     });
   }
@@ -1200,6 +1217,7 @@ class Select extends BaseComponent {
       }
       this._popper.destroy();
       this._isOpen = false;
+      this._input.setAttribute('aria-expanded', false);
       EventHandler.off(this.dropdown, 'transitionend');
       EventHandler.trigger(this._element, EVENT_CLOSED);
     }, ANIMATION_TRANSITION_TIME);
@@ -1392,6 +1410,7 @@ class Select extends BaseComponent {
     }
 
     this._updateSelections();
+    this._emitValueChangeEvent(value);
   }
 
   _selectByValue(value) {

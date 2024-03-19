@@ -1,7 +1,7 @@
 import PerfectScrollbar from '../../mdb/perfect-scrollbar';
 import { typeCheckConfig } from '../../mdb/util/index';
 import Data from '../../mdb/dom/data';
-import EventHandler from '../../mdb/dom/event-handler';
+import EventHandler, { EventHandlerMulti } from '../../mdb/dom/event-handler';
 import Manipulator from '../../mdb/dom/manipulator';
 import SelectorEngine from '../../mdb/dom/selector-engine';
 import tableTemplate from './html/table'; //eslint-disable-line
@@ -160,10 +160,19 @@ class Datatable extends BaseComponent {
     this._headerCheckbox = null;
     this._rows = this._getRows(data.rows);
     this._columns = this._getColumns(data.columns);
+    this._tableId = null;
+    this._hasFixedColumns = null;
 
     if (this._element) {
       this._perfectScrollbar = null;
       this._setup();
+
+      // Preventing from disappearing borders in datatables with fixed columns
+      this._hasFixedColumns = this._columns.some((column) => column.hasOwnProperty('fixed'));
+      if (this._hasFixedColumns) {
+        this._listenToWindowResize();
+      }
+
       Manipulator.setDataAttribute(this._element, `${this.constructor.NAME}-initialized`, true);
       bindCallbackEventsIfNeeded(this.constructor);
     }
@@ -391,8 +400,6 @@ class Datatable extends BaseComponent {
       this._element
     );
 
-    this._activePage = 0;
-
     this._toggleDisableState();
 
     this._renderRows();
@@ -486,6 +493,13 @@ class Datatable extends BaseComponent {
       ...options,
     };
 
+    const entriesOptions = Manipulator.getDataAttributes(this._element).entriesOptions;
+    const entriesOptionsAsArray = Array.isArray(config.entriesOptions)
+      ? config.entriesOptions
+      : JSON.parse(entriesOptions);
+
+    config.entriesOptions = entriesOptionsAsArray;
+
     typeCheckConfig(NAME, config, TYPE_OPTIONS);
     return config;
   }
@@ -568,6 +582,14 @@ class Datatable extends BaseComponent {
     this._setupScroll();
 
     this._setupSort();
+  }
+
+  _listenToWindowResize() {
+    EventHandlerMulti.on(window, 'resize DOMContentLoaded', this._handleWindowResize.bind(this));
+  }
+
+  _handleWindowResize() {
+    this._renderRows();
   }
 
   _setupClickableRows() {
@@ -665,8 +687,6 @@ class Datatable extends BaseComponent {
         }
 
         this._options.sortField = field;
-
-        this._activePage = 0;
 
         this._performSort();
 
@@ -778,7 +798,14 @@ class Datatable extends BaseComponent {
   }
 
   _renderTable() {
+    const userTable = SelectorEngine.findOne('table', this._element);
+    this._tableId = userTable?.getAttribute('id');
     this._element.innerHTML = tableTemplate(this.tableOptions).table;
+
+    if (this._tableId) {
+      const renderedTable = SelectorEngine.findOne('table', this._element);
+      renderedTable.setAttribute('id', this._tableId);
+    }
 
     this._formatCells();
 
@@ -815,23 +842,31 @@ class Datatable extends BaseComponent {
   }
 
   _formatCells() {
+    const columnsMap = new Map(
+      this.columns.map((obj) => {
+        return [obj.field, obj];
+      })
+    );
+
     const rows = SelectorEngine.find(SELECTOR_ROW, this._element);
+    const rowsData = this.rows;
+    const cellsToFormat = [];
 
-    rows.forEach((row) => {
-      const index = Manipulator.getDataAttribute(row, 'index');
-
+    rows.forEach((row, index) => {
       const cells = SelectorEngine.find(SELECTOR_CELL, row);
 
       cells.forEach((cell) => {
         const field = Manipulator.getDataAttribute(cell, 'field');
-
-        const column = this.columns.find((column) => column.field === field);
+        const column = columnsMap.get(field);
 
         if (column && column.format !== null) {
-          column.format(cell, this.rows[index][field]);
+          const cellData = rowsData[index][field];
+          cellsToFormat.push({ cell, column, cellData });
         }
       });
     });
+
+    cellsToFormat.forEach(({ cell, column, cellData }) => column.format(cell, cellData));
   }
 
   _toggleDisableState() {

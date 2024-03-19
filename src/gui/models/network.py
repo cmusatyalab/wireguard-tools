@@ -1,5 +1,7 @@
 import json
 import ipaddress
+
+from wireguard_tools import WireguardKey
 from .database import db
 from .peer import Peer
 from flask_marshmallow import Marshmallow
@@ -15,7 +17,7 @@ class Network(db.Model):
     lighthouse = db.Column(
         db.Integer, db.ForeignKey(Peer.id), nullable=True
     )  # Lighthouse peer for this network
-    public_key = db.Column(db.String(50))
+    private_key = db.Column(db.String(50))
     peers_list = db.Column(db.Text)
     base_ip = db.Column(db.String(50))
     subnet = db.Column(db.Integer)
@@ -53,6 +55,10 @@ class Network(db.Model):
     def to_dict(self):
         dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
         return dict_
+    
+    def get_public_key(self) -> WireguardKey:
+        public_key = str(WireguardKey(self.private_key).public_key())
+        return public_key
 
 
 class Network_Config(db.Model):

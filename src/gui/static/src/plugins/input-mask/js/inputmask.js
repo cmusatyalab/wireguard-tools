@@ -281,7 +281,7 @@ class InputMask {
     }
 
     // caret position after input will be set to the last character position, which is end of the placeholder when placeholder is turned on
-    // to avoid that we have to dynamically set caret position after each typed charater
+    // to avoid that we have to dynamically set caret position after each typed character
     this._futureCaretPosition = isDeleting
       ? text.length - this._calculateCaretJump(text)
       : text.length;
@@ -332,7 +332,7 @@ class InputMask {
         if (this._inputPlaceholder[i] === this._getInputPlaceholderChar(i)) {
           placeholderRest += this._getInputPlaceholderChar(i);
         } else {
-          placeholderRest += this._inputPlaceholder[i];
+          placeholderRest += this._inputPlaceholder[i] || this._getInputPlaceholderChar(i);
         }
       }
     }

@@ -23,9 +23,26 @@
                     </div>
                     <div class="card">
                         <h6 class="card-header">Configuration</h6>
-
                         <div class="mb-3">
                             <div class="mb-3 form-outline">
+                                <div class="form-outline">
+                                    <div class="mb-3 input-group" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="private_key" name="private_key"
+                                            value="{{ network.private_key }}" oninput="updatePublicKey()">
+                                        <label for="private_key" class="form-label">Private Key</label>
+                                        <button class="btn btn-primary " data-mdb-ripple-init type="button"
+                                            id="generatePrivateKey" onclick="generateAndSetPrivateKey()"
+                                            data-mdb-tooltip-init title="Generate Private Key">
+                                            <i class="fas fa-key"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                    <input type="text" class="form-control" id="public_key" name="public_key"
+                                        value="">
+                                    <label for="public_key" class="form-label">Public Key</label>
+                                </div>
+                                <h3>OR</h3>
                                 <select class="form-select" data-mdb-select-init id="lighthouse" name="lighthouse">
                                     {% for lighthouse in lighthouses %}
                                     <option value="{{ lighthouse.id }}" {% if network.lighthouse==lighthouse.id
@@ -47,12 +64,10 @@
                                         <option value="{{ subnet['CIDR'] }}" {% if subnet['CIDR']==network.subnet
                                             %}selected{% endif %}>{{
                                             subnet['CIDR'] }}</option>
-
                                         {% endfor %}
                                     </select>
                                     <label for="subnet" class="form-label select-label">CIDR Subnet</label>
                                 </div>
-
                             </div>
                             <div class="mb-3 form-outline">
                                 <select class="form-select" data-mdb-select-init id="adapter_name" name="adapter_name">
@@ -64,8 +79,6 @@
                                 </select>
                                 <label for="adapter_name" class="form-label select-label ">Host Adapter Name</label>
                             </div>
-
-
                             <div class="mb-3 form-outline" data-mdb-input-init>
                                 <input type="text" class="form-control" id="dns" name="dns"
                                     value="{{ network.dns_server }}" />
@@ -76,7 +89,6 @@
                                     value="{{ network.allowed_ips }}" />
                                 <label for="allowed_ips" class="form-label">Allowed IPs (CIDR)</label>
                             </div>
-
                             <div class="ms-3 form-check" data-mdb-check-init>
                                 <input class="form-check-input" type="checkbox" id="proxy" name="proxy"
                                     value="{{ network.proxy }}" />
@@ -137,11 +149,33 @@
     <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
         configurations are essentially in an unknown state.</p>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
-<script src="{{url_for('static',filename='js/wireguard.js')}}">
+<script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
+<script>
+    window.onload = function () {
+        updatePublicKey();
+        updateConfigCard();
+    };
+
+    function generateAndSetPrivateKey() {
+        let keypair = wireguard.generateKeypair();
+        // Use the generatePrivateKey function from wireguard.js
+        let privateKey = keypair.privateKey;
+        document.getElementById('private_key').value = privateKey;
+        updatePublicKey();
+        updateConfigCard();
+    }
+
+    function updatePublicKey() {
+        let privateKey = document.getElementById('private_key').value;
+        let publicKey = wireguard.getPublicKey(privateKey);
+        if (privateKey == "") {
+            publicKey = "No Private Key";
+        }
+        document.getElementById('public_key').value = publicKey;
+    }
 
     let btnAdd = document.getElementById('btn-Add');
     if (btnAdd) {

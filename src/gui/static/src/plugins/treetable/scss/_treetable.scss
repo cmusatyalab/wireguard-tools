@@ -18,7 +18,6 @@ $treetable-icon-color: var(--mdb-body-color) !default;
   tr.hidden td {
     padding-top: 0;
     padding-bottom: 0;
-    transition: padding 1s ease;
     border: 0;
   }
   tr.hidden {
@@ -26,6 +25,9 @@ $treetable-icon-color: var(--mdb-body-color) !default;
   }
   tr.hidden button {
     display: none;
+  }
+  tr td {
+    transition: padding-top 1s ease, padding-bottom 1s ease;
   }
   tr div {
     max-height: 100px;

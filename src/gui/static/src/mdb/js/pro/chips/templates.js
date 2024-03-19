@@ -5,12 +5,6 @@ export const getInputField = ({ inputID, labelText }) => {
       <label class="form-label" for="${inputID}">
         ${labelText}
       </label>
-
-      <div class="form-notch">
-        <div class="form-notch-leading" style="width: 9px;"></div>
-        <div class="form-notch-middle" style="width: 87.2px;"></div>
-        <div class="form-notch-trailing"></div>
-      </div>
     </div>`;
 };
 

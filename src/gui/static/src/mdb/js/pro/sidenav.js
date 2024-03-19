@@ -381,7 +381,12 @@ class Sidenav extends BaseComponent {
     }
 
     if (link.attributes.href) {
-      return new URL(link, window.location.href).href === window.location.href;
+      const trimmedLink = window.location.href.split(/#|\?/)[0];
+      const strippedRequests = window.location.href.split('?')[0];
+      return (
+        new URL(link, window.location.href).href === trimmedLink ||
+        new URL(link, window.location.href).href === strippedRequests
+      );
     }
 
     return false;

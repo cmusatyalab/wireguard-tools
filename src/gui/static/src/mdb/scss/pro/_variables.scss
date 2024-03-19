@@ -219,7 +219,7 @@ $autocomplete-scrollbar-thumb-background-color: var(--#{$prefix}scrollbar-thumb-
 
 // Sidenav
 
-$sidenav-transform: translateX(-100%) !default;
+$sidenav-transform: translateX(-100%) #{'/*!rtl:translate(100%)*/'} !default;
 $sidenav-color: var(--#{$prefix}surface-color) !default;
 $sidenav-background-color: var(--#{$prefix}surface-bg) !default;
 $sidenav-width: 240px !default;
@@ -389,7 +389,7 @@ $timepicker-item-middle-dot-top: 50% !default;
 $timepicker-item-middle-dot-left: 50% !default;
 $timepicker-item-middle-dot-width: 6px !default;
 $timepicker-item-middle-dot-height: $timepicker-item-middle-dot-width !default;
-$timepicker-item-middle-dot-transform: translate(-50%, -50%) !default;
+$timepicker-item-middle-dot-transform: translate(-50%, -50%) #{'/*!rtl:translate(50%, -50%)*/'} !default;
 $timepicker-item-middle-dot-border-radius: 50% !default;
 $timepicker-item-middle-dot-bg: $primary !default;
 
@@ -442,7 +442,7 @@ $timepicker-icon-btn-height: 30px !default;
 $timepicker-input-color: $primary !default;
 
 $timepicker-btn-icon-right: -10px !default;
-$timepicker-btn-icon-transform: translate(-50%, -50%) !default;
+$timepicker-btn-icon-transform: translate(-50%, -50%) #{'/*!rtl:translate(50%, -50%)*/'} !default;
 $timepicker-btn-icon-top: 50% !default;
 $timepicker-btn-icon-transition: all 0.3s ease !default;
 $timepicker-btn-icon-hover-color: $primary !default;
@@ -643,7 +643,7 @@ $datepicker-cell-color: var(--#{$prefix}surface-color) !default;
 $datepicker-small-cell-width: 40px !default;
 $datepicker-small-cell-height: $datepicker-small-cell-width !default;
 
-$datepicker-small-cell-content-width: 36px !default;
+$datepicker-small-cell-content-width: 40px !default;
 $datepicker-small-cell-content-height: $datepicker-small-cell-content-width !default;
 $datepicker-small-cell-content-line-height: $datepicker-small-cell-content-height !default;
 $datepicker-small-cell-content-border-radius: 50% !default;

@@ -521,6 +521,7 @@ class Autocomplete extends BaseComponent {
     setTimeout(() => {
       Manipulator.addClass(this.dropdown, CLASS_NAME_OPEN);
       this._isOpen = true;
+      this._input.setAttribute('aria-expanded', true);
       this._setInputActiveStyles();
       this._updateLabelPosition();
     }, 0);
@@ -644,6 +645,7 @@ class Autocomplete extends BaseComponent {
       }
 
       this._isOpen = false;
+      this._input.setAttribute('aria-expanded', false);
       EventHandler.off(this.dropdown, 'transitionend');
     }
   }

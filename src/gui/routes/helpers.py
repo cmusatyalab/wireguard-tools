@@ -123,7 +123,7 @@ def get_network(network_id: int) -> Network:
         network = Network(
             name="Invalid Network",
             lighthouse=0,
-            public_key="",
+            private_key="",
             peers_list="",
             base_ip="0.0.0.0",
             subnet=0,

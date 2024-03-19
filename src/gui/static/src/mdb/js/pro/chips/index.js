@@ -2,6 +2,7 @@ import { typeCheckConfig, element } from '../../mdb/util/index';
 import Manipulator from '../../mdb/dom/manipulator';
 import SelectorEngine from '../../mdb/dom/selector-engine';
 import Chip from './chip';
+import Input from '../../free/input';
 import Data from '../../mdb/dom/data';
 import { getInputField } from './templates';
 import EventHandler from '../../mdb/dom/event-handler';
@@ -71,6 +72,7 @@ class ChipsInput extends Chip {
     super(element, data);
     this._options = this._getConfig(data);
     this.numberClicks = 0;
+    this._inputInstance = null;
 
     this.init();
     Manipulator.setDataAttribute(this._element, `${this.constructor.NAME}-initialized`, true);
@@ -105,6 +107,7 @@ class ChipsInput extends Chip {
     this._setChipsClass();
     this._appendInputToElement(CLASSNAME_CHIPS_PLACEHOLDER);
     this._handleInitialValue();
+    this._initializeInput();
     this._handleInputText();
     this._handleKeyboard();
     this._handleChipsOnSelect();
@@ -123,15 +126,24 @@ class ChipsInput extends Chip {
         instance.dispose();
       }
     });
+    if (this._inputInstance) {
+      this._inputInstance.dispose();
+    }
     this.chipsInputWrapper.remove();
     EventHandler.off(this._element, 'click');
-    EventHandler.off(this._element, 'keyup');
+    EventHandler.off(this._element, 'keypress');
     Manipulator.removeDataAttribute(this._element, `${this.constructor.NAME}-initialized`);
 
     super.dispose();
   }
 
   // Private
+
+  _initializeInput() {
+    const formOutline = this._element.querySelector('.form-outline');
+
+    this._inputInstance = new Input(formOutline).init();
+  }
 
   _setChipsClass() {
     Manipulator.addClass(this._element, 'chips');
@@ -389,6 +401,7 @@ class ChipsInput extends Chip {
 
     if (keyCode === ENTER) {
       if (target.value === '') return;
+      event.preventDefault();
 
       this._handleCreateChip(target, target.value);
 
@@ -424,7 +437,9 @@ class ChipsInput extends Chip {
   _handleInputText() {
     const placeholder = SelectorEngine.findOne(CLASSNAME_CHIPS_PLACEHOLDER, this._element);
 
-    EventHandler.on(this._element, 'keyup', placeholder, (e) => this._handleKeysInputToElement(e));
+    EventHandler.on(this._element, 'keypress', placeholder, (e) =>
+      this._handleKeysInputToElement(e)
+    );
     EventHandler.on(this.input, 'blur', (e) => this._handleBlurInput(e));
   }
 
