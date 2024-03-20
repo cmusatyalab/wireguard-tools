@@ -14,56 +14,7 @@
     <div id="networks-datatable" data-mdb-loading="true">
     </div>
 
-    <div class="card-group">
-
-        {% if networks|length == 0 %}
-        <div class="col-md">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">No Networks Found</h5>
-                    <p class="card-text">No networks have been configured. Click the button above to create a new
-                        network
-                        configuration.</p>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% for network in networks %}
-        <div class="col-md-4">
-            <!-- Card -->
-            <div class="card">
-                <h5 class="card-header">{{ network.name }}</h5>
-                <div class="card-body">
-                    <h6 class="card-title mb-2">{{ network.address }}</h6>
-                    <p class="card-text">Base IP: {{network.base_ip}}</p>
-                    <p class="card-text">{{ network.description }}</p>
-                    <div class="card-footer row">
-                        <div class="col-md-4 col-sm-12">
-                            <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers:
-                                {{
-                                network.peer_count }}</a>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
-                            {% if network.active %}
-                            <button data-network-id="{{ network.id }}"
-                                class="btn btn-danger activateButton">Deactivate</button>
-                            {% else %}
-                            <button data-network-id="{{ network.id }}"
-                                class="btn btn-success activateButton">Activate</button>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card -->
-        </div>
-        {% endfor %}
-
-    </div>
+    
     <br>
     <div class="container-fluid">
         <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
@@ -84,23 +35,23 @@
         fetch("{{ url_for('networks.network_api',network_id=0)}}")
             .then((response) => response.json())
             .then((data) => {
-                peersTable.update(
+                networksTable.update(
                     {
                         rows: data.map((network) => ({
-                            ...peer,
-                            public_key: wireguard.getPublicKey(peer.private_key),
-                            endpoint_ip: `${peer.endpoint_host}:${peer.listen_port}`,
+                            ...network,
+                            public_key: wireguard.getPublicKey(network.private_key),
+                            endpoint_ip: `${network.endpoint_host}:${network.listen_port}`,
                             active: `
-                            <span class="badge bg-danger" data-mdb-index="${peer.id}">Inactive</span>
+                            <span class="badge bg-danger" data-mdb-index="${network.id}">Inactive</span>
                             `,
                             actions: `
-                            <a role="button" class="activate-peer-button text-warning" data-mdb-index="${peer.id}">
+                            <a role="button" class="activate-network-button text-warning" data-mdb-index="${network.id}">
                                 <i class="fas fa-power-off"></i>
                             </a>
-                            <a role="button" class="edit-peer-button text-muted ms-2" data-mdb-index="${peer.id}">
+                            <a role="button" class="edit-network-button text-muted ms-2" data-mdb-index="${network.id}">
                                 <i class="fa fa-pen-to-square"></i>
                             </a>
-                            <a role="button" class="delete-peer-button text-muted ms-2" data-mdb-index="${peer.id}">
+                            <a role="button" class="delete-network-button text-muted ms-2" data-mdb-index="${network.id}">
                                 <i class="fa fa-trash-alt"></i>
                             </a>
                             `,
@@ -113,28 +64,69 @@
 
     const table = document.getElementById('networks-datatable');
 
-    // Add click event listeners to the "Activate" buttons
-    document.querySelectorAll('.activateButton').forEach(function (button) {
-        button.addEventListener('click', function () {
-            // Get the network ID
-            let networkId = this.dataset.networkId;
-            // Build the URL
-            let buttonLabel = document.querySelector(`button[data-network-id="${networkId}"]`).textContent.trim();
-            // Build the URL
-            let baseUrl = "{{ url_for('networks.networks_all') }}";
-            let url;
-            if (buttonLabel === 'Activate') {
-                url = baseUrl + '/activate/' + networkId;
-            } else if (buttonLabel === 'Deactivate') {
-                url = baseUrl + '/deactivate/' + networkId;
+    const setupButtons = (action) => {
+        document.getElementsByClassName(`${action}-network-button`).forEach((button) => {
+            if (action === 'activate') {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    let base_url = "{{ url_for('networks.network_api',network_id=0)}}";
+                    let url = base_url.replace(0, index);
+                    console.log(`activate network: ${index} at ${url}`);
+                });
+            } else if (action === 'edit') {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    let base_url = "{{ url_for('networks.network_detail',network_id=0)}}";
+                    let url = base_url.replace(0, index)
+                    window.location.href = url;
+                });
+            } else if (action === 'delete') {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    let base_url = "{{ url_for('networks.network_api',network_id=0)}}";
+                    let url = base_url.replace(0, index);
+                    console.log(`delete network: ${index} at ${url}`);
+                    fetch(url, {
+                        method: 'DELETE',
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            loadPeers();
+                        });
+                });
+            } else {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = button.getAttribute('data-mdb-index');
+                    console.log(`${action} message: ${index}`, messages[index]);
+                });
             }
-            // Submit the form to the url
-            let form = document.createElement('form');
-            form.setAttribute('method', 'post');
-            form.setAttribute('action', url);
-            document.body.appendChild(form);
-            form.submit();
         });
-    });
+    };
+
+    const columns = [
+        { label: 'Activation', field: 'active', sort: false },
+        { label: 'Name', field: 'name', sort: false },
+        { label: 'Public Key', field: 'public_key', sort: false },
+        { label: 'Net IP', field: 'network_ip', sort: true },
+        { label: 'Endpoint IP:Port', field: 'endpoint_ip', sort: false },
+        { label: 'Actions', field: 'actions' },
+    ];
+
+    table.addEventListener('render.mdb.datatable', () => {
+        setupButtons('activate');
+        setupButtons('edit');
+        setupButtons('delete');
+    })
+
+    const networksTable = new mdb.Datatable(
+        table,
+        { columns, },
+        { loading: true }
+    );
 </script>
 {% endblock %}
