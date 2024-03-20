@@ -10,6 +10,10 @@
     </div>
     <hr class="hr" />
 
+    <!-- data table -->
+    <div id="networks-datatable" data-mdb-loading="true">
+    </div>
+
     <div class="card-group">
 
         {% if networks|length == 0 %}
@@ -39,7 +43,8 @@
                             <a href="{{ url_for('networks.networks_all')}}{{network.id }}" class="card-link">Details</a>
                         </div>
                         <div class="col-md-4 col-sm-12">
-                            <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers: {{
+                            <a href="{{ url_for('peers.peers_all', network_id=network.id) }}" class="card-link">Peers:
+                                {{
                                 network.peer_count }}</a>
                         </div>
                         <div class="col-md-4 col-sm-12">
@@ -69,7 +74,45 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{url_for('static',filename='js/wireguard.js')}}"></script>
 <script>
+    window.onload = function () {
+        loadNetworks();
+    }
+
+    function loadNetworks() {
+        fetch("{{ url_for('networks.network_api',network_id=0)}}")
+            .then((response) => response.json())
+            .then((data) => {
+                peersTable.update(
+                    {
+                        rows: data.map((network) => ({
+                            ...peer,
+                            public_key: wireguard.getPublicKey(peer.private_key),
+                            endpoint_ip: `${peer.endpoint_host}:${peer.listen_port}`,
+                            active: `
+                            <span class="badge bg-danger" data-mdb-index="${peer.id}">Inactive</span>
+                            `,
+                            actions: `
+                            <a role="button" class="activate-peer-button text-warning" data-mdb-index="${peer.id}">
+                                <i class="fas fa-power-off"></i>
+                            </a>
+                            <a role="button" class="edit-peer-button text-muted ms-2" data-mdb-index="${peer.id}">
+                                <i class="fa fa-pen-to-square"></i>
+                            </a>
+                            <a role="button" class="delete-peer-button text-muted ms-2" data-mdb-index="${peer.id}">
+                                <i class="fa fa-trash-alt"></i>
+                            </a>
+                            `,
+                        })),
+                    },
+                    { loading: false }
+                );
+            });
+    }
+
+    const table = document.getElementById('networks-datatable');
+
     // Add click event listeners to the "Activate" buttons
     document.querySelectorAll('.activateButton').forEach(function (button) {
         button.addEventListener('click', function () {

@@ -1,5 +1,5 @@
 import traceback
-from flask import Blueprint, current_app, flash, render_template, request
+from flask import Blueprint, current_app, flash, jsonify, render_template, request
 from flask_login import login_required
 from gui.models import db, Network, Peer, subnets
 from gui.routes import helpers
@@ -9,6 +9,18 @@ networks = Blueprint("networks", __name__, url_prefix="/networks")
 
 
 ## FUNCTIONS ##
+def add_network(network, sudo_password):
+    # Add a new network to the running server
+    network_cmd = f"wg set {network.adapter_name} network {network.get_public_key()} allowed-ips {network.address}/{network.subnet}"
+    print(f"Add Network: {network_cmd}")
+    try:
+        helpers.run_sudo(network_cmd, sudo_password)
+    except Exception as e:
+        print(e)
+        return False
+    else:
+        return True
+
 def query_all_networks():
     network_query = Network.query.all()
     # TODO: create a more robust error handling system
@@ -27,6 +39,21 @@ def query_all_networks():
 
     return network_query
 
+def remove_network(network, sudo_password):
+    # Remove a network from the running server
+    network_cmd = f"wg set {network.adapter_name} network {network.get_public_key()} remove"
+    print(f"Remove Network: {network_cmd}")
+    try:
+        helpers.run_sudo(network_cmd, sudo_password)
+    except Exception as e:
+        print(e)
+        return False
+    else:
+        return True
+    
+def update_network(network):
+    # Update a network on the running server
+    return False
 
 ## ROUTES ##
 @networks.route("/", methods=["GET"])
@@ -85,17 +112,17 @@ def networks_add():
     lighthouses = helpers.get_lighthouses()
     adapters = helpers.get_adapter_names()
     if request.method == "POST":
+        lighthouse = Peer()
         name = request.form.get("name")
         message = f"Adding network {name}\n"
-        if request.form.get("lighthouse") == "":
-            message += "No lighthouse selected"
-            private_key = request.form.get("private_key")
-        else:
+        if request.form.get("lighthouse"):
             message += f"Lighthouse selected: {request.form.get('lighthouse')}\n"
             lighthouse = Peer.query.get(request.form.get("lighthouse"))        
-            lh_ip = lighthouse.endpoint_host
-            lh_port = lighthouse.listen_port
             private_key = lighthouse.private_key
+        else:
+            message += "No lighthouse selected"
+            lighthouse.id = 0
+            private_key = request.form.get("private_key")
         base_ip = request.form.get("base_ip")
         subnet = request.form.get("subnet")
         dns = request.form.get("dns")
@@ -234,3 +261,47 @@ def network_deactivate(network_id):
     finally:
         network_list = query_all_networks()
         return render_template("networks.html", networks=network_list)
+
+@networks.route("/api/<int:network_id>", methods=["POST","GET", "PATCH", "DELETE"])
+@login_required
+def network_api(network_id):
+    if request.method == "GET":
+        if network_id == 0:
+            return jsonify([network.to_dict() for network in Network.query.all()])
+        return jsonify(Network.query.get(network_id))
+    elif request.method == "POST":
+        return add_network(network_id)
+    elif request.method == "PATCH":
+        message = f"Updating network {network_id}\n"
+        network = Network.query.get(network_id)
+        # logic to update network
+        # If server
+        if current_app.config["MODE"] == "server":
+            if update_network(network):
+                message += "Network updated on server\n"
+            else:
+                message += "Error updating network on server\n"
+        # If database
+        for key, value in request.json.items():
+            setattr(network, key, value)
+        db.session.commit()
+        message += "Network updated in database"
+        flash(message, "success")
+        return jsonify(network)
+    elif request.method == "DELETE":
+        message = f"Deleting network {network_id}\n"
+        network = Network.query.get(network_id)
+        # If server
+        if current_app.config["MODE"] == "server":
+            if remove_network(network_id):
+                message += "Network removed from server\n"
+            else:
+                message += "Error removing network from server\n"
+        # If database
+        db.session.delete(network)
+        db.session.commit()
+        message += "Network removed from database"
+        flash(message, "success")
+        return jsonify(message)
+    else:
+        return jsonify("Invalid request method")
