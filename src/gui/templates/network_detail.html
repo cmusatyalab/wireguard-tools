@@ -24,7 +24,7 @@
                     <div class="card">
                         <h6 class="card-header">Configuration</h6>
                         <div class="mb-3">
-                            <div class="mb-3 form-outline">
+                            <div class="mb-3 form-outline bordered" >
                                 <div class="form-outline">
                                     <div class="mb-3 input-group" data-mdb-input-init>
                                         <input type="text" class="form-control" id="private_key" name="private_key"
@@ -42,7 +42,7 @@
                                         value="">
                                     <label for="public_key" class="form-label">Public Key</label>
                                 </div>
-                                <h3>OR</h3>
+                                <div class="text-center"><h4> OR </h4></div>
                                 <select class="form-select" data-mdb-select-init id="lighthouse" name="lighthouse">
                                     {% for lighthouse in lighthouses %}
                                     <option value="{{ lighthouse.id }}" {% if network.lighthouse==lighthouse.id
