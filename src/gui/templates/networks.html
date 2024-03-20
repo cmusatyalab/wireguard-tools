@@ -14,7 +14,6 @@
     <div id="networks-datatable" data-mdb-loading="true">
     </div>
 
-    
     <br>
     <div class="container-fluid">
         <p>Note: All network configurations are stored in the database until they are deleted. Inactive network
@@ -41,6 +40,7 @@
                             ...network,
                             public_key: wireguard.getPublicKey(network.private_key),
                             endpoint_ip: `${network.endpoint_host}:${network.listen_port}`,
+                            base_ip_range: `${network.base_ip}/${network.subnet}`,
                             active: `
                             <span class="badge bg-danger" data-mdb-index="${network.id}">Inactive</span>
                             `,
@@ -95,7 +95,7 @@
                         .then((response) => response.json())
                         .then((data) => {
                             console.log(data);
-                            loadPeers();
+                            loadNetworks();
                         });
                 });
             } else {
@@ -112,7 +112,7 @@
         { label: 'Activation', field: 'active', sort: false },
         { label: 'Name', field: 'name', sort: false },
         { label: 'Public Key', field: 'public_key', sort: false },
-        { label: 'Net IP', field: 'network_ip', sort: true },
+        { label: 'Net IP Range', field: 'base_ip_range', sort: true },
         { label: 'Endpoint IP:Port', field: 'endpoint_ip', sort: false },
         { label: 'Actions', field: 'actions' },
     ];

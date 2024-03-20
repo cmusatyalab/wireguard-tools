@@ -43,17 +43,28 @@ class Network(db.Model):
 
     def get_config(self):
         lh = Peer.query.get(self.lighthouse)
-        wg_config = f"[Peer]\nPublicKey = {self.public_key}\n"
+        wg_config = f"[Peer]\nPublicKey = {self.get_public_key()}\n"
         if len(self.allowed_ips) > 0:
             wg_config += f"AllowedIPs = {self.allowed_ips}\n"
-        if lh.endpoint_host:
+        if lh:
             wg_config += f"Endpoint = {lh.endpoint_host}:{lh.listen_port}\n"
         if self.persistent_keepalive:
             wg_config += f"PersistentKeepalive = {self.persistent_keepalive}\n"
         return wg_config
     
+    def get_endpoint(self):
+        lh = Peer.query.get(self.lighthouse)
+        return {'endpoint_host':lh.endpoint_host,'listen_port': lh.listen_port, 'private_key': lh.private_key, 'public_key': self.get_public_key(lh.public_key)} 
+    
     def to_dict(self):
         dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        lighthouse = Peer.query.get(self.lighthouse)
+        if lighthouse:
+            dict_["endpoint_host"] = lighthouse.endpoint_host
+            dict_["listen_port"] = lighthouse.listen_port
+        else:
+            dict_["endpoint_host"] = None
+            dict_["listen_port"] = None
         return dict_
     
     def get_public_key(self) -> WireguardKey:

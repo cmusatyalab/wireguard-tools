@@ -268,7 +268,7 @@ def network_api(network_id):
     if request.method == "GET":
         if network_id == 0:
             return jsonify([network.to_dict() for network in Network.query.all()])
-        return jsonify(Network.query.get(network_id))
+        return jsonify(Network.query.get(network_id).to_dict())
     elif request.method == "POST":
         return add_network(network_id)
     elif request.method == "PATCH":
