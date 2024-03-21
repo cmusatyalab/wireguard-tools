@@ -52,14 +52,15 @@
                                     {% endfor %}
                                 </select>
                                 <label for="lighthouse" class="form-label select-label">Lighthouse</label>
+                                Enter the private key if you haven't set up a lighthouse peer yet, otherwise it's preferable to use the lighthouse peer.
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="mb-3 form-outline" data-mdb-input-init>
+                                <div class="mb-3 form-outline me-2" data-mdb-input-init>
                                     <input type="text" class="form-control" id="base_ip" name="base_ip"
                                         value="{{ network.base_ip }}" />
                                     <label for="base_ip" class="form-label">Base IP</label>
                                 </div>
-                                <div class="mb-3 form-outline">
+                                <div class="mb-3 form-outline me-2">
                                     <select class="form-select" data-mdb-select-init id="subnet" name="subnet">
                                         {% for subnet in subnets %}
                                         <option value="{{ subnet['CIDR'] }}" {% if subnet['CIDR']==network.subnet
