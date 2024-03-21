@@ -28,7 +28,7 @@
                                 <div class="form-outline">
                                     <div class="mb-3 input-group" data-mdb-input-init>
                                         <input type="text" class="form-control" id="private_key" name="private_key"
-                                            value="{{ network.private_key }}" oninput="updatePublicKey()"/>
+                                            value="{{ network.private_key }}" oninput="updatePublicKey()" />
                                         <label for="private_key" class="form-label">Private Key</label>
                                         <button class="btn btn-primary " data-mdb-ripple-init type="button"
                                             id="generatePrivateKey" onclick="generateAndSetPrivateKey()"
@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 form-outline" data-mdb-input-init>
-                                    <input type="text" class="form-control" id="public_key" name="public_key"/>
+                                    <input type="text" class="form-control" id="public_key" name="public_key" />
                                     <label for="public_key" class="form-label">Public Key</label>
                                 </div>
                                 <div class="text-center mb-3">
@@ -70,17 +70,29 @@
                                     <label for="subnet" class="form-label select-label">CIDR Subnet</label>
                                 </div>
                             </div>
-                            <div class="mb-3 form-outline">
-                                <select class="form-select" data-mdb-select-init id="adapter_name" name="adapter_name">
-                                    {% for adapter in adapters %}
-                                    <option value="{{ adapter }}" {% if adapter==network.adapter_name %}selected{% endif
-                                        %}>
-                                        {{ adapter }}</option>
-                                    {% endfor %}
-                                </select>
-                                <label for="adapter_name" class="form-label select-label ">Host Adapter Name</label>
+                            <div class="mb-3 d-flex justify-content-evenly">
+                                <div class="form-outline col me-3" id="local_adapter">
+                                    <select class="form-select" data-mdb-select-init id="adapter_name_local"
+                                        name="adapter_name">
+                                        {% for adapter in adapters %}
+                                        <option value="{{ adapter }}" {% if adapter==network.adapter_name %}selected{%
+                                            endif %}>
+                                            {{ adapter }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="adapter_name" class="form-label select-label ">Host Adapter Name</label>
+                                </div>
+                                <div class="form-outline col me-3" data-mdb-input-init id="remote_adapter" hidden>
+                                    <input type="text" class="form-control" id="adapter_name_remote"
+                                        name="adapter_name" />
+                                    <label for="adapter_name_remote" class="form-label">Host Adapter Name</label>
+                                </div>
+                                <div class="form-check form-switch me-3">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="remoteHost" />
+                                    <label class="form-check-label" for="remoteHost">Remote Host</label>
+                                </div>
                             </div>
-                            <div class="mb-3 form-outline" data-mdb-input-init>
+                            <div class="mb-3 form-outline col " data-mdb-input-init>
                                 <input type="text" class="form-control" id="dns" name="dns"
                                     value="{{ network.dns_server }}" />
                                 <label for="dns" class="form-label">DNS</label>
@@ -136,7 +148,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-mdb-ripple-init
                         data-mdb-dismiss="modal">Cancel</button>
-                    <form action="{{ url_for('networks.network_delete',network_id=network.id)}}" method="post">
+                    <form action="{{ url_for('networks.network_delete', network_id=network.id)}}" method="post">
                         <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Delete</button>
                     </form>
                 </div>
@@ -191,6 +203,21 @@
             document.getElementById('addPeerForm').submit();
         });
     }
+
+    addEventListener('DOMContentLoaded', function () {
+        let remoteHost = document.getElementById('remoteHost');
+        let localAdapter = document.getElementById('local_adapter');
+        let remoteAdapter = document.getElementById('remote_adapter');
+        remoteHost.addEventListener('change', function () {
+            if (remoteHost.checked) {
+                localAdapter.hidden = true;
+                remoteAdapter.hidden = false;
+            } else {
+                localAdapter.hidden = false;
+                remoteAdapter.hidden = true;
+            }
+        });
+    });
 
 </script>
 {% endblock %}
