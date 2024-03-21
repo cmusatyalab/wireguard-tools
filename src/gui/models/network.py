@@ -14,16 +14,14 @@ class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     proxy = db.Column(db.Boolean, default=False)
-    lighthouse = db.Column(
-        db.Integer, db.ForeignKey(Peer.id), nullable=True
-    )  # Lighthouse peer for this network
+    # Lighthouse peer for this network
+    lighthouse = db.Column(db.Integer, db.ForeignKey(Peer.id), nullable=True)
     private_key = db.Column(db.String(50))
     peers_list = db.Column(db.Text)
     base_ip = db.Column(db.String(50))
     subnet = db.Column(db.Integer)
-    dns_server = db.Column(
-        db.String(50)
-    )  # DNS server setting for peers in this network
+    # DNS server setting for peers in this network
+    dns_server = db.Column(db.String(50))
     description = db.Column(db.Text)
     persistent_keepalive = db.Column(db.Integer)
     adapter_name = db.Column(db.String(50))
@@ -51,11 +49,16 @@ class Network(db.Model):
         if self.persistent_keepalive:
             wg_config += f"PersistentKeepalive = {self.persistent_keepalive}\n"
         return wg_config
-    
+
     def get_endpoint(self):
         lh = Peer.query.get(self.lighthouse)
-        return {'endpoint_host':lh.endpoint_host,'listen_port': lh.listen_port, 'private_key': lh.private_key, 'public_key': self.get_public_key(lh.public_key)} 
-    
+        return {
+            "endpoint_host": lh.endpoint_host,
+            "listen_port": lh.listen_port,
+            "private_key": lh.private_key,
+            "public_key": self.get_public_key(lh.public_key),
+        }
+
     def to_dict(self):
         dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
         lighthouse = Peer.query.get(self.lighthouse)
@@ -66,7 +69,7 @@ class Network(db.Model):
             dict_["endpoint_host"] = None
             dict_["listen_port"] = None
         return dict_
-    
+
     def get_public_key(self) -> WireguardKey:
         public_key = str(WireguardKey(self.private_key).public_key())
         return public_key

@@ -80,41 +80,11 @@ def wizard_basic():
     # Create a private key for the lighthouse
     new_key = WireguardKey.generate()
     private_key = str(new_key)
-    public_key = str(new_key.public_key())
 
     # Get adapter name from rotation
     adapter_name = "wg0"
 
-    # Create a new network object
-    # TODO: fix config name rotation
-    new_network = Network(
-        name=name,
-        proxy=False,
-        lh_ip=endpoint_host,
-        public_key=public_key,
-        peers_list="",
-        base_ip=base_ip,
-        subnet=subnet,
-        adapter_name=adapter_name,
-        dns_server=dns,
-        description=description,
-        config=json.dumps(
-            {
-                "public_key": public_key,
-                "preshared_key": None,
-                "endpoint_host": endpoint_host,
-                "endpoint_port": listen_port,
-                "persistent_keepalive": current_app.config["BASE_KEEPALIVE"],
-                "allowed_ips": allowed_ips,
-            }
-        ),
-    )
-
-    # Add the new network to the database
-    db.session.add(new_network)
-    db.session.commit()
-    message += "\nNetwork added to database"
-
+    # Create a lighthouse first
     # Create a new peer object
     # The lighthouse is always the first peer in the network
     lh_address = Network.append_ip(base_ip, 1)
@@ -126,17 +96,19 @@ def wizard_basic():
     post_up_string = f"iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {adapters[0]} -j MASQUERADE"
     post_down_string = f"iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {adapters[0]} -j MASQUERADE"
     new_peer = Peer(
-        name=f"Server for {name}",
+        name=f"Lighthouse server for {name}",
         private_key=private_key,
-        address=lh_address,
+        network_ip=lh_address,
         subnet=subnet,
+        endpoint_host=endpoint_host,
         listen_port=listen_port,
         lighthouse=True,
         post_up=post_up_string,
         post_down=post_down_string,
-        network=new_network.id,
+        network=0,
         description="Auto-generated peer for the lighthouse",
     )
+
     if dns:
         new_peer.dns = dns
 
@@ -144,6 +116,34 @@ def wizard_basic():
     db.session.add(new_peer)
     db.session.commit()
     message += "\nPeer added to database"
+
+    # Create a new network object
+    # TODO: fix config name rotation
+    new_network = Network(
+        name=name,
+        proxy=False,
+        lighthouse=new_peer.id,
+        private_key=new_peer.private_key,
+        peers_list="",
+        base_ip=base_ip,
+        subnet=subnet,
+        dns_server=dns,
+        description=description,
+        persistent_keepalive=25,
+        adapter_name=adapter_name,
+        allowed_ips = allowed_ips,
+        active = False
+    )
+
+    # Add the new network to the database
+    db.session.add(new_network)
+    db.session.commit()
+    message += "\nNetwork added to database"
+
+    new_peer.network = new_network.id
+
+    db.session.commit()
+    message += "\nPeer network updated"
 
     if current_app.config["MODE"] == "server":
         # Create the adapter configuration file
@@ -164,7 +164,9 @@ def wizard_basic():
                 )
             except Exception as e:
                 print(e)
-                message += "\nError copying configuration file to /etc/wireguard/wg0.conf"
+                message += (
+                    "\nError copying configuration file to /etc/wireguard/wg0.conf"
+                )
             else:
                 message += "\nConfiguration file copied to /etc/wireguard/wg0.conf"
         else:
@@ -175,6 +177,7 @@ def wizard_basic():
 
     print(message)
     flash(message, "info")
+    networks = Network.query.all()
     return render_template("networks.html", networks=networks)
 
 
