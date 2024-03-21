@@ -41,6 +41,15 @@
             </div>
             <div class="row form-group align-items-center">
                 <div class="col-sm-2">
+                    <button type="button" class="btn btn-primary" id="btn_dump_db" data-mdb-ripple-init>
+                        Dump Database</button>
+                </div>
+                <div class="col-sm-10">
+                    <label for="btn_load_db">Download database in JSON format</label>
+                </div>
+            </div>
+            <div class="row form-group align-items-center">
+                <div class="col-sm-2">
                     <a href="{{url_for ('user.register')}}" type="button" class="btn btn-primary" id="btn_add_user">
                         Add user</a>
                 </div>
@@ -50,8 +59,8 @@
             </div>
             <div class="row form-group align-items-center">
                 <div class="col-sm-2">
-                    <a type="button" class="btn btn-danger" data-mdb-toggle="modal" data-mdb-target="#confirmModal"
-                        id="btn_purge_db">Purge Database</a>
+                    <button type="button" class="btn btn-danger" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#confirmModal"
+                        id="btn_purge_db">Purge Database</button>
                 </div>
                 <div class="col-sm-10">
                     <label for="btn_purge_db">Purge all entries from the database </label>
@@ -60,8 +69,8 @@
         </div>
         <div class="tab-pane fade" id="admin-tabs-2" role="tabpanel" aria-labelledby="admin-tab-2">
 
-                <p>Changing these values only updates the current running instance.</p>
-                <p>Update config.yaml to persistently update these values.</p>
+            <p>Changing these values only updates the current running instance.</p>
+            <p>Update config.yaml to persistently update these values.</p>
 
             <hr class="hr" />
             <form method="post">
@@ -75,35 +84,31 @@
                 <button class="btn btn-warning">Save</button>
             </form>
         </div>
-        <div
-    class="tab-pane fade"
-    id="admin-tabs-3"
-    role="tabpanel"
-    aria-labelledby="admin-tab-3"
-  >
-    Reserved for future use
-  </div>
+        <div class="tab-pane fade" id="admin-tabs-3" role="tabpanel" aria-labelledby="admin-tab-3">
+            Reserved for future use
+        </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmModalLabel">Confirm Purge</h5>
-                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to purge all entries from the database?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">No</button>
-                    <form action="{{ url_for('settings.purge_db') }}" method="post">
-                        <button type="submit" class="btn btn-primary">Yes</button>
-                    </form>
-                </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Purge</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to purge all entries from the database?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">No</button>
+                <form action="{{ url_for('settings.purge_db') }}" method="post">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </form>
             </div>
         </div>
     </div>
+
     {% endblock %}
 
     {% block scripts %}
