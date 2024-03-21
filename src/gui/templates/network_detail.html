@@ -24,11 +24,11 @@
                     <div class="card">
                         <h6 class="card-header">Configuration</h6>
                         <div class="mb-3">
-                            <div class="mb-3 form-outline bordered">
+                            <div class="mb-3 bordered">
                                 <div class="form-outline">
                                     <div class="mb-3 input-group" data-mdb-input-init>
                                         <input type="text" class="form-control" id="private_key" name="private_key"
-                                            value="{{ network.private_key }}" oninput="updatePublicKey()">
+                                            value="{{ network.private_key }}" oninput="updatePublicKey()"/>
                                         <label for="private_key" class="form-label">Private Key</label>
                                         <button class="btn btn-primary " data-mdb-ripple-init type="button"
                                             id="generatePrivateKey" onclick="generateAndSetPrivateKey()"
@@ -38,11 +38,11 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 form-outline" data-mdb-input-init>
-                                    <input type="text" class="form-control" id="public_key" name="public_key" value="">
+                                    <input type="text" class="form-control" id="public_key" name="public_key"/>
                                     <label for="public_key" class="form-label">Public Key</label>
                                 </div>
-                                <div class="text-center">
-                                    <h4> OR </h4>
+                                <div class="text-center mb-3">
+                                    OR
                                 </div>
                                 <select class="form-select" data-mdb-select-init id="lighthouse" name="lighthouse">
                                     {% for lighthouse in lighthouses %}
