@@ -220,42 +220,43 @@
                 </div>
             </div>
         </div>
-        <!-- MDB -->
-        <script type="text/javascript" src="{{url_for('static', filename='js/mdb.umd.min.js')}}"></script>
-        <!-- MDB PLUGINS -->
-        <script type="text/javascript" src="{{url_for('static', filename='plugins/js/all.min.js')}}"></script>
-        <!-- Custom scripts -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var toastElement = document.getElementById('basic-toast');
-                if (toastElement) {
-                    var toastInstance = new mdb.Toast(toastElement);
-                    toastInstance.show();
-                }
-            });
-
-            function refresh_page() {
-                window.location.reload(true);
+    </div>
+    <!-- MDB -->
+    <script type="text/javascript" src="{{url_for('static', filename='js/mdb.umd.min.js')}}"></script>
+    <!-- MDB PLUGINS -->
+    <script type="text/javascript" src="{{url_for('static', filename='plugins/js/all.min.js')}}"></script>
+    <!-- Custom scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastElement = document.getElementById('basic-toast');
+            if (toastElement) {
+                var toastInstance = new mdb.Toast(toastElement);
+                toastInstance.show();
             }
+        });
 
-            function showSpinner() {
-                // Get the spinner element
-                var spinner = document.getElementById("spinner");
+        function refresh_page() {
+            window.location.reload(true);
+        }
 
-                // Show the spinner
-                spinner.style.display = "block";
-            }
+        function showSpinner() {
+            // Get the spinner element
+            var spinner = document.getElementById("spinner");
 
-            function updateDateTime() {
-                let now = new Date();
-                let date = now.toLocaleDateString();
-                let time = now.toLocaleTimeString();
-                document.getElementById('liveDateTime').textContent = date + ' ' + time;
-            }
-            setInterval(updateDateTime, 1000);
-            updateDateTime();
-        </script>
-        {% block scripts %} {% endblock %}
+            // Show the spinner
+            spinner.style.display = "block";
+        }
+
+        function updateDateTime() {
+            let now = new Date();
+            let date = now.toLocaleDateString();
+            let time = now.toLocaleTimeString();
+            document.getElementById('liveDateTime').textContent = date + ' ' + time;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+    </script>
+    {% block scripts %} {% endblock %}
 </body>
 
 </html>

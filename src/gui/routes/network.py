@@ -216,30 +216,31 @@ def network_delete(network_id):
 @login_required
 def network_activate(network_id):
     message = f"Activating network {network_id}"
-    sudo_password = request.form.get("sudoPassword")
-    network = Network.query.filter_by(id=network_id).first()
-    if network.adapter_name in helpers.get_adapter_names():
-        message += "Network already active"
-        network.active = True
-        db.session.commit()
-        network_list = query_all_networks()
-        flash(message, "info")
-        return render_template("networks.html", networks=network_list)
-    try:
-        helpers.run_sudo("wg-quick up " + network.adapter_name, sudo_password)
-    except Exception as e:
-        traceback.print_exc()
-        message += "Error activating network: " + str(e)
-        flash(message, "danger")
+    if current_app.config["MODE"] == "server":
+        if request.form.get("sudoPassword"):
+            sudo_password = request.form.get("sudoPassword")
+        else:
+            sudo_password = current_app.config["SUDO_PASSWORD"]
+        network = Network.query.filter_by(id=network_id).first()
+        if network.adapter_name in helpers.get_adapter_names():
+            message += "Network already active"
+            network.active = True
+            db.session.commit()
+            network_list = query_all_networks()
+            flash(message, "info")
+            return render_template("networks.html", networks=network_list)
+        try:
+            helpers.run_sudo("wg-quick up " + network.adapter_name, sudo_password)
+        except Exception as e:
+            traceback.print_exc()
+            message += "Error activating network: " + str(e)
+        else:
+            network.active = True
+            db.session.commit()
+            message += "Network activated successfully"
     else:
-        network.active = True
-        db.session.commit()
-        message += "Network activated successfully"
-        flash(message, "success")
-    finally:
-        network_list = query_all_networks()
-        return render_template("networks.html", message=message, networks=network_list)
-
+        message = "Cannot activate network in database mode"
+    return jsonify(message)
 
 @networks.route("/deactivate/<int:network_id>", methods=["POST"])
 @login_required

@@ -70,9 +70,17 @@
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const index = button.getAttribute('data-mdb-index');
-                    let base_url = "{{ url_for('networks.network_api',network_id=0)}}";
+                    let base_url = "{{ url_for('networks.network_activate',network_id=0)}}";
                     let url = base_url.replace(0, index);
                     console.log(`activate network: ${index} at ${url}`);
+                    fetch(url, {
+                        method: 'POST',
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            loadNetworks();
+                        });
                 });
             } else if (action === 'edit') {
                 button.addEventListener('click', (e) => {
