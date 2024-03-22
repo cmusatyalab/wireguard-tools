@@ -68,9 +68,18 @@
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const index = button.getAttribute('data-mdb-index');
-                    let base_url = "{{ url_for('peers.peer_api',peer_id=0)}}";
+                    let base_url = "{{ url_for('peers.peer_activate',peer_id=0)}}";
                     let url = base_url.replace(0, index);
                     console.log(`activate peer: ${index} at ${url}`);
+                    fetch(url, {
+                        method: 'POST',
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            showAlert(data);
+                            loadPeers();
+                        });
                 });
             } else if (action === 'edit') {
                 button.addEventListener('click', (e) => {
@@ -93,6 +102,7 @@
                         .then((response) => response.json())
                         .then((data) => {
                             console.log(data);
+                            showAlert(data);
                             loadPeers();
                         });
                 });

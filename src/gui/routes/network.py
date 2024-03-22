@@ -208,14 +208,15 @@ def network_delete(network_id):
     db.session.commit()
     message += f"\nNetwork deleted successfully"
     network_list = query_all_networks()
-    flash(message, "success")
-    return render_template("networks.html", networks=network_list)
+    category = "success"
+    return jsonify({'category': category, 'message': message})
 
 
 @networks.route("/activate/<int:network_id>", methods=["POST"])
 @login_required
 def network_activate(network_id):
     message = f"Activating network {network_id}"
+    category = "information"
     if current_app.config["MODE"] == "server":
         if request.form.get("sudoPassword"):
             sudo_password = request.form.get("sudoPassword")
@@ -226,43 +227,51 @@ def network_activate(network_id):
             message += "Network already active"
             network.active = True
             db.session.commit()
-            network_list = query_all_networks()
-            flash(message, "info")
-            return render_template("networks.html", networks=network_list)
+            return jsonify({'category': category, 'message': message})
         try:
             helpers.run_sudo("wg-quick up " + network.adapter_name, sudo_password)
         except Exception as e:
             traceback.print_exc()
+            category = "danger"
             message += "Error activating network: " + str(e)
         else:
             network.active = True
             db.session.commit()
+            category = "success"
             message += "Network activated successfully"
     else:
+        category="warning"
         message = "Cannot activate network in database mode"
-    return jsonify(message)
+
+    return jsonify({'category': category, 'message': message})
 
 @networks.route("/deactivate/<int:network_id>", methods=["POST"])
 @login_required
 def network_deactivate(network_id):
     message = f"Deactivating network {network_id}"
-    sudo_password = request.form.get("sudoPassword")
-    network = Network.query.filter_by(id=network_id).first()
-    try:
-        helpers.run_sudo("wg-quick down " + network.adapter_name, sudo_password)
-    except Exception as e:
-        traceback.print_exc()
-        message += "Error deactivating network: " + str(e)
-        flash(message, "danger")
+    category="information"
+    if current_app.config["MODE"] == "server":
+        if request.form.get("sudoPassword"):
+            sudo_password = request.form.get("sudoPassword")
+        else:
+            sudo_password = current_app.config["SUDO_PASSWORD"]
+        network = Network.query.filter_by(id=network_id).first()
+        try:
+            helpers.run_sudo("wg-quick down " + network.adapter_name, sudo_password)
+        except Exception as e:
+            traceback.print_exc()
+            message += "Error deactivating network: " + str(e)
+            category= "danger"
+        else:
+            network.active = False
+            db.session.commit()
+            message += "Network deactivated successfully"
+            category= "success"
     else:
-        network.active = False
-        db.session.commit()
-        message += "Network deactivated successfully"
-        flash(message, "success")
-    finally:
-        network_list = query_all_networks()
-        return render_template("networks.html", networks=network_list)
-
+        category="warning"
+        message = "Cannot deactivate network in database mode"
+    return jsonify({'category': category, 'message': message})
+  
 @networks.route("/api/<int:network_id>", methods=["POST","GET", "PATCH", "DELETE"])
 @login_required
 def network_api(network_id):
