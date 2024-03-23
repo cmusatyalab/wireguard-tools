@@ -323,3 +323,27 @@ def peer_api(peer_id):
         return jsonify(message)
     else:
         return jsonify("Invalid request method")
+    
+@peers.route("/activate/<int:peer_id>", methods=["POST"])
+@login_required
+def peer_activate(peer_id):
+    message = f"Activating peer {peer_id}\n"
+    category = "information"
+    if current_app.config["MODE"] == "server":
+        peer = Peer.query.get(peer_id)
+        network = Network.query.get(peer.network)
+        sudo_password = current_app.config["SUDO_PASSWORD"]
+        # Add peer to running server
+        if current_app.config["MODE"] == "server":
+            if add_peer(peer, network, sudo_password):
+                message += "Peer added to running server"
+            else:
+                message += "Error adding peer to running server"
+        else:
+            peer.active = True
+            db.session.commit()
+            message += "Peer activated in database"
+    else:
+        message = "Peer activation only available on server"
+        category = "warning"
+    return jsonify({"category":category, "message":message})
