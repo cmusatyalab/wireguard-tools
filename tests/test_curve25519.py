@@ -1,9 +1,10 @@
-# Copyright (c) 2022 Carnegie Mellon University
+# Copyright (c) 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
+
+from __future__ import annotations
 
 from binascii import hexlify, unhexlify
 from secrets import token_bytes
-from typing import List, Tuple
 
 from wireguard_tools.curve25519 import X25519PrivateKey, curve25519, curve25519_base
 
@@ -11,7 +12,7 @@ from wireguard_tools.curve25519 import X25519PrivateKey, curve25519, curve25519_
 class VectorTest:
     # assumes the derived class has an array named VECTORS consisting of
     # (scalar, input coordinate, output coordinate) tuples.
-    VECTORS: List[Tuple[bytes, bytes, bytes]] = []
+    VECTORS: list[tuple[bytes, bytes, bytes]] = []
 
     def test_vectors(self) -> None:
         for scalar, input_ucoord, output_ucoord in self.VECTORS:

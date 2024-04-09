@@ -1,7 +1,7 @@
 #
 # Pure Python reimplementation of wireguard-tools
 #
-# Copyright (c) 2022-2023 Carnegie Mellon University
+# Copyright (c) 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 #
 
@@ -57,15 +57,18 @@ def _list_of_ipinterface(
 class WireguardPeer:
     public_key: WireguardKey = field(converter=WireguardKey)
     preshared_key: WireguardKey | None = field(
-        converter=optional(WireguardKey), default=None
+        converter=optional(WireguardKey),
+        default=None,
     )
     endpoint_host: IPv4Address | IPv6Address | str | None = field(
-        converter=optional(_ipaddress_or_host), default=None
+        converter=optional(_ipaddress_or_host),
+        default=None,
     )
     endpoint_port: int | None = field(converter=optional(int), default=None)
     persistent_keepalive: int | None = field(converter=optional(int), default=None)
     allowed_ips: list[IPv4Interface | IPv6Interface] = field(
-        converter=_list_of_ipinterface, factory=list
+        converter=_list_of_ipinterface,
+        factory=list,
     )
     # comment tags that can be parsed by prometheus-wireguard-exporter
     friendly_name: str | None = None
@@ -73,7 +76,9 @@ class WireguardPeer:
 
     # peer statistics from device
     last_handshake: float | None = field(
-        converter=optional(float), default=None, eq=False
+        converter=optional(float),
+        default=None,
+        eq=False,
     )
     rx_bytes: int | None = field(converter=optional(int), default=None, eq=False)
     tx_bytes: int | None = field(converter=optional(int), default=None, eq=False)
@@ -88,7 +93,7 @@ class WireguardPeer:
         return cls(**config_dict)
 
     def asdict(self) -> dict[str, Any]:
-        def _filter(attr: Any, value: Any) -> bool:
+        def _filter(_attr: Any, value: Any) -> bool:
             return value is not None
 
         def _serializer(_instance: type, _field: Any, value: T) -> T | str:
@@ -103,9 +108,9 @@ class WireguardPeer:
 
     @classmethod
     def from_wgconfig(cls, config: Sequence[tuple[str, str]]) -> WireguardPeer:
-        conf: dict[str, Any] = dict()
-        for key, value in config:
-            key = key.lower()
+        conf: dict[str, Any] = {}
+        for key_, value in config:
+            key = key_.lower()
             if key == "publickey":
                 conf["public_key"] = WireguardKey(value)
             elif key == "presharedkey":
@@ -147,7 +152,9 @@ class WireguardPeer:
 @define(on_setattr=setters_convert)
 class WireguardConfig:
     private_key: WireguardKey | None = field(
-        converter=optional(WireguardKey), default=None, repr=lambda _: "(hidden)"
+        converter=optional(WireguardKey),
+        default=None,
+        repr=lambda _: "(hidden)",
     )
     fwmark: int | None = field(converter=optional(int), default=None)
     listen_port: int | None = field(converter=optional(int), default=None)
@@ -155,10 +162,12 @@ class WireguardConfig:
 
     # wg-quick format extensions
     addresses: list[IPv4Interface | IPv6Interface] = field(
-        converter=_list_of_ipinterface, factory=list
+        converter=_list_of_ipinterface,
+        factory=list,
     )
     dns_servers: list[IPv4Address | IPv6Address] = field(
-        converter=_list_of_ipaddress, factory=list
+        converter=_list_of_ipaddress,
+        factory=list,
     )
     search_domains: list[str] = field(factory=list)
     mtu: int | None = field(converter=optional(int), default=None)
@@ -190,11 +199,13 @@ class WireguardConfig:
         return config
 
     def asdict(self) -> dict[str, Any]:
-        def _filter(attr: Any, value: Any) -> bool:
+        def _filter(_attr: Any, value: Any) -> bool:
             return value is not None
 
         def _serializer(
-            _instance: type, _field: Any, value: T
+            _instance: type,
+            _field: Any,
+            value: T,
         ) -> list[dict[str, Any]] | T | str:
             if isinstance(value, dict):
                 return list(value.values())
@@ -213,7 +224,8 @@ class WireguardConfig:
         _pre, *parts = re.split(r"\[(Interface|Peer)\]\n", text, flags=re.I)
         sections = [section.lower() for section in parts[0::2]]
         if sections.count("interface") > 1:
-            raise ValueError("More than one [Interface] section in config file")
+            msg = "More than one [Interface] section in config file"
+            raise ValueError(msg)
 
         config = cls()
         for section, content in zip(sections, parts[1::2]):
@@ -229,8 +241,8 @@ class WireguardConfig:
         return config
 
     def _update_from_conf(self, key_value: Sequence[tuple[str, str]]) -> None:
-        for key, value in key_value:
-            key = key.lower()
+        for key_, value in key_value:
+            key = key_.lower()
             if key == "privatekey":
                 self.private_key = WireguardKey(value)
             elif key == "fwmark":

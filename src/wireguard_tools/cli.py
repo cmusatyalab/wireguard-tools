@@ -1,7 +1,7 @@
 #
 # Pure Python reimplementation of wireguard-tools
 #
-# Copyright (c) 2022 Carnegie Mellon University
+# Copyright (c) 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 #
 
@@ -21,17 +21,12 @@ from .wireguard_key import WireguardKey
 
 
 def show(args: argparse.Namespace) -> int:
-    """Shows the current configuration and device information"""
+    """Show the current configuration and device information."""
     try:
         if args.interface is None:
             devices: Iterable[WireguardDevice] = WireguardDevice.list()
         else:
-            device = WireguardDevice.get(args.interface)
-            if device is None:
-                raise RuntimeError(
-                    f"Unable to access interface: {args.interface} not found"
-                )
-            devices = [device]
+            devices = [WireguardDevice.get(args.interface)]
 
         for device in devices:
             config = device.get_config()
@@ -64,19 +59,20 @@ def show(args: argparse.Namespace) -> int:
                     print(
                         "  transfer:"
                         f" {peer.rx_bytes / 1024:.2f} KiB received, "
-                        f" {peer.tx_bytes / 1024:.2f} KiB sent"
+                        f" {peer.tx_bytes / 1024:.2f} KiB sent",
                     )
                 print()
-
-        return 0
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
+    else:
+        return 0
 
 
 def showconf(args: argparse.Namespace) -> int:
-    """Shows the current configuration of a given WireGuard interface, \
-    for use with `setconf`"""
+    """Show the current configuration of a given WireGuard interface, \
+    for use with `setconf`.
+    """
     try:
         with closing(WireguardDevice.get(args.interface)) as device:
             config = device.get_config()
@@ -88,13 +84,13 @@ def showconf(args: argparse.Namespace) -> int:
 
 
 def set_(_args: argparse.Namespace) -> int:
-    """Change the current configuration, add peers, remove peers, or change peers"""
+    """Change the current configuration, add peers, remove peers, or change peers."""
     print("Not implemented yet")
     return 1
 
 
 def setconf(args: argparse.Namespace) -> int:
-    """Applies a configuration file to a WireGuard interface"""
+    """Apply a configuration file to a WireGuard interface."""
     # XXX our device.set_config implicitly does a syncconf
     try:
         config = WireguardConfig.from_wgconfig(args.configfile)
@@ -107,13 +103,13 @@ def setconf(args: argparse.Namespace) -> int:
 
 
 def addconf(_args: argparse.Namespace) -> int:
-    """Appends a configuration file to a WireGuard interface"""
+    """Append a configuration file to a WireGuard interface."""
     print("Not implemented yet")
     return 1
 
 
 def syncconf(args: argparse.Namespace) -> int:
-    """Synchronizes a configuration file to a WireGuard interface"""
+    """Synchronize a configuration file with a WireGuard interface."""
     try:
         config = WireguardConfig.from_wgconfig(args.configfile)
         with closing(WireguardDevice.get(args.interface)) as device:
@@ -132,7 +128,7 @@ def _check_stdout() -> None:
 
 
 def genkey(_args: argparse.Namespace) -> int:
-    """Generates a new private key and writes it to stdout"""
+    """Generate a new private key and write it to stdout."""
     _check_stdout()
     secret_key = WireguardKey.generate()
     print(secret_key)
@@ -140,7 +136,7 @@ def genkey(_args: argparse.Namespace) -> int:
 
 
 def genpsk(_args: argparse.Namespace) -> int:
-    """Generates a new preshared key and writes it to stdout"""
+    """Generate a new preshared key and write it to stdout."""
     _check_stdout()
     # generate a key without the curve25519 key value clamping
     random_data = token_bytes(32)
@@ -150,7 +146,7 @@ def genpsk(_args: argparse.Namespace) -> int:
 
 
 def pubkey(_args: argparse.Namespace) -> int:
-    """Reads a private key from stdin and writes a public key to stdout"""
+    """Read a private key from stdin and write a public key to stdout."""
     private_key = sys.stdin.read()
     public_key = WireguardKey(private_key).public_key()
     print(public_key)
@@ -158,7 +154,7 @@ def pubkey(_args: argparse.Namespace) -> int:
 
 
 def strip(args: argparse.Namespace) -> int:
-    """Output a configuration file with all wg-quick specific options removed"""
+    """Output a configuration file with all wg-quick specific options removed."""
     config = WireguardConfig.from_wgconfig(args.configfile)
     print(config.to_wgconfig())
     return 0
@@ -174,7 +170,9 @@ def main() -> int:
     show_parser.set_defaults(func=show)
 
     showconf_parser = sub.add_parser(
-        "showconf", help=showconf.__doc__, description=showconf.__doc__
+        "showconf",
+        help=showconf.__doc__,
+        description=showconf.__doc__,
     )
     showconf_parser.add_argument("interface")
     showconf_parser.set_defaults(func=showconf)
@@ -183,44 +181,58 @@ def main() -> int:
     set__parser.set_defaults(func=set_)
 
     setconf_parser = sub.add_parser(
-        "setconf", help=setconf.__doc__, description=setconf.__doc__
+        "setconf",
+        help=setconf.__doc__,
+        description=setconf.__doc__,
     )
     setconf_parser.add_argument("interface")
     setconf_parser.add_argument("configfile", type=argparse.FileType("r"))
     setconf_parser.set_defaults(func=setconf)
 
     addconf_parser = sub.add_parser(
-        "addconf", help=addconf.__doc__, description=addconf.__doc__
+        "addconf",
+        help=addconf.__doc__,
+        description=addconf.__doc__,
     )
     addconf_parser.add_argument("interface")
     addconf_parser.add_argument("configfile", type=argparse.FileType("r"))
     addconf_parser.set_defaults(func=addconf)
 
     syncconf_parser = sub.add_parser(
-        "syncconf", help=syncconf.__doc__, description=syncconf.__doc__
+        "syncconf",
+        help=syncconf.__doc__,
+        description=syncconf.__doc__,
     )
     syncconf_parser.add_argument("interface")
     syncconf_parser.add_argument("configfile", type=argparse.FileType("r"))
     syncconf_parser.set_defaults(func=syncconf)
 
     genkey_parser = sub.add_parser(
-        "genkey", help=genkey.__doc__, description=genkey.__doc__
+        "genkey",
+        help=genkey.__doc__,
+        description=genkey.__doc__,
     )
     genkey_parser.set_defaults(func=genkey)
 
     genpsk_parser = sub.add_parser(
-        "genpsk", help=genpsk.__doc__, description=genpsk.__doc__
+        "genpsk",
+        help=genpsk.__doc__,
+        description=genpsk.__doc__,
     )
     genpsk_parser.set_defaults(func=genpsk)
 
     pubkey_parser = sub.add_parser(
-        "pubkey", help=pubkey.__doc__, description=pubkey.__doc__
+        "pubkey",
+        help=pubkey.__doc__,
+        description=pubkey.__doc__,
     )
     pubkey_parser.set_defaults(func=pubkey)
 
     # from wg-quick
     strip_parser = sub.add_parser(
-        "strip", help=strip.__doc__, description=strip.__doc__
+        "strip",
+        help=strip.__doc__,
+        description=strip.__doc__,
     )
     strip_parser.add_argument("configfile", type=argparse.FileType("r"))
     strip_parser.set_defaults(func=strip)

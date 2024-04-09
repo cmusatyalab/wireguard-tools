@@ -1,7 +1,7 @@
 #
 # Pure Python reimplementation of wireguard-tools
 #
-# Copyright (c) 2022 Carnegie Mellon University
+# Copyright (c) 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 #
 
@@ -25,7 +25,8 @@ class WireguardNetlinkDevice(WireguardDevice):
         try:
             attrs = dict(self.wg.info(self.interface)[0]["attrs"])
         except pyroute2.netlink.exceptions.NetlinkError as exc:
-            raise RuntimeError(f"Unable to access interface: {exc.args[1]}") from exc
+            msg = f"Unable to access interface: {exc.args[1]}"
+            raise RuntimeError(msg) from exc
 
         try:
             private_key = WireguardKey(attrs["WGDEVICE_A_PRIVATE_KEY"].decode("utf-8"))
@@ -44,7 +45,7 @@ class WireguardNetlinkDevice(WireguardDevice):
             peer = WireguardPeer(
                 public_key=peer_attrs["WGPEER_A_PUBLIC_KEY"].decode("utf-8"),
                 preshared_key=WireguardKey(
-                    peer_attrs["WGPEER_A_PRESHARED_KEY"].decode("utf-8")
+                    peer_attrs["WGPEER_A_PRESHARED_KEY"].decode("utf-8"),
                 )
                 or None,
                 endpoint_host=peer_attrs.get("WGPEER_A_ENDPOINT", {}).get("addr"),
@@ -58,7 +59,7 @@ class WireguardNetlinkDevice(WireguardDevice):
                     for allowed_ip in peer_attrs["WGPEER_A_ALLOWEDIPS"]
                 ],
                 last_handshake=peer_attrs.get("WGPEER_A_LAST_HANDSHAKE_TIME", {}).get(
-                    "tv_sec"
+                    "tv_sec",
                 ),
                 rx_bytes=peer_attrs.get("WGPEER_A_RX_BYTES"),
                 tx_bytes=peer_attrs.get("WGPEER_A_TX_BYTES"),
@@ -82,7 +83,7 @@ class WireguardNetlinkDevice(WireguardDevice):
 
         # remove peers that are no longer in the configuration
         for key in cur_peers.difference(new_peers):
-            self.wg.set(self.interface, peer=dict(public_key=str(key), remove=True))
+            self.wg.set(self.interface, peer={"public_key": str(key), "remove": True})
 
         # update any changed peers
         for key in cur_peers.intersection(new_peers):
@@ -96,9 +97,9 @@ class WireguardNetlinkDevice(WireguardDevice):
             self.wg.set(self.interface, peer=self._wg_set_peer_arg(peer))
 
     def _wg_set_peer_arg(self, peer: WireguardPeer) -> dict[str, str | int | list[str]]:
-        peer_dict: dict[str, str | int | list[str]] = dict(
-            public_key=str(peer.public_key)
-        )
+        peer_dict: dict[str, str | int | list[str]] = {
+            "public_key": str(peer.public_key),
+        }
         if peer.endpoint_host is not None and peer.endpoint_port is not None:
             peer_dict["endpoint_addr"] = str(peer.endpoint_host)
             peer_dict["endpoint_port"] = peer.endpoint_port
@@ -110,7 +111,7 @@ class WireguardNetlinkDevice(WireguardDevice):
         return peer_dict
 
     @classmethod
-    def list(cls) -> Iterator[WireguardDevice]:
+    def list(cls) -> Iterator[WireguardNetlinkDevice]:
         with pyroute2.NDB() as ndb:
             for nic in ndb.interfaces:
                 if nic.kind == "wireguard":

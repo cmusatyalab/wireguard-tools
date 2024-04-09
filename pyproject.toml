@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2022-2023 Carnegie Mellon University
+# SPDX-FileCopyrightText: 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: 0BSD
 
 [tool.poetry]
 name = "wireguard-tools"
-version = "0.4.4.post.dev0"
+version = "0.4.6.post.dev0"
 description = "Pure python reimplementation of wireguard-tools"
 authors = [
     "Carnegie Mellon University <satya+group@cs.cmu.edu>",

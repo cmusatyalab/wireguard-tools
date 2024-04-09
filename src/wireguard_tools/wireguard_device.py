@@ -1,7 +1,7 @@
 #
 # Pure Python reimplementation of wireguard-tools
 #
-# Copyright (c) 2022 Carnegie Mellon University
+# Copyright (c) 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 #
 
@@ -9,9 +9,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from contextlib import suppress
-from typing import Iterator
+from typing import TYPE_CHECKING, Iterator
 
-from .wireguard_config import WireguardConfig
+if TYPE_CHECKING:
+    from .wireguard_config import WireguardConfig
 
 
 class WireguardDevice(ABC):
@@ -22,12 +23,10 @@ class WireguardDevice(ABC):
         return None
 
     @abstractmethod
-    def get_config(self) -> WireguardConfig:
-        ...
+    def get_config(self) -> WireguardConfig: ...
 
     @abstractmethod
-    def set_config(self, config: WireguardConfig) -> None:
-        ...
+    def set_config(self, config: WireguardConfig) -> None: ...
 
     @classmethod
     def get(cls, ifname: str) -> WireguardDevice:

@@ -1,7 +1,6 @@
-# Copyright (c) 2022 Carnegie Mellon University
+# Copyright (c) 2022-2024 Carnegie Mellon University
 # SPDX-License-Identifier: MIT
 
-# import copy
 from io import StringIO
 
 import pytest
@@ -54,21 +53,21 @@ Endpoint = 127.0.0.1:51820
 PersistentKeepalive = 30
 AllowedIPs = 10.0.0.1/32
 """
-FRIENDLY_TAGS_DICT = dict(
-    private_key="DnLEmfJzVoCRJYXzdSXIhTqnjygnhh6O+I3ErMS6OUg=",
-    addresses=["10.0.0.2/32"],
-    dns=["10.0.0.1", "test.svc.cluster.local"],
-    peers=[
-        dict(
-            friendly_name="Friendly Peer",
-            friendly_json=dict(mood="happy", attitude="friendly"),
-            public_key="ba8AwcolBVDuhR/MKFU8O6CZrAjh7c20h6EOnQx0VRE=",
-            endpoint="127.0.0.1:51820",
-            persistent_keepalive=30,
-            allowed_ips=["10.0.0.1/32"],
-        ),
+FRIENDLY_TAGS_DICT = {
+    "private_key": "DnLEmfJzVoCRJYXzdSXIhTqnjygnhh6O+I3ErMS6OUg=",
+    "addresses": ["10.0.0.2/32"],
+    "dns": ["10.0.0.1", "test.svc.cluster.local"],
+    "peers": [
+        {
+            "friendly_name": "Friendly Peer",
+            "friendly_json": dict(mood="happy", attitude="friendly"),
+            "public_key": "ba8AwcolBVDuhR/MKFU8O6CZrAjh7c20h6EOnQx0VRE=",
+            "endpoint": "127.0.0.1:51820",
+            "persistent_keepalive": 30,
+            "allowed_ips": ["10.0.0.1/32"],
+        },
     ],
-)
+}
 
 
 @pytest.fixture(scope="session")
