@@ -56,7 +56,7 @@ class WireguardNetlinkDevice(WireguardDevice):
                 or None,
                 allowed_ips=[
                     allowed_ip["addr"]
-                    for allowed_ip in peer_attrs["WGPEER_A_ALLOWEDIPS"]
+                    for allowed_ip in peer_attrs.get("WGPEER_A_ALLOWEDIPS", [])
                 ],
                 last_handshake=peer_attrs.get("WGPEER_A_LAST_HANDSHAKE_TIME", {}).get(
                     "tv_sec",
