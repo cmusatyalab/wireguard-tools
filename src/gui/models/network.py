@@ -71,7 +71,10 @@ class Network(db.Model):
         return dict_
 
     def get_public_key(self) -> WireguardKey:
-        public_key = str(WireguardKey(self.private_key).public_key())
+        try:
+            public_key = str(WireguardKey(self.private_key).public_key())
+        except ValueError as e:
+            public_key = None
         return public_key
 
 
