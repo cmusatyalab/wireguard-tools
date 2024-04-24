@@ -41,6 +41,7 @@
                             public_key: wireguard.getPublicKey(network.private_key),
                             endpoint_ip: `${network.endpoint_host}:${network.listen_port}`,
                             base_ip_range: `${network.base_ip}/${network.subnet}`,
+                            peer_count: network.peer_count,
                             active: `
                             <span class="badge bg-danger" data-mdb-index="${network.id}">Inactive</span>
                             `,
@@ -124,6 +125,7 @@
         { label: 'Public Key', field: 'public_key', sort: false },
         { label: 'Net IP Range', field: 'base_ip_range', sort: true },
         { label: 'Endpoint IP:Port', field: 'endpoint_ip', sort: false },
+        { label: 'Peers', field: 'peer_count', sort: true },
         { label: 'Actions', field: 'actions' },
     ];
 

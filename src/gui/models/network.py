@@ -1,26 +1,37 @@
+from __future__ import annotations
 import json
 import ipaddress
 
+from typing import List
 from wireguard_tools import WireguardKey
 from .database import db
 from .peer import Peer
 from flask_marshmallow import Marshmallow
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 ma = Marshmallow()
 
+# Association table for lighthouses
+lighthouse_table = db.Table(
+    "lighthouses",
+    db.Column("network_id", db.Integer, db.ForeignKey("network.id")),
+    db.Column("peer_id", db.Integer, db.ForeignKey("peer.id")),
+)
 
-# Create model
+
+# Network Model
 class Network(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'network'
+    id: Mapped[int] = mapped_column(primary_key=True) # type: ignore
     active = db.Column(db.Boolean, default=False)
     adapter_name = db.Column(db.String(50))
     allowed_ips = db.Column(db.String(50))
     base_ip = db.Column(db.String(50))
     description = db.Column(db.Text)
     dns_server = db.Column(db.String(50))
-    lighthouse = db.Column(db.Integer, db.ForeignKey(Peer.id), nullable=True)
+    lighthouse: Mapped[List[Peer]] = relationship(secondary=lighthouse_table)
     name = db.Column(db.String(50))
-    peers_list = db.Column(db.Text)
+    peers_list: Mapped[List["Peer"]] = relationship()
     persistent_keepalive = db.Column(db.Integer)
     private_key = db.Column(db.String(50))
     proxy = db.Column(db.Boolean, default=False)
@@ -38,8 +49,10 @@ class Network(db.Model):
         return result
 
     def get_config(self):
-        if self.lighthouse > 0:
-            lh = Peer.query.get(self.lighthouse)
+        if len(self.lighthouse) > 0:
+            lh = self.lighthouse[0]
+        else:
+            lh = None
         wg_config = f"[Peer]\nPublicKey = {self.get_public_key()}\n"
         if len(self.allowed_ips) > 0:
             wg_config += f"AllowedIPs = {self.allowed_ips}\n"
@@ -60,13 +73,9 @@ class Network(db.Model):
 
     def to_dict(self):
         dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-        if self.lighthouse:
-            lighthouse = Peer.query.get(self.lighthouse)
-        else:
-            lighthouse = None
-        if lighthouse:
-            dict_["endpoint_host"] = lighthouse.endpoint_host
-            dict_["listen_port"] = lighthouse.listen_port
+        if len(self.lighthouse) > 0:
+            dict_["endpoint_host"] = self.lighthouse[0].endpoint_host
+            dict_["listen_port"] = self.lighthouse[0].listen_port
         else:
             dict_["endpoint_host"] = None
             dict_["listen_port"] = None

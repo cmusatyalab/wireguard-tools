@@ -60,7 +60,7 @@ def query_all_peers(network_id=None):
         print(f"Found {len(peer_query)} peers")
     for peer in peer_query:
         peer.public_key = wgt.WireguardKey(peer.private_key).public_key()
-        network = helpers.get_network(peer.network)
+        network = helpers.get_network(peer.network_id)
         print(f"Peer {peer.name} is on network {network.name}")
         if network.name == "Invalid Network placeholder":
             print(f"Skipping {peer.name} on {network.name}")
@@ -140,6 +140,7 @@ def peers_add():
     new_peer["network"] = 1
     if request.method == "POST":
         name = request.form.get("name")
+        network = Network()
         description = request.form.get("description")
         private_key = request.form.get("private_key")
         if request.form.get("lighthouse") == "on":
@@ -154,6 +155,7 @@ def peers_add():
         subnet = request.form.get("subnet")
         dns = request.form.get("dns")
         # peer_config = request.form["peer_config"]
+        print(f"Adding peer {name} to network {request.form.get('network')}")
         if request.form.get("network"):
             network = Network.query.get(request.form.get("network"))
         else:
@@ -175,12 +177,17 @@ def peers_add():
             lighthouse=lighthouse,
             dns=dns,
             # peer_config=peer_config,
-            network=network.id,
             description=description,
+            network_id=network.id,
         )
         if request.form.get("endpoint_ip"):
             new_peer.endpoint_host = request.form.get("endpoint_host")
         db.session.add(new_peer)
+        # Add peer to network only if a network exists
+        if network is not None:
+            if network.peers_list is None:
+                network.peers_list = []
+            network.peers_list.append(new_peer)
         db.session.commit()
         message += "\nPeer added to database"
         # Add peer to running server
@@ -207,7 +214,7 @@ def peers_add():
 def peer_update(peer_id):
     message = f"Updating peer {peer_id}"
     peer = Peer.query.get(peer_id)
-    network = Network.query.get(peer.network)
+    network = Network.query.get(peer.network_id)
     sudo_password = current_app.config["SUDO_PASSWORD"]
     peer.name = request.form.get("name")
     peer.description = request.form.get("description")

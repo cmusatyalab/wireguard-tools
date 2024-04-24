@@ -30,15 +30,19 @@ def query_all_networks():
             try:
                 network.peers_list = json.loads(network.peers_list)
             except:
-                network.peers_list = "Json error"
+                network.peers_list = []
                 print(f"Json error in peers for network {network.name}")
-        try:
-            network.config = json.loads(network.config)
-        except:
-            network.config = "Json error"
-            print(f"Json error in config for network {network.name}")
 
     return network_query
+
+    
+def query_network(network_id):
+    network_query = Network.query.get(network_id)
+    return network_query
+
+def query_peer(peer_id):
+    peer_query = Peer.query.get(peer_id)
+    return peer_query
 
 
 def remove_network(network, sudo_password):
@@ -58,6 +62,7 @@ def remove_network(network, sudo_password):
 
 def update_network(network):
     # Update a network on the running server
+    #TODO: #10 Add logic to update network on server
     return False
 
 
@@ -86,9 +91,11 @@ def network_detail(network_id):
             network.description = request.form.get("description")
             network.private_key = request.form.get("private_key")
             network.adapter_name = request.form.get("adapter_name")
-            network.lighthouse = request.form.get("lighthouse")
+            if request.form.get("lighthouse"):
+                network.lighthouse = [query_peer(request.form.get("lighthouse"))]
             network.proxy = request.form.get("proxy")
-            network.peers_list = request.form.get("peers_list")
+            if request.form.get("peers_list"):
+                network.peers_list = request.form.get("peers_list")
             network.subnet = request.form.get("subnet")
             network.dns_server = request.form.get("dns_server")
             network.persistent_keepalive = request.form.get("persistent_keepalive")
@@ -132,23 +139,24 @@ def networks_add():
     lighthouses = helpers.get_lighthouses()
     adapters = helpers.get_adapter_names()
     if request.method == "POST":
-        lighthouse = Peer()
+        lighthouse_list = []
         name = request.form.get("name")
         message = f"Adding network {name}\n"
         if request.form.get("lighthouse"):
             message += f"Lighthouse selected: {request.form.get('lighthouse')}\n"
-            lighthouse = Peer.query.get(request.form.get("lighthouse"))
-            private_key = lighthouse.private_key
+            lighthouse_list = [Peer.query.get(request.form.get("lighthouse"))]
+            private_key = lighthouse_list[0].private_key
         else:
             message += "No lighthouse selected"
-            lighthouse.id = 0
+            lighthouse_list = []
             private_key = request.form.get("private_key")
         base_ip = request.form.get("base_ip")
         subnet = request.form.get("subnet")
-        dns = request.form.get("dns")
+        dns = request.form.get("dns_server")
         description = request.form.get("description")
         allowed_ips = request.form.get("allowed_ips")
         adapter_name = request.form.get("adapter_name")
+        peers_list = []
 
         # Create a new network object
         # TODO: fix config name rotation
@@ -159,9 +167,8 @@ def networks_add():
             base_ip=base_ip,
             dns_server=dns,
             description=description,
+            lighthouse=lighthouse_list,
             name=name,
-            lighthouse=lighthouse.id,
-            peers_list="",
             persistent_keepalive=0,
             private_key=private_key,
             proxy=False,

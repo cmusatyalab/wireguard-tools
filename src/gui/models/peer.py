@@ -1,12 +1,16 @@
+from flask import current_app
 from .database import db
 import json
 
+from typing import List
 from wireguard_tools import WireguardKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 # Create models
 class Peer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = "peer"
+    id: Mapped[int] = mapped_column(primary_key=True)
     name = db.Column(db.String(50))
     private_key = db.Column(db.String(50))
     endpoint_host = db.Column(db.String(50))
@@ -22,7 +26,8 @@ class Peer(db.Model):
         db.String(50)
     )  # A peer could have a specific DNS requirement but generally leave it to the network config
     peers_list = db.Column(db.Text)
-    network = db.Column(db.Integer)  # Network ID
+    network_id: Mapped[int] = mapped_column(db.ForeignKey("network.id"))
+    #network: Mapped["Network"] = relationship(back_populates="peers_list") # type: ignore
     post_up = db.Column(db.Text)
     post_down = db.Column(db.Text)
     description = db.Column(db.Text)

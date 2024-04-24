@@ -136,10 +136,16 @@ def get_network(network_id: int) -> Network:
     return network
 
 def get_peer_count(network_id: int) -> int:
-    with db.session.no_autoflush:
-        count = Peer.query.filter_by(network=network_id).count()
-        print(count)
-        return count
+    count = 0
+    network = Network.query.get(network_id)
+    if network.peers_list is None:
+        count = 0
+    else:
+        count = len(network.peers_list)
+    if network.lighthouse is not None:
+        count += len(network.lighthouse)
+    print(f"Peer count {count}")
+    return count
 
 def get_peers_status(network_adapter="all", sudo_password=""):
     output = ""
