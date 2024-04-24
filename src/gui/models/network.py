@@ -61,7 +61,10 @@ class Network(db.Model):
 
     def to_dict(self):
         dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-        lighthouse = Peer.query.get(self.lighthouse)
+        if self.lighthouse:
+            lighthouse = Peer.query.get(self.lighthouse)
+        else:
+            lighthouse = None
         if lighthouse:
             dict_["endpoint_host"] = lighthouse.endpoint_host
             dict_["listen_port"] = lighthouse.listen_port

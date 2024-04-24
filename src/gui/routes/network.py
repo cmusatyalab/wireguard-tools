@@ -75,17 +75,29 @@ def network_detail(network_id):
     if request.method == "POST":
         if request.method == "POST":
             network.name = request.form.get("name")
-            network.lh_ip = request.form.get("lh_ip")
             network.peers = request.form.get("peers")
             network.base_ip = request.form.get("base_ip")
             network.description = request.form.get("description")
-            network.config = request.form.get("config")
+            network.private_key = request.form.get("private_key")
             network.adapter_name = request.form.get("adapter_name")
             network.lighthouse = request.form.get("lighthouse")
+            network.proxy = request.form.get("proxy")
+            network.peers_list = request.form.get("peers_list")
+            network.subnet = request.form.get("subnet")
+            network.dns_server = request.form.get("dns_server")
+            network.persistent_keepalive = request.form.get("persistent_keepalive")
+            network.allowed_ips = request.form.get("allowed_ips")
+            network.active = request.form.get("active")
         if network.adapter_name == "":
             network.adapter_name = "wg0"
-
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            print(f"Error updating network: {e}")
+            message = "Error updating network"
+            flash(message, "danger")
+            return render_template("network_detail.html", network=network, subnets=subnets)
+        
         message = "Network updated successfully"
         network_list = query_all_networks()
         flash(message, "success")
