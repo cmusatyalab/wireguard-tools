@@ -12,21 +12,19 @@ ma = Marshmallow()
 # Create model
 class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    proxy = db.Column(db.Boolean, default=False)
-    # Lighthouse peer for this network
-    lighthouse = db.Column(db.Integer, db.ForeignKey(Peer.id), nullable=True)
-    private_key = db.Column(db.String(50))
-    peers_list = db.Column(db.Text)
-    base_ip = db.Column(db.String(50))
-    subnet = db.Column(db.Integer)
-    # DNS server setting for peers in this network
-    dns_server = db.Column(db.String(50))
-    description = db.Column(db.Text)
-    persistent_keepalive = db.Column(db.Integer)
+    active = db.Column(db.Boolean, default=False)
     adapter_name = db.Column(db.String(50))
     allowed_ips = db.Column(db.String(50))
-    active = db.Column(db.Boolean, default=False)
+    base_ip = db.Column(db.String(50))
+    description = db.Column(db.Text)
+    dns_server = db.Column(db.String(50))
+    lighthouse = db.Column(db.Integer, db.ForeignKey(Peer.id), nullable=True)
+    name = db.Column(db.String(50))
+    peers_list = db.Column(db.Text)
+    persistent_keepalive = db.Column(db.Integer)
+    private_key = db.Column(db.String(50))
+    proxy = db.Column(db.Boolean, default=False)
+    subnet = db.Column(db.Integer)
 
     @classmethod
     def append_ip(self, ip, host):
@@ -40,7 +38,8 @@ class Network(db.Model):
         return result
 
     def get_config(self):
-        lh = Peer.query.get(self.lighthouse)
+        if self.lighthouse > 0:
+            lh = Peer.query.get(self.lighthouse)
         wg_config = f"[Peer]\nPublicKey = {self.get_public_key()}\n"
         if len(self.allowed_ips) > 0:
             wg_config += f"AllowedIPs = {self.allowed_ips}\n"
@@ -74,10 +73,14 @@ class Network(db.Model):
         return dict_
 
     def get_public_key(self) -> WireguardKey:
-        try:
-            public_key = str(WireguardKey(self.private_key).public_key())
-        except ValueError as e:
-            public_key = None
+        print(f"Lighthouse for {self.name} is {self.lighthouse}")
+        if self.lighthouse:
+            public_key = Peer.query.get(self.lighthouse).public_key
+        else:
+            try:
+                public_key = str(WireguardKey(self.private_key).public_key())
+            except ValueError as e:
+                public_key = None
         return public_key
 
 

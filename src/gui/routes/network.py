@@ -21,6 +21,7 @@ def add_network(network, sudo_password):
     else:
         return True
 
+
 def query_all_networks():
     network_query = Network.query.all()
     # TODO: create a more robust error handling system
@@ -39,9 +40,12 @@ def query_all_networks():
 
     return network_query
 
+
 def remove_network(network, sudo_password):
     # Remove a network from the running server
-    network_cmd = f"wg set {network.adapter_name} network {network.get_public_key()} remove"
+    network_cmd = (
+        f"wg set {network.adapter_name} network {network.get_public_key()} remove"
+    )
     print(f"Remove Network: {network_cmd}")
     try:
         helpers.run_sudo(network_cmd, sudo_password)
@@ -50,10 +54,12 @@ def remove_network(network, sudo_password):
         return False
     else:
         return True
-    
+
+
 def update_network(network):
     # Update a network on the running server
     return False
+
 
 ## ROUTES ##
 @networks.route("/", methods=["GET"])
@@ -96,8 +102,10 @@ def network_detail(network_id):
             print(f"Error updating network: {e}")
             message = "Error updating network"
             flash(message, "danger")
-            return render_template("network_detail.html", network=network, subnets=subnets)
-        
+            return render_template(
+                "network_detail.html", network=network, subnets=subnets
+            )
+
         message = "Network updated successfully"
         network_list = query_all_networks()
         flash(message, "success")
@@ -108,7 +116,7 @@ def network_detail(network_id):
             "network_detail.html",
             subnets=subnets,
             network=network,
-            lighthouses = helpers.get_lighthouses(),
+            lighthouses=helpers.get_lighthouses(),
             adapters=adapters,
             s_button="Update",
         )
@@ -129,7 +137,7 @@ def networks_add():
         message = f"Adding network {name}\n"
         if request.form.get("lighthouse"):
             message += f"Lighthouse selected: {request.form.get('lighthouse')}\n"
-            lighthouse = Peer.query.get(request.form.get("lighthouse"))        
+            lighthouse = Peer.query.get(request.form.get("lighthouse"))
             private_key = lighthouse.private_key
         else:
             message += "No lighthouse selected"
@@ -145,29 +153,31 @@ def networks_add():
         # Create a new network object
         # TODO: fix config name rotation
         new_network = Network(
-            name=name,
-            proxy=False,
-            lighthouse=lighthouse.id,
+            active=False,
             adapter_name=adapter_name,
-            private_key=private_key,
-            peers_list="",
+            allowed_ips=allowed_ips,
             base_ip=base_ip,
-            subnet=subnet,
             dns_server=dns,
             description=description,
-            allowed_ips=allowed_ips,
-            )
-        
-        if request.form.get('adapter_name'):
-            new_network.adapter_name = request.form.get('adapter_name')
+            name=name,
+            lighthouse=lighthouse.id,
+            peers_list="",
+            persistent_keepalive=0,
+            private_key=private_key,
+            proxy=False,
+            subnet=subnet,
+        )
+
+        if request.form.get("adapter_name"):
+            new_network.adapter_name = request.form.get("adapter_name")
         db.session.add(new_network)
         db.session.commit()
         message += "Network added successfully"
         network_list = query_all_networks()
         flash(message, "success")
-        return render_template("networks.html",  networks=network_list)
+        return render_template("networks.html", networks=network_list)
     else:
-        new_network = {'id':0, 'public_key':'', 'name': ''}
+        new_network = {"id": 0, "public_key": "", "name": ""}
         return render_template(
             "network_detail.html",
             network=new_network,
@@ -176,7 +186,8 @@ def networks_add():
             adapters=adapters,
             s_button="Add",
         )
-    
+
+
 @networks.route("/update/<int:network_id>", methods=["POST"])
 @login_required
 def network_update(network_id):
@@ -221,7 +232,7 @@ def network_delete(network_id):
     message += f"\nNetwork deleted successfully"
     network_list = query_all_networks()
     category = "success"
-    return jsonify({'category': category, 'message': message})
+    return jsonify({"category": category, "message": message})
 
 
 @networks.route("/activate/<int:network_id>", methods=["POST"])
@@ -239,7 +250,7 @@ def network_activate(network_id):
             message += "Network already active"
             network.active = True
             db.session.commit()
-            return jsonify({'category': category, 'message': message})
+            return jsonify({"category": category, "message": message})
         try:
             helpers.run_sudo("wg-quick up " + network.adapter_name, sudo_password)
         except Exception as e:
@@ -252,16 +263,17 @@ def network_activate(network_id):
             category = "success"
             message += "Network activated successfully"
     else:
-        category="warning"
+        category = "warning"
         message = "Cannot activate network in database mode"
 
-    return jsonify({'category': category, 'message': message})
+    return jsonify({"category": category, "message": message})
+
 
 @networks.route("/deactivate/<int:network_id>", methods=["POST"])
 @login_required
 def network_deactivate(network_id):
     message = f"Deactivating network {network_id}"
-    category="information"
+    category = "information"
     if current_app.config["MODE"] == "server":
         if request.form.get("sudoPassword"):
             sudo_password = request.form.get("sudoPassword")
@@ -273,18 +285,19 @@ def network_deactivate(network_id):
         except Exception as e:
             traceback.print_exc()
             message += "Error deactivating network: " + str(e)
-            category= "danger"
+            category = "danger"
         else:
             network.active = False
             db.session.commit()
             message += "Network deactivated successfully"
-            category= "success"
+            category = "success"
     else:
-        category="warning"
+        category = "warning"
         message = "Cannot deactivate network in database mode"
-    return jsonify({'category': category, 'message': message})
-  
-@networks.route("/api/<int:network_id>", methods=["POST","GET", "PATCH", "DELETE"])
+    return jsonify({"category": category, "message": message})
+
+
+@networks.route("/api/<int:network_id>", methods=["POST", "GET", "PATCH", "DELETE"])
 @login_required
 def network_api(network_id):
     if request.method == "GET":
