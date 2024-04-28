@@ -47,6 +47,18 @@
                                         value="{{ peer.public_key }}" readonly/>
                                     <label for="public_key" class="form-label">Public Key</label>
                                 </div>
+                                <div class="form-outline">
+                                    <div class="mb-3 input-group" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="preshared_key" name="preshared_key"
+                                            value="{{ peer.preshared_key }}" onchange="updateConfigCard()"/>
+                                        <label for="preshared_key" class="form-label">Preshared Key</label>
+                                        <button class="btn btn-primary " data-mdb-ripple-init type="button"
+                                            id="generatePresharedKey" onclick="generateAndSetPresharedKey()"
+                                            data-mdb-tooltip-init title="Generate Private Key">
+                                            <i class="fas fa-key"></i>
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     <input type="text" class="form-control" id="network_ip" name="network_ip"
                                         value="{{ peer.network_ip }}" onchange="updateConfigCard()">
@@ -229,6 +241,12 @@
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     });
+
+    function generateAndSetPresharedKey() {
+        let preshared_key = wireguard.generatePresharedKey();
+        document.getElementById('preshared_key').value = presharedKey;
+        updateConfigCard();
+    }
 
     function generateAndSetPrivateKey() {
         let keypair = wireguard.generateKeypair();

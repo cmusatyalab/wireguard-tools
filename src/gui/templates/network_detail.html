@@ -52,7 +52,8 @@
                                     {% endfor %}
                                 </select>
                                 <label for="lighthouse" class="form-label select-label">Lighthouse</label>
-                                Enter the private key if you haven't set up a lighthouse peer yet, otherwise it's preferable to use the lighthouse peer.
+                                Enter the private key if you haven't set up a lighthouse peer yet, otherwise it's
+                                preferable to use the lighthouse peer.
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="mb-3 form-outline me-2" data-mdb-input-init>
@@ -92,11 +93,7 @@
                                     <input class="form-check-input" type="checkbox" role="switch" id="remoteHost" />
                                     <label class="form-check-label" for="remoteHost">Remote Host</label>
                                 </div>
-                                <div class="ms-3 form-check" data-mdb-check-init>
-                                    <input class="form-check-input" type="checkbox" id="proxy" name="proxy"
-                                        value="{{ network.proxy }}" />
-                                    <label for="proxy" class="form-label">Proxy</label>
-                                </div>
+
                             </div>
                             <div class="mb-3 form-outline " data-mdb-input-init>
                                 <input type="text" class="form-control" id="dns" name="dns_server"
@@ -108,10 +105,15 @@
                                     value="{{ network.allowed_ips }}" />
                                 <label for="allowed_ips" class="form-label">Allowed IPs (CIDR)</label>
                             </div>
-                            <div class="ms-3 form-outline" data-mdb-check-init>
-                                <input class="form-control" type="number" id="persistent_keepalive" name="persistent_keepalive"
-                                    value="{{ network.persistent_keepalive }}" />
+                            <div class="mb-3 form-outline" data-mdb-input-init>
+                                <input class="form-control" type="number" id="persistent_keepalive"
+                                    name="persistent_keepalive" value="{{ network.persistent_keepalive }}" />
                                 <label for="persistent_keepalive" class="form-label">Persistent Keep-Alive</label>
+                            </div>
+                            <div class="ms-3 form-check" data-mdb-check-init>
+                                <input class="form-check-input" type="checkbox" id="proxy" name="proxy"
+                                    value="{{ network.proxy }}" />
+                                <label for="proxy" class="form-label">Proxy</label>
                             </div>
                         </div>
                     </div>
