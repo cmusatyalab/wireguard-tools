@@ -139,11 +139,11 @@ def get_peer_count(network_id: int) -> int:
     count = 0
     network = Network.query.get(network_id)
     if network.peers_list is None:
-        count = 0
+        pass
     else:
         count = len(network.peers_list)
-    if network.lighthouse is not None:
-        count += len(network.lighthouse)
+    # Add any lighthouses to the peer count as well
+    count += len(network.lighthouse)
     print(f"Peer count {count}")
     return count
 
