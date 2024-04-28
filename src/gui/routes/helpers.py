@@ -137,13 +137,14 @@ def get_network(network_id: int) -> Network:
 
 def get_peer_count(network_id: int) -> int:
     count = 0
-    network = Network.query.get(network_id)
-    if network.peers_list is None:
-        pass
-    else:
-        count = len(network.peers_list)
-    # Add any lighthouses to the peer count as well
-    count += len(network.lighthouse)
+    with db.session.no_autoflush:
+        network = Network.query.get(network_id)
+        if network.peers_list is None:
+            pass
+        else:
+            count = len(network.peers_list)
+        # Add any lighthouses to the peer count as well
+        count += len(network.lighthouse)
     print(f"Peer count {count}")
     return count
 
