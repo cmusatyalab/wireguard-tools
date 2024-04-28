@@ -7,7 +7,22 @@ from wireguard_tools import WireguardKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
-# Create models
+# Helper class for dictionary serialization
+class TextPickleType(db.TypeDecorator):
+    impl = db.Text
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
+
+
+# Peer Model
 class Peer(db.Model):
     __tablename__ = "peer"
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -29,6 +44,7 @@ class Peer(db.Model):
     post_up = db.Column(db.Text)
     post_down = db.Column(db.Text)
     preshared_key = db.Column(db.String(50))
+    preshared_keys = db.Column(TextPickleType())
     private_key = db.Column(db.String(50))
     subnet = db.Column(
         db.Integer, default=32

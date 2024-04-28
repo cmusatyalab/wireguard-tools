@@ -21,8 +21,8 @@ lighthouse_table = db.Table(
 
 # Network Model
 class Network(db.Model):
-    __tablename__ = 'network'
-    id: Mapped[int] = mapped_column(primary_key=True) # type: ignore
+    __tablename__ = "network"
+    id: Mapped[int] = mapped_column(primary_key=True)  # type: ignore
     active = db.Column(db.Boolean, default=False)
     adapter_name = db.Column(db.String(50))
     allowed_ips = db.Column(db.String(50))
@@ -158,16 +158,6 @@ def network_load_test_db():
         adapter_name="wg0",
         dns_server="10.10.11.1",
         description="A basic /24 network",
-        config=json.dumps(
-            {
-                "public_key": "m1cSyM6Veev3vQIMYQ23gr22Qn/Vu3vg5d8xBTu43gE=",
-                "preshared_key": None,
-                "endpoint_host": "12.13.14.15",
-                "endpoint_port": 51820,
-                "persistent_keepalive": 30,
-                "allowed_ips": "10.10.11.0/24",
-            }
-        ),
         active=True,
     )
     network2 = Network(
@@ -181,16 +171,7 @@ def network_load_test_db():
         adapter_name="wg0",
         dns_server="1.1.1.1,1.1.2.2",
         description="Another network that could be slightly larger and uses the server as a proxy",
-        config=json.dumps(
-            {
-                "public_key": "Wek3/glj4oirvt6gPw3BPL1wLrb47KxXKUwShvBNy0Y=",
-                "preshared_key": None,
-                "endpoint_host": "140.13.214.15",
-                "endpoint_port": 51820,
-                "persistent_keepalive": 30,
-                "allowed_ips": "172.122.88.0/16",
-            }
-        ),
+        active=False,
     )
     network3 = Network(
         name="network 3",
@@ -202,16 +183,7 @@ def network_load_test_db():
         subnet="24",
         adapter_name="wg0",
         description="A small, closed network",
-        config=json.dumps(
-            {
-                "public_key": "OIa8lH814Mzuo1oIT+AQpe8Wm/9JEIf3Tg6g7t5e1k8=",
-                "preshared_key": None,
-                "endpoint_host": "99.133.211.115",
-                "endpoint_port": 51820,
-                "persistent_keepalive": 30,
-                "allowed_ips": "192.168.43.0/24",
-            }
-        ),
+        active=True,
     )
     network_list = [network1.__dict__, network2.__dict__, network3.__dict__]
     db.session.bulk_insert_mappings(Network, network_list)
