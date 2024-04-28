@@ -94,7 +94,7 @@
                                 </div>
                                 <hr class="hr" />
 
-                                <div class="d-flex">
+                                <div class="d-flex peer-psk-row">
                                     <div class="mb-3 form-outline" data-mdb-input-init>
                                         <input type="text" class="form-control" id="peer1" name="peer" value="">
                                         <label for="peer1" class="form-label">Peer</label>
@@ -106,15 +106,15 @@
                                                 onchange="updateConfigCard()" />
                                             <label for="preshared_key1" class="form-label">Preshared Key</label>
                                             <button class="btn btn-primary " data-mdb-ripple-init type="button"
-                                                id="generatePresharedKey" onclick="generateAndSetPresharedKey()"
+                                                id="generatePresharedKey" onclick="generateAndSetPresharedKey(1)"
                                                 data-mdb-tooltip-init title="Generate Preshared Key">
                                                 <i class="fas fa-key"></i>
                                             </button>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary" data-mdb-ripple-init id="addPeerPSK" onclick="addPskPeer()
+                                    <button type="button" class="btn btn-primary" data-mdb-ripple-init id="addPeerPSK" onclick="addPskPeer()"
                                         data-mdb-tooltip-init title="Add a Peer and Preshared Key"><i
-                                            class="fas fa-plus"></button>
+                                            class="fas fa-plus"></i></button>
                                 </div>
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     {% for network in networks %}
@@ -257,28 +257,36 @@
 
     function addPskPeer() {
         // add another row for peer and preshared key
-        let peerCount = document.querySelectorAll('input[name^="peer"]').length;
-        let newPeer = document.getElementById('peer1').cloneNode(true);
-        newPeer.id = 'peer' + (peerCount + 1);
-        newPeer.name = 'peer' + (peerCount + 1);
-        newPeer.value = '';
-        newPeer.onchange = updateConfigCard;
-        let newPsk = document.getElementById('preshared_key1').cloneNode(true);
-        newPsk.id = 'preshared_key' + (peerCount + 1);
-        newPsk.name = 'preshared_key' + (peerCount + 1);
-        newPsk.value = '';
-        newPsk.onchange = updateConfigCard;
-        let newDiv = document.createElement('div');
-        newDiv.className = 'form-outline';
-        newDiv.appendChild(newPeer);
-        newDiv.appendChild(newPsk);
-        document.getElementById('addPeerPSK').before(newDiv);
+        let row = document.getElementsByClassName('peer-psk-row').length + 1;
+        let peerRow = document.createElement('div');
+        peerRow.className = 'd-flex peer-psk-row';
+        peerRow.innerHTML = `
+            <div class="mb-3 form-outline" data-mdb-input-init>
+                <input type="text" class="form-control" id="peer${row}" name="peer" value="">
+                <label for="peer${row}" class="form-label">Peer</label>
+            </div>
+            <div class="form-outline">
+                <div class="mb-3 input-group" data-mdb-input-init>
+                    <input type="text" class="form-control" id="preshared_key${row}" name="preshared_key" value=""
+                        onchange="updateConfigCard()" />
+                    <label for="preshared_key${row}" class="form-label">Preshared Key</label>
+                    <button class="btn btn-primary " data-mdb-ripple-init type="button"
+                        id="generatePresharedKey" onclick="generateAndSetPresharedKey(${row})"
+                        data-mdb-tooltip-init title="Generate Preshared Key">
+                        <i class="fas fa-key"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        document.getElementsByClassName('peer-psk-row')[0].parentNode.appendChild(peerRow);
+        updateConfigCard();
         
+
     }
 
-    function generateAndSetPresharedKey() {
+    function generateAndSetPresharedKey(row) {
         let presharedKey = wireguard.generatePresharedKey();
-        document.getElementById('preshared_key').value = presharedKey;
+        document.getElementById(`preshared_key${row}`).value = presharedKey;
         updateConfigCard();
     }
 
