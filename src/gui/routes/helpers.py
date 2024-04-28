@@ -104,8 +104,29 @@ def get_adapter_names():
     for adapter in adapters:
         if adapter != "lo":
             adapter_names.append(adapter)
-
+ 
     return adapter_names
+
+def get_available_ip(network_id: int) -> dict:
+    network = get_network(network_id)
+    ip_dict = {}
+    if network.base_ip == "":
+        base_ip = current_app.config["BASE_IP"]
+    else:
+        base_ip = network.base_ip
+    if network.subnet == 0:
+        subnet = current_app.config["SUBNET"]
+    else:
+        subnet = network.subnet
+    if network.peers_list is None:
+        pass
+    else:
+        for peer in network.peers_list:
+            ip_dict[peer.network_ip] = peer.name
+
+
+    print(f"IP Dict: {ip_dict}")
+    return ip_dict        
 
 def get_lighthouses():
     return Peer.query.filter_by(lighthouse=True).all()

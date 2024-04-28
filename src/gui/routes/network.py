@@ -98,7 +98,9 @@ def network_detail(network_id):
                 network.peers_list = request.form.get("peers_list")
             network.subnet = request.form.get("subnet")
             network.dns_server = request.form.get("dns_server")
-            network.persistent_keepalive = request.form.get("persistent_keepalive")
+            if request.form.get("persistent_keepalive"):
+                print(f"Persistent Keepalive: {request.form.get('persistent_keepalive')}")
+                network.persistent_keepalive = request.form.get("persistent_keepalive")
             network.allowed_ips = request.form.get("allowed_ips")
             network.active = request.form.get("active")
         if network.adapter_name == "":
@@ -156,7 +158,16 @@ def networks_add():
         description = request.form.get("description")
         allowed_ips = request.form.get("allowed_ips")
         adapter_name = request.form.get("adapter_name")
+        if request.form.get("persistent_keepalive"):
+            persistent_keepalive = request.form.get("persistent_keepalive")
+        else:
+            persistent_keepalive = 0
         peers_list = []
+        if request.form.get("proxy"):
+            proxy = request.form.get("proxy")
+        else:
+            proxy = False
+
 
         # Create a new network object
         # TODO: fix config name rotation
@@ -169,9 +180,10 @@ def networks_add():
             description=description,
             lighthouse=lighthouse_list,
             name=name,
-            persistent_keepalive=0,
+            peers_list=peers_list,
+            persistent_keepalive=persistent_keepalive,
             private_key=private_key,
-            proxy=False,
+            proxy=proxy,
             subnet=subnet,
         )
 

@@ -201,10 +201,12 @@ def peers_add():
         flash(message.replace('\n','<br>'), "success")
         return redirect(url_for("peers.peer_detail", peer_id=new_peer.id))
     else:
+        avail_ip = helpers.get_available_ip()
         return render_template(
             "peer_detail.html",
             networks=network_list,
             peer=new_peer,
+            avail_ip=avail_ip,
             s_button="Add",
         )
 

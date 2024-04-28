@@ -108,16 +108,19 @@ class NetworkSchema(ma.Schema):
     class Meta:
         fields = (
             "id",
-            "name",
-            "lighthouse",
-            "proxy",
-            "public_key",
-            "peers_list",
+            "active",
+            "adapter_name",
+            "allowed_ips",
             "base_ip",
             "description",
-            "allowed_ips",
-            "config",
-            "active",
+            "dns_server",
+            "lighthouse",
+            "name",
+            "peers_list",
+            "persistent_keepalive",
+            "private_key",
+            "proxy",
+            "subnet",
         )
 
 
@@ -185,6 +188,7 @@ def network_load_test_db():
         description="A small, closed network",
         active=True,
     )
+
     network_list = [network1.__dict__, network2.__dict__, network3.__dict__]
     db.session.bulk_insert_mappings(Network, network_list)
     db.session.commit()

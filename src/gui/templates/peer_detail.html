@@ -48,6 +48,19 @@
                                     <label for="public_key" class="form-label">Public Key</label>
                                 </div>
 
+                                <div class="form-outline">
+                                    <select class="form-select" data-mdb-select-init name="network_ip" id="network_ip2"
+                                        onchange="updateConfigCard()">
+                                        {% for avail_ip in avail_ips %}
+                                        <option value="{{ avail_ip.ip }}" {% if network.id==peer.network %}selected{%
+                                            endif %}>
+                                            {{ avail_ip.key }}: {{ avail_ip.value }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="network_ip2" class="form-label select-label">VPN IP</label>
+                                </div>
+
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     <input type="text" class="form-control" id="network_ip" name="network_ip"
                                         value="{{ peer.network_ip }}" onchange="updateConfigCard()">
