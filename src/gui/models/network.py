@@ -84,7 +84,7 @@ class Network(db.Model):
     def get_public_key(self) -> WireguardKey:
         print(f"Lighthouse for {self.name} is {self.lighthouse}")
         if self.lighthouse:
-            public_key = Peer.query.get(self.lighthouse).public_key
+            public_key = self.lighthouse[0].get_public_key()
         else:
             try:
                 public_key = str(WireguardKey(self.private_key).public_key())
