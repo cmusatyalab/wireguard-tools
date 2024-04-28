@@ -189,6 +189,9 @@
 				privateKey: keyToBase64(privateKey)
 			};
 		},
+		generatePresharedKey: function () {
+			return keyToBase64(generatePresharedKey());
+		},
 		getPublicKey: function (privateKey) {
 			var privateKeyBytes = base64ToKey(privateKey);
 			var publicKey = generatePublicKey(privateKeyBytes);
