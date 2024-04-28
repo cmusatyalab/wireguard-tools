@@ -33,7 +33,7 @@
                                 <div class="form-outline">
                                     <div class="mb-3 input-group" data-mdb-input-init>
                                         <input type="text" class="form-control" id="private_key" name="private_key"
-                                            value="{{ peer.private_key }}" oninput="updatePublicKey()"/>
+                                            value="{{ peer.private_key }}" oninput="updatePublicKey()" />
                                         <label for="private_key" class="form-label">Private Key</label>
                                         <button class="btn btn-primary " data-mdb-ripple-init type="button"
                                             id="generatePrivateKey" onclick="generateAndSetPrivateKey()"
@@ -44,21 +44,10 @@
                                 </div>
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     <input type="text" class="form-control" id="public_key" name="public_key"
-                                        value="{{ peer.public_key }}" readonly/>
+                                        value="{{ peer.public_key }}" readonly />
                                     <label for="public_key" class="form-label">Public Key</label>
                                 </div>
-                                <div class="form-outline">
-                                    <div class="mb-3 input-group" data-mdb-input-init>
-                                        <input type="text" class="form-control" id="preshared_key" name="preshared_key"
-                                            value="{{ peer.preshared_key }}" onchange="updateConfigCard()"/>
-                                        <label for="preshared_key" class="form-label">Preshared Key</label>
-                                        <button class="btn btn-primary " data-mdb-ripple-init type="button"
-                                            id="generatePresharedKey" onclick="generateAndSetPresharedKey()"
-                                            data-mdb-tooltip-init title="Generate Preshared Key">
-                                            <i class="fas fa-key"></i>
-                                        </button>
-                                    </div>
-                                </div>
+
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     <input type="text" class="form-control" id="network_ip" name="network_ip"
                                         value="{{ peer.network_ip }}" onchange="updateConfigCard()">
@@ -102,6 +91,30 @@
                                         {% endfor %}
                                     </select>
                                     <label for="network" class="form-label select-label">Network</label>
+                                </div>
+                                <hr class="hr" />
+
+                                <div class="d-flex">
+                                    <div class="mb-3 form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" id="peer1" name="peer" value="">
+                                        <label for="peer1" class="form-label">Peer</label>
+                                    </div>
+                                    <div class="form-outline">
+                                        <div class="mb-3 input-group" data-mdb-input-init>
+                                            <input type="text" class="form-control" id="preshared_key1"
+                                                name="preshared_key" value="{{ peer.preshared_key }}"
+                                                onchange="updateConfigCard()" />
+                                            <label for="preshared_key1" class="form-label">Preshared Key</label>
+                                            <button class="btn btn-primary " data-mdb-ripple-init type="button"
+                                                id="generatePresharedKey" onclick="generateAndSetPresharedKey()"
+                                                data-mdb-tooltip-init title="Generate Preshared Key">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" data-mdb-ripple-init id="addPeerPSK" onclick="addPskPeer()
+                                        data-mdb-tooltip-init title="Add a Peer and Preshared Key"><i
+                                            class="fas fa-plus"></button>
                                 </div>
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     {% for network in networks %}
@@ -241,6 +254,27 @@
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     });
+
+    function addPskPeer() {
+        // add another row for peer and preshared key
+        let peerCount = document.querySelectorAll('input[name^="peer"]').length;
+        let newPeer = document.getElementById('peer1').cloneNode(true);
+        newPeer.id = 'peer' + (peerCount + 1);
+        newPeer.name = 'peer' + (peerCount + 1);
+        newPeer.value = '';
+        newPeer.onchange = updateConfigCard;
+        let newPsk = document.getElementById('preshared_key1').cloneNode(true);
+        newPsk.id = 'preshared_key' + (peerCount + 1);
+        newPsk.name = 'preshared_key' + (peerCount + 1);
+        newPsk.value = '';
+        newPsk.onchange = updateConfigCard;
+        let newDiv = document.createElement('div');
+        newDiv.className = 'form-outline';
+        newDiv.appendChild(newPeer);
+        newDiv.appendChild(newPsk);
+        document.getElementById('addPeerPSK').before(newDiv);
+        
+    }
 
     function generateAndSetPresharedKey() {
         let presharedKey = wireguard.generatePresharedKey();
