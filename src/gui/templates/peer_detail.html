@@ -112,10 +112,10 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary" data-mdb-ripple-init id="addPeerPSK" onclick="addPskPeer()"
-                                        data-mdb-tooltip-init title="Add a Peer and Preshared Key"><i
-                                            class="fas fa-plus"></i></button>
                                 </div>
+                                <button type="button" class="btn btn-primary" data-mdb-ripple-init id="addPeerPSK"
+                                    onclick="addPskPeer()" data-mdb-tooltip-init title="Add a Peer and Preshared Key"><i
+                                        class="fas fa-plus"></i></button>
                                 <div class="mb-3 form-outline" data-mdb-input-init>
                                     {% for network in networks %}
                                     <textarea rows="6" cols="32" class="card-text" id="nc-{{network.id}}"
@@ -280,7 +280,7 @@
         `;
         document.getElementsByClassName('peer-psk-row')[0].parentNode.appendChild(peerRow);
         updateConfigCard();
-        
+
 
     }
 
