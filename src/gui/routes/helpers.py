@@ -3,6 +3,7 @@ from gui.models import db, Network, Peer
 from os.path import exists
 import subprocess as sp
 import os
+import ipaddress
 import psutil
 import socket
 import re
@@ -107,25 +108,38 @@ def get_adapter_names():
  
     return adapter_names
 
-def get_available_ip(network_id: int) -> dict:
-    network = get_network(network_id)
+def get_available_ip(network_id: int = 0) -> dict:
+    if network_id == 0:
+        network = get_network(network_id)
+        network.base_ip = current_app.config["BASE_IP"]
+        network.subnet = current_app.config["BASE_NETMASK"]
+    else:
+        network = get_network(network_id)
     ip_dict = {}
     if network.base_ip == "":
         base_ip = current_app.config["BASE_IP"]
     else:
         base_ip = network.base_ip
     if network.subnet == 0:
-        subnet = current_app.config["SUBNET"]
+        subnet = current_app.config["BASE_NETMASK"]
     else:
         subnet = network.subnet
+
+    # Add all ip addresses in the base IP /subnet range to the dictionary
+    for ip in ipaddress.IPv4Network(f"{base_ip}/{subnet}"):
+        # Skip .0 and .255
+        if str(ip).split('.')[3] == '0' or str(ip).split('.')[3] == "255":
+            pass
+        else:
+            ip_dict[str(ip)] = None
+
     if network.peers_list is None:
         pass
     else:
         for peer in network.peers_list:
+            # add the peer name to the peer IP in the dictionary
             ip_dict[peer.network_ip] = peer.name
 
-
-    print(f"IP Dict: {ip_dict}")
     return ip_dict        
 
 def get_lighthouses():
@@ -143,9 +157,9 @@ def get_network(network_id: int) -> Network:
         message += f"\nUsing Invalid Network settings"
         network = Network(
             name="Invalid Network",
-            lighthouse=0,
+            lighthouse=[],
             private_key="",
-            peers_list="",
+            peers_list=[],
             base_ip="0.0.0.0",
             subnet=0,
             dns_server="",

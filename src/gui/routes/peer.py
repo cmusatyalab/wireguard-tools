@@ -137,7 +137,7 @@ def peers_add():
     new_peer["id"] = 0
     new_peer["config"] = sample_config
     new_peer["public_key"] = ""
-    new_peer["network"] = 1
+    new_peer["network_id"] = 1
     if request.method == "POST":
         name = request.form.get("name")
         network = Network()
@@ -154,6 +154,7 @@ def peers_add():
         network_ip = request.form.get("network_ip")
         subnet = request.form.get("subnet")
         dns = request.form.get("dns")
+        preshared_key = request.form.get("preshared_key")
         # peer_config = request.form["peer_config"]
         print(f"Adding peer {name} to network {request.form.get('network')}")
         if request.form.get("network"):
@@ -179,6 +180,7 @@ def peers_add():
             # peer_config=peer_config,
             description=description,
             network_id=network.id,
+            preshared_key=preshared_key,
         )
         if request.form.get("endpoint_ip"):
             new_peer.endpoint_host = request.form.get("endpoint_host")
@@ -229,6 +231,7 @@ def peer_update(peer_id):
         peer.listen_port = request.form.get("listen_port")
     peer.dns = request.form.get("dns")
     peer.network = request.form.get("network")
+    peer.preshared_key = request.form.get("preshared_key")
     if request.form.get("lighthouse") == "on":
         peer.lighthouse = True
     else:

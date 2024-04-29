@@ -359,3 +359,10 @@ def network_api(network_id):
         return jsonify(message)
     else:
         return jsonify("Invalid request method")
+    
+
+@networks.route("/api/ip/<int:network_id>", methods=["GET"])
+@login_required
+def network_ip(network_id):
+    ip_dict = helpers.get_available_ip(network_id)
+    return jsonify(ip_dict)
