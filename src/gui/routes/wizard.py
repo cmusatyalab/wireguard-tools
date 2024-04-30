@@ -96,17 +96,20 @@ def wizard_basic():
     post_up_string = f"iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {adapters[0]} -j MASQUERADE"
     post_down_string = f"iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {adapters[0]} -j MASQUERADE"
     new_peer = Peer(
-        name=f"Lighthouse server for {name}",
-        private_key=private_key,
-        network_ip=lh_address,
-        subnet=subnet,
+        active = False,
+        description="Auto-generated peer for the lighthouse",
         endpoint_host=endpoint_host,
         listen_port=listen_port,
         lighthouse=True,
+        name=f"Lighthouse server for {name}",
+        network_id=0,
+        network_ip=lh_address,
+        peers_list = "",
+        preshared_key="",
         post_up=post_up_string,
         post_down=post_down_string,
-        network=0,
-        description="Auto-generated peer for the lighthouse",
+        private_key=private_key,
+        subnet=subnet,
     )
 
     if dns:
@@ -119,20 +122,21 @@ def wizard_basic():
 
     # Create a new network object
     # TODO: fix config name rotation
+    lighthouse_list = [new_peer]
     new_network = Network(
-        name=name,
-        proxy=False,
-        lighthouse=new_peer.id,
-        private_key=new_peer.private_key,
-        peers_list="",
-        base_ip=base_ip,
-        subnet=subnet,
-        dns_server=dns,
-        description=description,
-        persistent_keepalive=25,
+        active = False,
         adapter_name=adapter_name,
         allowed_ips = allowed_ips,
-        active = False
+        base_ip=base_ip,
+        dns_server=dns,
+        description=description,
+        lighthouse= lighthouse_list,
+        name=name,
+        peers_list=[],
+        persistent_keepalive=25,
+        private_key=new_peer.private_key,
+        proxy=False,
+        subnet=subnet,
     )
 
     # Add the new network to the database
