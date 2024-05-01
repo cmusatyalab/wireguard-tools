@@ -149,8 +149,10 @@ def peers_add():
             lighthouse = False
         if request.form.get("listen_port"):
             listen_port = request.form.get("listen_port")
+        elif lighthouse is True:
+            listen_port = current_app.config["DEFAULT_LISTEN_PORT"]
         else:
-            listen_port = 51820
+            listen_port = None
         network_ip = request.form.get("network_ip")
         subnet = request.form.get("subnet")
         dns = request.form.get("dns")
