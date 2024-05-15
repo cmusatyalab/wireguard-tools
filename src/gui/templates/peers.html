@@ -10,6 +10,10 @@
     </div>
     <hr class="hr" />
     <!-- data table -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" class="form-control" id="datatable-search-input" />
+        <label class="form-label" for="datatable-search-input">Search</label>
+    </div>
     <div id="peers-datatable" data-mdb-loading="true">
     </div>
 
@@ -118,8 +122,8 @@
 
     const columns = [
         { label: 'Activation', field: 'active', sort: false },
-        { label: 'Name', field: 'name', sort: false },
-        { label: 'Public Key', field: 'public_key', sort: false },
+        { label: 'Name', field: 'name', sort: true },
+        { label: 'Public Key', field: 'public_key', sort: true },
         { label: 'Net IP', field: 'network_ip', sort: true },
         { label: 'Endpoint IP:Port', field: 'endpoint_ip', sort: false },
         { label: 'Actions', field: 'actions' },
@@ -136,5 +140,9 @@
         { columns, },
         { loading: true }
     );
+
+    document.getElementById('datatable-search-input').addEventListener('input', (e) => {
+        peersTable.search(e.target.value);
+    });
 </script>
 {% endblock %}
