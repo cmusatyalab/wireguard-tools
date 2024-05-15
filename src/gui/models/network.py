@@ -70,17 +70,12 @@ class Network(db.Model):
             "private_key": lh.private_key,
             "public_key": self.get_public_key(lh.public_key),
         }
-
-    def to_dict(self):
-        dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-        if len(self.lighthouse) > 0:
-            dict_["endpoint_host"] = self.lighthouse[0].endpoint_host
-            dict_["listen_port"] = self.lighthouse[0].listen_port
-        else:
-            dict_["endpoint_host"] = None
-            dict_["listen_port"] = None
-        return dict_
-
+    
+    def get_peer_count(self):
+        count = len(self.peers_list)
+        count += len(self.lighthouse)
+        return count
+    
     def get_public_key(self) -> WireguardKey:
         print(f"Lighthouse for {self.name} is {self.lighthouse}")
         if self.lighthouse:
@@ -92,6 +87,16 @@ class Network(db.Model):
                 public_key = None
         return public_key
 
+    def to_dict(self):
+        dict_ = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        if len(self.lighthouse) > 0:
+            dict_["endpoint_host"] = self.lighthouse[0].endpoint_host
+            dict_["listen_port"] = self.lighthouse[0].listen_port
+        else:
+            dict_["endpoint_host"] = None
+            dict_["listen_port"] = None
+        dict_["peer_count"] = self.get_peer_count()
+        return dict_
 
 class Network_Config(db.Model):
     id = db.Column(db.Integer, primary_key=True)
