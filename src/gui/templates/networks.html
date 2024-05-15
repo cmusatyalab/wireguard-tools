@@ -11,6 +11,10 @@
     <hr class="hr" />
 
     <!-- data table -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" class="form-control" id="datatable-search-input" />
+        <label class="form-label" for="datatable-search-input">Search</label>
+    </div>
     <div id="networks-datatable" data-mdb-loading="true">
     </div>
 
@@ -140,5 +144,9 @@
         { columns, },
         { loading: true }
     );
+
+    document.getElementById('datatable-search-input').addEventListener('input', (e) => {
+        networksTable.search(e.target.value);
+    });
 </script>
 {% endblock %}
