@@ -67,7 +67,7 @@ class WireguardUAPIDevice(WireguardDevice):
             elif key == "endpoint":
                 assert peer is not None
                 addr, port = value.rsplit(":", 1)
-                peer.endpoint_host = ip_address(addr)
+                peer.endpoint_host = ip_address(addr.lstrip("[").rstrip("]"))
                 peer.endpoint_port = int(port)
             elif key == "persistent_keepalive_interval":
                 assert peer is not None
