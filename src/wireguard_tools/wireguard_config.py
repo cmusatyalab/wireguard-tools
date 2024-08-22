@@ -123,7 +123,7 @@ class WireguardPeer:
                 conf["persistent_keepalive"] = int(value)
             elif key == "allowedips":
                 conf.setdefault("allowed_ips", []).extend(
-                    ip_interface(addr) for addr in value.split(", ")
+                    ip_interface(addr.strip()) for addr in value.split(",")
                 )
             elif key == "# friendly_name":
                 conf["friendly_name"] = value
@@ -250,16 +250,16 @@ class WireguardConfig:
             elif key == "listenport":
                 self.listen_port = int(value)
             elif key == "address":
-                self.addresses.extend(ip_interface(addr) for addr in value.split(", "))
+                self.addresses.extend(ip_interface(addr.strip()) for addr in value.split(","))
             elif key == "dns":
-                for item in value.split(", "):
-                    self._add_dns_entry(item)
+                for item in value.split(","):
+                    self._add_dns_entry(item.strip())
             elif key == "mtu":
                 self.mtu = int(value)
             elif key == "includedapplications":
-                self.included_applications.extend(item for item in value.split(", "))
+                self.included_applications.extend(item.strip() for item in value.split(","))
             elif key == "excludedapplications":
-                self.excluded_applications.extend(item for item in value.split(", "))
+                self.excluded_applications.extend(item.strip() for item in value.split(","))
             elif key == "preup":
                 self.preup.append(value)
             elif key == "postup":
