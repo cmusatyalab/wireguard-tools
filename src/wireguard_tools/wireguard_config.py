@@ -36,7 +36,7 @@ def _ipaddress_or_host(
     if isinstance(host, (IPv4Address, IPv6Address)):
         return host
     try:
-        return ip_address(host)
+        return ip_address(host.lstrip("[").rstrip("]"))
     except ValueError:
         return host
 
@@ -250,16 +250,22 @@ class WireguardConfig:
             elif key == "listenport":
                 self.listen_port = int(value)
             elif key == "address":
-                self.addresses.extend(ip_interface(addr.strip()) for addr in value.split(","))
+                self.addresses.extend(
+                    ip_interface(addr.strip()) for addr in value.split(",")
+                )
             elif key == "dns":
                 for item in value.split(","):
                     self._add_dns_entry(item.strip())
             elif key == "mtu":
                 self.mtu = int(value)
             elif key == "includedapplications":
-                self.included_applications.extend(item.strip() for item in value.split(","))
+                self.included_applications.extend(
+                    item.strip() for item in value.split(",")
+                )
             elif key == "excludedapplications":
-                self.excluded_applications.extend(item.strip() for item in value.split(","))
+                self.excluded_applications.extend(
+                    item.strip() for item in value.split(",")
+                )
             elif key == "preup":
                 self.preup.append(value)
             elif key == "postup":
