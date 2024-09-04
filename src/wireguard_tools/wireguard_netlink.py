@@ -21,6 +21,9 @@ class WireguardNetlinkDevice(WireguardDevice):
         super().__init__(interface)
         self.wg = pyroute2.WireGuard()
 
+    def close(self) -> None:
+        self.wg.close()
+
     def get_config(self) -> WireguardConfig:
         try:
             attrs = dict(self.wg.info(self.interface)[0]["attrs"])
