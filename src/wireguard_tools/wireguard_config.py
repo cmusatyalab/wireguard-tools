@@ -221,7 +221,7 @@ class WireguardConfig:
     @classmethod
     def from_wgconfig(cls, configfile: TextIO) -> WireguardConfig:
         text = configfile.read()
-        _pre, *parts = re.split(r"\[(Interface|Peer)\]\n", text, flags=re.I)
+        _pre, *parts = re.split(r"^\[(Interface|Peer)\]$", text, flags=re.I | re.M)
         sections = [section.lower() for section in parts[0::2]]
         if sections.count("interface") > 1:
             msg = "More than one [Interface] section in config file"
