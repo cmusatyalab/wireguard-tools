@@ -192,11 +192,12 @@ class WireguardConfig:
     )
     search_domains: list[str] = field(factory=list)
     mtu: int | None = field(converter=optional(int), default=None)
-
+    table: str | None = field(default=None)
     preup: list[str] = field(factory=list)
     postup: list[str] = field(factory=list)
     predown: list[str] = field(factory=list)
     postdown: list[str] = field(factory=list)
+    saveconfig: bool = field(default=False)
 
     # wireguard-android specific extensions
     included_applications: list[str] = field(factory=list)
@@ -278,6 +279,7 @@ class WireguardConfig:
                 self.fwmark = int(value)
             elif key == "listenport":
                 self.listen_port = int(value)
+            # wg-quick specific extensions
             elif key == "address":
                 self.addresses.extend(
                     ip_interface(addr.strip()) for addr in value.split(",")
@@ -287,6 +289,19 @@ class WireguardConfig:
                     self._add_dns_entry(item.strip())
             elif key == "mtu":
                 self.mtu = int(value)
+            elif key == "table":
+                self.table = value
+            elif key == "preup":
+                self.preup.append(value)
+            elif key == "postup":
+                self.postup.append(value)
+            elif key == "predown":
+                self.predown.append(value)
+            elif key == "postdown":
+                self.postdown.append(value)
+            elif key == "saveconfig":
+                self.saveconfig = value == "true"
+            # wireguard-android specific extensions
             elif key == "includedapplications":
                 self.included_applications.extend(
                     item.strip() for item in value.split(",")
@@ -295,8 +310,6 @@ class WireguardConfig:
                 self.excluded_applications.extend(
                     item.strip() for item in value.split(",")
                 )
-            elif key in ["preup", "postup", "predown", "postdown"]:
-                getattr(self, key).append(value)
 
     def _add_dns_entry(self, item: str) -> None:
         try:
@@ -324,11 +337,14 @@ class WireguardConfig:
             conf.extend([f"Address = {addr}" for addr in self.addresses])
             conf.extend([f"DNS = {addr}" for addr in self.dns_servers])
             conf.extend([f"DNS = {domain}" for domain in self.search_domains])
-
+            if self.table is not None:
+                conf.append(f"Table = {self.table}")
             conf.extend([f"PreUp = {cmd}" for cmd in self.preup])
             conf.extend([f"PostUp = {cmd}" for cmd in self.postup])
             conf.extend([f"PreDown = {cmd}" for cmd in self.predown])
             conf.extend([f"PostDown = {cmd}" for cmd in self.postdown])
+            if self.saveconfig:
+                conf.append("SaveConfig = true")
 
             # wireguard-android specific extensions
             if self.included_applications:

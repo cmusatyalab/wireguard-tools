@@ -99,7 +99,7 @@ ignore = ["ANN401", "COM812", "D", "S101"]
 "src/wireguard_tools/cli.py" = ["FIX003", "T201", "TD"]
 "src/wireguard_tools/curve25519.py" = ["N806"]
 "src/wireguard_tools/wireguard_uapi.py" = ["C901", "PLR0912"]
-"src/wireguard_tools/wireguard_config.py" = ["C901"]
+"src/wireguard_tools/wireguard_config.py" = ["C901", "PLR0912"]
 "tests/*" = ["PLR2004", "S101"]
 
 [build-system]
