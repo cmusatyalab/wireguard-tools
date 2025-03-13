@@ -47,6 +47,7 @@ from typing import Tuple
 
 Point = Tuple[int, int]
 
+RAW_KEY_LENGTH = 32
 P = 2**255 - 19
 _A = 486662
 
@@ -72,7 +73,7 @@ def _point_double(point_n: Point) -> Point:
     return x % P, z % P
 
 
-def _const_time_swap(a: Point, b: Point, swap: bool) -> tuple[Point, Point]:
+def _const_time_swap(a: Point, b: Point, *, swap: bool) -> tuple[Point, Point]:
     """Swap two values in constant time."""
     index = int(swap) * 2
     temp = (a, b, b, a)
@@ -87,9 +88,9 @@ def _raw_curve25519(base: int, n: int) -> int:
 
     for i in reversed(range(256)):
         bit = bool(n & (1 << i))
-        mP, m1P = _const_time_swap(mP, m1P, bit)
+        mP, m1P = _const_time_swap(mP, m1P, swap=bit)
         mP, m1P = _point_double(mP), _point_add(mP, m1P, one)
-        mP, m1P = _const_time_swap(mP, m1P, bit)
+        mP, m1P = _const_time_swap(mP, m1P, swap=bit)
 
     x, z = mP
     inv_z = pow(z, P - 2, P)
@@ -98,7 +99,7 @@ def _raw_curve25519(base: int, n: int) -> int:
 
 def _unpack_number(s: bytes) -> int:
     """Unpack 32 bytes to a 256 bit value."""
-    if len(s) != 32:
+    if len(s) != RAW_KEY_LENGTH:
         msg = "Curve25519 values must be 32 bytes"
         raise ValueError(msg)
     return int.from_bytes(s, "little")
@@ -106,7 +107,7 @@ def _unpack_number(s: bytes) -> int:
 
 def _pack_number(n: int) -> bytes:
     """Pack a value into 32 bytes."""
-    return n.to_bytes(32, "little")
+    return n.to_bytes(RAW_KEY_LENGTH, "little")
 
 
 def _fix_base_point(n: int) -> int:

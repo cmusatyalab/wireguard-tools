@@ -87,6 +87,21 @@ ignore_missing_imports = true
 [tool.poe]
 include = "tasks.toml"
 
+[tool.ruff]
+target-version = "py37"
+exclude = ["noxfile.py"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["ANN401", "COM812", "D", "S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/wireguard_tools/cli.py" = ["FIX003", "T201", "TD"]
+"src/wireguard_tools/curve25519.py" = ["N806"]
+"src/wireguard_tools/wireguard_uapi.py" = ["C901", "PLR0912"]
+"src/wireguard_tools/wireguard_config.py" = ["C901"]
+"tests/*" = ["PLR2004", "S101"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

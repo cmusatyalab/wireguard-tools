@@ -242,7 +242,11 @@ class WireguardConfig:
     @classmethod
     def from_wgconfig(cls, configfile: TextIO) -> WireguardConfig:
         text = configfile.read()
-        _pre, *parts = re.split(r"^\[(Interface|Peer)\]$", text, flags=re.I | re.M)
+        _pre, *parts = re.split(
+            r"^\[(Interface|Peer)\]$",
+            text,
+            flags=re.IGNORECASE | re.MULTILINE,
+        )
         sections = [section.lower() for section in parts[0::2]]
         if sections.count("interface") > 1:
             msg = "More than one [Interface] section in config file"
@@ -252,7 +256,11 @@ class WireguardConfig:
         for section, content in zip(sections, parts[1::2]):
             key_value = [
                 (match.group(1), match.group(3))
-                for match in re.finditer(r"^((# )?\w+)\s*=\s*(.+)$", content, re.M)
+                for match in re.finditer(
+                    r"^((# )?\w+)\s*=\s*(.+)$",
+                    content,
+                    re.MULTILINE,
+                )
             ]
             if section == "interface":
                 config._update_from_conf(key_value)
@@ -287,14 +295,8 @@ class WireguardConfig:
                 self.excluded_applications.extend(
                     item.strip() for item in value.split(",")
                 )
-            elif key == "preup":
-                self.preup.append(value)
-            elif key == "postup":
-                self.postup.append(value)
-            elif key == "predown":
-                self.predown.append(value)
-            elif key == "postdown":
-                self.postdown.append(value)
+            elif key in ["preup", "postup", "predown", "postdown"]:
+                getattr(self, key).append(value)
 
     def _add_dns_entry(self, item: str) -> None:
         try:
@@ -308,7 +310,7 @@ class WireguardConfig:
     def del_peer(self, peer_key: WireguardKey) -> None:
         del self.peers[peer_key]
 
-    def to_wgconfig(self, wgquick_format: bool = False) -> str:
+    def to_wgconfig(self, *, wgquick_format: bool = False) -> str:
         conf = ["[Interface]"]
         if self.private_key is not None:
             conf.append(f"PrivateKey = {self.private_key}")

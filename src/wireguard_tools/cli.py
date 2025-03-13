@@ -40,9 +40,7 @@ def show(args: argparse.Namespace) -> int:
 
 
 def showconf(args: argparse.Namespace) -> int:
-    """Show the current configuration of a given WireGuard interface, \
-    for use with `setconf`.
-    """
+    """Show the configuration of a WireGuard interface, for use with `setconf`."""
     try:
         with closing(WireguardDevice.get(args.interface)) as device:
             config = device.get_config()

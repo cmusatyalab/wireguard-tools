@@ -61,7 +61,7 @@ FRIENDLY_TAGS_DICT = {
     "peers": [
         {
             "friendly_name": "Friendly Peer",
-            "friendly_json": dict(mood="happy", attitude="friendly"),
+            "friendly_json": {"mood": "happy", "attitude": "friendly"},
             "public_key": "ba8AwcolBVDuhR/MKFU8O6CZrAjh7c20h6EOnQx0VRE=",
             "endpoint": "127.0.0.1:51820",
             "persistent_keepalive": 30,

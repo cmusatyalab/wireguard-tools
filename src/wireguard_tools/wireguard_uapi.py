@@ -52,10 +52,8 @@ class WireguardUAPIDevice(WireguardDevice):
             # interface
             if key == "private_key":
                 config.private_key = WireguardKey(value)
-            elif key == "listen_port":
-                config.listen_port = int(value)
-            elif key == "fwmark":
-                config.fwmark = int(value)
+            elif key in ["listen_port", "fwmark"]:
+                setattr(config, key, int(value))
 
             # peer
             elif key == "public_key":
@@ -84,12 +82,9 @@ class WireguardUAPIDevice(WireguardDevice):
                 assert peer is not None
                 if peer.last_handshake is not None:
                     peer.last_handshake += int(value) * 1e-9
-            elif key == "rx_bytes":
+            elif key in ["rx_bytes", "tx_bytes"]:
                 assert peer is not None
-                peer.rx_bytes = int(value)
-            elif key == "tx_bytes":
-                assert peer is not None
-                peer.tx_bytes = int(value)
+                setattr(peer, key, int(value))
 
             # misc
             elif key == "protocol_version":

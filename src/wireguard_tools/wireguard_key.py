@@ -17,7 +17,10 @@ from secrets import token_bytes
 
 from attrs import define, field
 
-from .curve25519 import X25519PrivateKey
+from .curve25519 import RAW_KEY_LENGTH, X25519PrivateKey
+
+# Length of a wireguard key when encoded as a hexadecimal string
+HEX_KEY_LENGTH = 64
 
 
 def convert_wireguard_key(value: str | bytes | WireguardKey) -> bytes:
@@ -31,12 +34,12 @@ def convert_wireguard_key(value: str | bytes | WireguardKey) -> bytes:
 
     if isinstance(value, bytes):
         raw_key = value
-    elif len(value) == 64:
+    elif len(value) == HEX_KEY_LENGTH:
         raw_key = bytes.fromhex(value)
     else:
         raw_key = urlsafe_b64decode(value + "==")
 
-    if len(raw_key) != 32:
+    if len(raw_key) != RAW_KEY_LENGTH:
         msg = "Invalid WireGuard key length"
         raise ValueError(msg)
 
@@ -52,7 +55,7 @@ class WireguardKey:
     @classmethod
     def generate(cls) -> WireguardKey:
         """Generate a new private key."""
-        random_data = token_bytes(32)
+        random_data = token_bytes(RAW_KEY_LENGTH)
         # turn it into a proper curve25519 private key by fixing/clamping the value
         private_bytes = X25519PrivateKey.from_private_bytes(random_data).private_bytes()
         return cls(private_bytes)

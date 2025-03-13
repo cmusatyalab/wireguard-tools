@@ -5,14 +5,22 @@ from __future__ import annotations
 
 from binascii import hexlify, unhexlify
 from secrets import token_bytes
+from typing import ClassVar
 
-from wireguard_tools.curve25519 import X25519PrivateKey, curve25519, curve25519_base
+import pytest
+
+from wireguard_tools.curve25519 import (
+    RAW_KEY_LENGTH,
+    X25519PrivateKey,
+    curve25519,
+    curve25519_base,
+)
 
 
 class VectorTest:
     # assumes the derived class has an array named VECTORS consisting of
     # (scalar, input coordinate, output coordinate) tuples.
-    VECTORS: list[tuple[bytes, bytes, bytes]] = []
+    VECTORS: ClassVar[list[tuple[bytes, bytes, bytes]]] = []
 
     def test_vectors(self) -> None:
         for scalar, input_ucoord, output_ucoord in self.VECTORS:
@@ -24,7 +32,7 @@ class VectorTest:
 
 class TestPycurve25519(VectorTest):
     # https://github.com/TomCrypto/pycurve25519/blob/6cb15d7610c921956d7b33435fdf362ef7bf2ca4/test_curve25519.py
-    VECTORS = [
+    VECTORS: ClassVar[list[tuple[bytes, bytes, bytes]]] = [
         (
             b"a8abababababababababababababababababababababababababababababab6b",
             b"0900000000000000000000000000000000000000000000000000000000000000",
@@ -39,7 +47,7 @@ class TestPycurve25519(VectorTest):
 
     def test_private_key_format(self) -> None:
         for _ in range(1024):
-            data = token_bytes(32)
+            data = token_bytes(RAW_KEY_LENGTH)
             private_bytes = X25519PrivateKey.from_private_bytes(data).private_bytes()
 
             # check if the key is properly formatted
@@ -62,8 +70,8 @@ class TestPycurve25519(VectorTest):
 
     def test_shared_secret_extended(self) -> None:
         for _ in range(1024):
-            pri1 = token_bytes(32)
-            pri2 = token_bytes(32)
+            pri1 = token_bytes(RAW_KEY_LENGTH)
+            pri2 = token_bytes(RAW_KEY_LENGTH)
             pub1 = curve25519_base(pri1)
             pub2 = curve25519_base(pri2)
             shared1 = curve25519(pub2, pri1)
@@ -73,7 +81,7 @@ class TestPycurve25519(VectorTest):
 
 class TestRFC7748(VectorTest):
     # https://www.rfc-editor.org/rfc/rfc7748
-    VECTORS = [
+    VECTORS: ClassVar[list[tuple[bytes, bytes, bytes]]] = [
         # RFC7748 6.1
         (
             b"77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a",
@@ -129,19 +137,22 @@ class TestRFC7748(VectorTest):
             == b"684cf59ba83309552800ef566f2f4d3c1c3887c49360e3875f2eb94d99532c51"
         )
 
-        # this test ran for about 2 1/2 hours, so we'll keep it commented
-        # for _ in range(1000000-1000):
-        #     ucoord_bytes, scalar_bytes = scalar_bytes, output_bytes
-        #     output_bytes = curve25519(ucoord_bytes, scalar_bytes)
-        # assert (
-        #     hexlify(output_bytes)
-        #     == b"7c3911e0ab2586fd864497297e575e6f3bc601c0883c30df5f4dd2d24f665424"
-        # )
+    @pytest.mark.skip(reason="Skipping 2 1/2 hour long test")
+    def test_rfc7748_extended_long(self) -> None:
+        output_bytes, scalar_bytes, _ = map(unhexlify, self.VECTORS[-1])
+
+        for _ in range(1000000):
+            ucoord_bytes, scalar_bytes = scalar_bytes, output_bytes
+            output_bytes = curve25519(ucoord_bytes, scalar_bytes)
+        assert (
+            hexlify(output_bytes)
+            == b"7c3911e0ab2586fd864497297e575e6f3bc601c0883c30df5f4dd2d24f665424"
+        )
 
 
 class TestGcrypt(VectorTest):
     # https://github.com/gpg/libgcrypt/blob/ccfa9f2c1427b40483984198c3df41f8057f69f8/tests/t-cv25519.c#L514  # noqa: E501
-    VECTORS = [
+    VECTORS: ClassVar[list[tuple[bytes, bytes, bytes]]] = [
         # Seven tests which result in 0.
         (
             b"a546e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449ac4",
