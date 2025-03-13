@@ -148,6 +148,27 @@ class WireguardPeer:
         conf.extend([f"AllowedIPs = {addr}" for addr in self.allowed_ips])
         return conf
 
+    def __str__(self) -> str:
+        desc = [f"peer: {self.public_key}"]
+        if self.preshared_key:
+            desc.append(f"  preshared key: {self.preshared_key}")
+        if self.endpoint_host:
+            desc.append(f"  endpoint: {self.endpoint_host}:{self.endpoint_port}")
+        if self.persistent_keepalive:
+            desc.append(f"  persistent keepalive: {self.persistent_keepalive}")
+        if self.allowed_ips:
+            allowed_ips = ", ".join(str(addr) for addr in self.allowed_ips)
+            desc.append(f"  allowed ips: {allowed_ips}")
+        if self.last_handshake:
+            desc.append(f"  last handshake: {self.last_handshake}")
+        if self.rx_bytes and self.tx_bytes:
+            desc.append(
+                "  transfer:"
+                f" {self.rx_bytes / 1024:.2f} KiB received, "
+                f" {self.tx_bytes / 1024:.2f} KiB sent",
+            )
+        return "\n".join(desc)
+
 
 @define(on_setattr=setters_convert)
 class WireguardConfig:
@@ -332,3 +353,17 @@ class WireguardConfig:
     def to_qrcode(self) -> QRCode:
         config = self.to_wgconfig(wgquick_format=True)
         return make_qr(config, mode="byte", encoding="utf-8", eci=True)
+
+    def __str__(self) -> str:
+        desc = []
+        if self.private_key is not None:
+            desc.append(f"  public key: {self.private_key.public_key()}")
+            desc.append("  private key: (hidden)")
+        if self.listen_port is not None:
+            desc.append(f"  listening port: {self.listen_port}")
+        if self.fwmark is not None:
+            desc.append(f"  fwmark: {self.fwmark}")
+        for peer in self.peers.values():
+            desc.append("")
+            desc.append(str(peer))
+        return "\n".join(desc)

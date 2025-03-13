@@ -29,39 +29,9 @@ def show(args: argparse.Namespace) -> int:
             devices = [WireguardDevice.get(args.interface)]
 
         for device in devices:
-            config = device.get_config()
-            device.close()
-
             print(f"interface: {device.interface}")
-            if config.private_key is not None:
-                print(f"  public key: {config.private_key.public_key()}")
-                print("  private key: (hidden)")
-            if config.listen_port is not None:
-                print(f"  listening port: {config.listen_port}")
-            if config.fwmark is not None:
-                print(f"  fwmark: {config.fwmark}")
-            print()
-
-            for peer in config.peers.values():
-                print(f"peer: {peer.public_key}")
-                if peer.preshared_key:
-                    print(f"  preshared key: {peer.preshared_key}")
-                if peer.endpoint_host:
-                    print(f"  endpoint: {peer.endpoint_host}:{peer.endpoint_port}")
-                if peer.persistent_keepalive:
-                    print(f"  persistent keepalive: {peer.persistent_keepalive}")
-                if peer.allowed_ips:
-                    allowed_ips = ", ".join(str(addr) for addr in peer.allowed_ips)
-                    print(f"  allowed ips: {allowed_ips}")
-                if peer.last_handshake:
-                    print(f"  last handshake: {peer.last_handshake}")
-                if peer.rx_bytes and peer.tx_bytes:
-                    print(
-                        "  transfer:"
-                        f" {peer.rx_bytes / 1024:.2f} KiB received, "
-                        f" {peer.tx_bytes / 1024:.2f} KiB sent",
-                    )
-                print()
+            print(device.get_config())
+            device.close()
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
