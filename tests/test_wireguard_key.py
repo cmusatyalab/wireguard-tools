@@ -19,5 +19,5 @@ class TestWireguardKey:
         key_copy = WireguardKey(stored_key)
         assert stored_key == key_copy
 
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid WireGuard key length"):
             WireguardKey("foobar")
