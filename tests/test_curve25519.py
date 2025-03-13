@@ -137,7 +137,7 @@ class TestRFC7748(VectorTest):
             == b"684cf59ba83309552800ef566f2f4d3c1c3887c49360e3875f2eb94d99532c51"
         )
 
-    @pytest.mark.skip(reason="Skipping 2 1/2 hour long test")
+    @pytest.mark.skip(reason="Skipping long running test (20 minutes or more)")
     def test_rfc7748_extended_long(self) -> None:
         output_bytes, scalar_bytes, _ = map(unhexlify, self.VECTORS[-1])
 
