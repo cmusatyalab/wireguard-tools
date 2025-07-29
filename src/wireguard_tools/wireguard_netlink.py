@@ -26,7 +26,8 @@ class WireguardNetlinkDevice(WireguardDevice):
 
     def get_config(self) -> WireguardConfig:
         try:
-            attrs = dict(self.wg.info(self.interface)[0]["attrs"])
+            info = self.wg.info(self.interface)
+            attrs = dict(info[0]["attrs"])
         except pyroute2.netlink.exceptions.NetlinkError as exc:
             msg = f"Unable to access interface: {exc.args[1]}"
             raise RuntimeError(msg) from exc
@@ -43,7 +44,9 @@ class WireguardNetlinkDevice(WireguardDevice):
         )
 
         for peer_attrs in (
-            dict(peer["attrs"]) for peer in attrs.get("WGDEVICE_A_PEERS", [])
+            dict(peer["attrs"])
+            for part in info
+            for peer in part.get("WGDEVICE_A_PEERS", [])
         ):
             peer = WireguardPeer(
                 public_key=peer_attrs["WGPEER_A_PUBLIC_KEY"].decode("utf-8"),
