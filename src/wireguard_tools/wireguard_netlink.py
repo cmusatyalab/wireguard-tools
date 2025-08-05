@@ -7,7 +7,8 @@
 
 from __future__ import annotations
 
-from typing import Iterator
+from collections import defaultdict
+from typing import Any, Iterator
 
 import pyroute2
 
@@ -43,11 +44,18 @@ class WireguardNetlinkDevice(WireguardDevice):
             listen_port=attrs["WGDEVICE_A_LISTEN_PORT"] or None,
         )
 
+        peer_attrs_by_pubkey: defaultdict[str, dict[str, Any]] = defaultdict(dict)
+
         for peer_attrs in (
             dict(peer["attrs"])
             for part in info
             for peer in part.get("WGDEVICE_A_PEERS", [])
         ):
+            peer_attrs_by_pubkey[
+                peer_attrs["WGPEER_A_PUBLIC_KEY"].decode("utf-8")
+            ].update(peer_attrs)
+
+        for peer_attrs in peer_attrs_by_pubkey.values():
             peer = WireguardPeer(
                 public_key=peer_attrs["WGPEER_A_PUBLIC_KEY"].decode("utf-8"),
                 preshared_key=WireguardKey(
