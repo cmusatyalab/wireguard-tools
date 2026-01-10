@@ -61,7 +61,7 @@ class WireguardUAPIDevice(WireguardDevice):
                 config.add_peer(peer)
             elif key == "preshared_key":
                 assert peer is not None
-                peer.preshared_key = WireguardKey(value) or None
+                peer.preshared_key = WireguardKey(value) if value else None
             elif key == "endpoint":
                 assert peer is not None
                 addr, port = value.rsplit(":", 1)

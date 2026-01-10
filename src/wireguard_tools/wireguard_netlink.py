@@ -39,7 +39,7 @@ class WireguardNetlinkDevice(WireguardDevice):
             private_key = None
 
         wgconfig = WireguardConfig(
-            private_key=private_key or None,
+            private_key=private_key,
             fwmark=attrs["WGDEVICE_A_FWMARK"] or None,
             listen_port=attrs["WGDEVICE_A_LISTEN_PORT"] or None,
         )
@@ -54,12 +54,10 @@ class WireguardNetlinkDevice(WireguardDevice):
             peer_attrs_by_pubkey[peer_attrs["WGPEER_A_PUBLIC_KEY"]].update(peer_attrs)
 
         for peer_attrs in peer_attrs_by_pubkey.values():
+            preshared_key = peer_attrs["WGPEER_A_PRESHARED_KEY"].decode("utf-8")
             peer = WireguardPeer(
                 public_key=peer_attrs["WGPEER_A_PUBLIC_KEY"].decode("utf-8"),
-                preshared_key=WireguardKey(
-                    peer_attrs["WGPEER_A_PRESHARED_KEY"].decode("utf-8"),
-                )
-                or None,
+                preshared_key=WireguardKey(preshared_key) if preshared_key else None,
                 endpoint_host=peer_attrs.get("WGPEER_A_ENDPOINT", {}).get("addr"),
                 endpoint_port=peer_attrs.get("WGPEER_A_ENDPOINT", {}).get("port"),
                 persistent_keepalive=peer_attrs[
