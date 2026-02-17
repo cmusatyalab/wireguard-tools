@@ -1,0 +1,13 @@
+version = 1
+
+[[annotations]]
+path = "uv.lock"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Carnegie Mellon University"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = "README.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2022-2026 Carnegie Mellon University"
+SPDX-License-Identifier = "MIT"

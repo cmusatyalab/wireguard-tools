@@ -1,17 +1,18 @@
-# SPDX-FileCopyrightText: 2022-2024 Carnegie Mellon University
+# SPDX-FileCopyrightText: 2022-2026 Carnegie Mellon University
 # SPDX-License-Identifier: 0BSD
 
-[tool.poetry]
+[project]
 name = "wireguard-tools"
-version = "0.5.3.post.dev0"
+version = "0.6.0rc1"
 description = "Pure python reimplementation of wireguard-tools"
-authors = [
-    "Carnegie Mellon University <satya+group@cs.cmu.edu>",
-    "Jan Harkes <jaharkes@cs.cmu.edu>",
-]
-license = "MIT"
 readme = "README.md"
-repository = "https://github.com/cmusatyalab/wireguard-tools"
+requires-python = ">=3.8"
+license = "MIT"
+license-files = ["LICENSE", "LICENSES/*.txt"]
+authors = [
+    {name = "Carnegie Mellon University", email = "satya+group@cs.cmu.edu"},
+    {name = "Jan Harkes", email = "jaharkes@cs.cmu.edu"},
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -19,39 +20,37 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-packages = [
-    {include = "wireguard_tools", from = "src"},
-]
-include = [
-    {path = "LICENSES", format = "sdist"},
-    {path = "tests", format = "sdist"},
+
+dependencies = [
+    "attrs >=22.1.0",
+    "pyroute2 >=0.7.3, <1.0.0",
+    "segno >=1.5.2, <2.0.0",
 ]
 
-[tool.poetry.scripts]
+[project.urls]
+repository = "https://github.com/cmusatyalab/wireguard-tools"
+
+[project.scripts]
 wg-py = "wireguard_tools.cli:main"
 
-[tool.poetry.dependencies]
-python = "^3.7"
-attrs = ">=22.1.0"
-pyroute2 = "^0.7.3"
-segno = "^1.5.2"
-
-[tool.poetry.group.dev.dependencies]
-black = { version=">=24.3.0", python = "^3.8" }
-poethepoet = "^0.16.5"
-pre-commit = { version = "^3.5.0", python = "^3.8.1" }
-tbump = "^6.9.0"
-
-[tool.poetry.group.test.dependencies]
-mypy = "^0.991"
-pytest = "^6.2.5"
-pytest-mock = "^3.6.1"
+[dependency-groups]
+dev = [
+    "nox-uv ; python_version >= '3.9'",
+    "poethepoet >=0.16.5",
+    "pre-commit >=3.5.0, <4.0.0 ; python_version >= '3.8.1'",
+    "ruff >=0.15.1",
+]
+test = [
+    "mypy",
+    "pytest >=6.2.5, <7.0.0",
+    "pytest-mock >=3.6.1, <4.0.0",
+]
 
 [tool.black]
-target-version = ["py37"]
+target-version = ["py38"]
 
 [tool.isort]
-py_version = 37
+py_version = 38
 profile = "black"
 
 [tool.mypy]
@@ -88,7 +87,7 @@ ignore_missing_imports = true
 include = "tasks.toml"
 
 [tool.ruff]
-target-version = "py37"
+target-version = "py38"
 exclude = ["noxfile.py"]
 
 [tool.ruff.lint]
@@ -100,8 +99,12 @@ ignore = ["ANN401", "COM812", "D", "S101"]
 "src/wireguard_tools/curve25519.py" = ["N806"]
 "src/wireguard_tools/wireguard_uapi.py" = ["C901", "PLR0912"]
 "src/wireguard_tools/wireguard_config.py" = ["C901", "PLR0912"]
+"src/wireguard_tools/wireguard_device.py" = ["PLC0415"]
 "tests/*" = ["PLR2004", "S101"]
 
+[tool.uv.build-backend]
+source-include = [ "tests/**" ]
+
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.10.3,<0.11.0"]
+build-backend = "uv_build"

@@ -16,6 +16,7 @@ level interface using the X25519PrivateKey and X25519PublicKey classes that are
 compatible with the classes in cryptography.hazmat.primitives.asymmetric.x25519 with
 the same names.
 """
+
 # trying to keep this somewhat close to the original gist
 # pylint: disable=invalid-name,missing-class-docstring,missing-function-docstring
 
@@ -54,9 +55,9 @@ _A = 486662
 
 def _point_add(point_n: Point, point_m: Point, point_diff: Point) -> Point:
     """Given the projection of two points and their difference, return their sum."""
-    (xn, zn) = point_n
-    (xm, zm) = point_m
-    (x_diff, z_diff) = point_diff
+    xn, zn = point_n
+    xm, zm = point_m
+    x_diff, z_diff = point_diff
     x = (z_diff << 2) * (xm * xn - zm * zn) ** 2
     z = (x_diff << 2) * (xm * zn - zm * xn) ** 2
     return x % P, z % P
@@ -64,7 +65,7 @@ def _point_add(point_n: Point, point_m: Point, point_diff: Point) -> Point:
 
 def _point_double(point_n: Point) -> Point:
     """Double a point provided in projective coordinates."""
-    (xn, zn) = point_n
+    xn, zn = point_n
     xn2 = xn**2
     zn2 = zn**2
     x = (xn2 - zn2) ** 2

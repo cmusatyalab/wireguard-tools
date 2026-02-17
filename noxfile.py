@@ -4,13 +4,18 @@
 # Test wireguard-tools wheel against different python versions
 #
 #   pipx install nox
-#   pipx inject nox nox-poetry
+#   pipx inject nox nox-uv
 #   nox
 
-from nox_poetry import session
+from nox import options
+from nox_uv import session
+
+options.default_venv_backend = "uv"
 
 
-@session(python=["3.13", "3.12", "3.11", "3.10", "3.9", "3.8", "3.7"])
+@session(
+    python=["3.13", "3.12", "3.11", "3.10", "3.9", "3.8"],
+    uv_groups=["test"],
+)
 def tests(session):
-    session.install("pytest", ".")
-    session.run("pytest")
+    session.run("python", "-m", "pytest")

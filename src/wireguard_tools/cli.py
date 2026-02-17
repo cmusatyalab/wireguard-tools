@@ -11,6 +11,7 @@ import argparse
 import os
 import sys
 from contextlib import closing
+from importlib.metadata import version
 from secrets import token_bytes
 from stat import S_IRWXO, S_ISREG
 from typing import Iterable
@@ -129,7 +130,8 @@ def strip(args: argparse.Namespace) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
+    version_str = f"wireguard-tools {version('wireguard-tools')}"
+    parser = argparse.ArgumentParser(epilog=version_str)
     parser.set_defaults(func=lambda _: parser.print_help())
 
     sub = parser.add_subparsers(title="Available subcommands")
