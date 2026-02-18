@@ -3,7 +3,7 @@
 
 [project]
 name = "wireguard-tools"
-version = "0.6.0rc1"
+version = "0.6.0"
 description = "Pure python reimplementation of wireguard-tools"
 readme = "README.md"
 requires-python = ">=3.8"
