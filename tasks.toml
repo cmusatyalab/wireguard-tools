@@ -22,12 +22,15 @@ sequence = [
 [tool.poe.tasks._version]
 cmd = "uv version --short"
 
-[tool.poe.tasks._bump]
+[tool.poe.tasks._bump_stable]
 cmd = "uv version --bump stable"
+
+[tool.poe.tasks._bump_post]
+cmd = "uv version --bump post"
 
 [tool.poe.tasks.tag-release]
 help = "Bump version, build, and create a release tag"
-deps = ["check", "_bump"]
+deps = ["check", "_bump_release"]
 sequence = [
     {cmd = "uv build"},
     {cmd = "git commit -m \"Release v${VERSION}\" pyproject.toml uv.lock"},
@@ -35,20 +38,21 @@ sequence = [
 ]
 uses = { VERSION = "_version" }
 
+[tool.poe.tasks._pypirc]
+shell = "cat ~/.pypirc | jc --ini | jq -r .pypi.password"
+
 [tool.poe.tasks.publish]
 help = "Publish release to pypi and git"
 sequence = [
-    {cmd = "uv publish"},
+    {cmd = "uv publish dist/wireguard_tools-${VERSION}*"},
     {cmd = "git push --atomic origin main v${VERSION}"},
 ]
-uses = { VERSION = "_version" }
+uses = { VERSION = "_version", UV_PUBLISH_TOKEN = "_pypirc" }
 
 [tool.poe.tasks.post-release]
 help = "Bump to post release version"
-sequence = [
-    {cmd = "uv version --bump post"},
-    {cmd = "git commit -m \"Bumping to v${VERSION}\" pyproject.toml uv.lock"},
-]
+deps = ["_bump_post"]
+cmd = "git commit -m \"Bumping to v${VERSION}\" pyproject.toml uv.lock"
 uses = { VERSION = "_version" }
 
 [tool.poe.tasks.release]
