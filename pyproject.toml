@@ -35,9 +35,9 @@ wg-py = "wireguard_tools.cli:main"
 
 [dependency-groups]
 dev = [
-    "nox-uv ; python_version >= '3.9'",
+    "nox-uv ; python_version >= '3.10'",
     "poethepoet >=0.16.5",
-    "pre-commit >=3.5.0, <4.0.0 ; python_version >= '3.8.1'",
+    "pre-commit >=3.5.0, <4.0.0 ; python_version >= '3.10'",
     "ruff >=0.15.1",
 ]
 test = [
