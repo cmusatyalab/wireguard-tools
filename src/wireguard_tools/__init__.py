@@ -9,4 +9,10 @@ from .wireguard_config import WireguardConfig, WireguardPeer
 from .wireguard_device import WireguardDevice
 from .wireguard_key import WireguardKey
 
-__all__ = ["WireguardConfig", "WireguardDevice", "WireguardKey", "WireguardPeer"]
+__version__ = "0.7.0.dev0"
+__all__ = [
+    "WireguardConfig",
+    "WireguardDevice",
+    "WireguardKey",
+    "WireguardPeer",
+]

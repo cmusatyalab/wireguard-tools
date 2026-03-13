@@ -3,7 +3,7 @@
 
 [project]
 name = "wireguard-tools"
-version = "0.6.0.post1"
+version = "0.7.0.dev0"
 description = "Pure python reimplementation of wireguard-tools"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -95,10 +95,11 @@ select = ["ALL"]
 ignore = ["ANN401", "COM812", "D", "S101"]
 
 [tool.ruff.lint.per-file-ignores]
-"src/wireguard_tools/cli.py" = ["FIX003", "T201", "TD"]
+"src/wireguard_tools/cli.py" = ["C901", "FIX003", "PLR0912", "PLR0915", "T201", "TD"]
 "src/wireguard_tools/curve25519.py" = ["N806"]
 "src/wireguard_tools/wireguard_uapi.py" = ["C901", "PLR0912"]
 "src/wireguard_tools/wireguard_config.py" = ["C901", "PLR0912"]
+"src/wireguard_tools/wg_quick.py" = ["C901", "PLR0912", "PLR0915", "S603"]
 "src/wireguard_tools/wireguard_device.py" = ["PLC0415"]
 "tests/*" = ["PLR2004", "S101"]
 

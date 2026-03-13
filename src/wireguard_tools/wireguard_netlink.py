@@ -78,9 +78,14 @@ class WireguardNetlinkDevice(WireguardDevice):
         return wgconfig
 
     def set_config(self, config: WireguardConfig) -> None:
+        self._apply_config(config)
+
+    def sync_config(self, config: WireguardConfig) -> None:
+        self._apply_config(config)
+
+    def _apply_config(self, config: WireguardConfig) -> None:
         current_config = self.get_config()
 
-        # set/update the configuration
         self.wg.set(
             interface=self.interface,
             private_key=str(config.private_key) if config.private_key else None,
@@ -91,17 +96,14 @@ class WireguardNetlinkDevice(WireguardDevice):
         cur_peers = set(current_config.peers)
         new_peers = set(config.peers)
 
-        # remove peers that are no longer in the configuration
         for key in cur_peers.difference(new_peers):
             self.wg.set(self.interface, peer={"public_key": str(key), "remove": True})
 
-        # update any changed peers
         for key in cur_peers.intersection(new_peers):
             peer = config.peers[key]
             if peer != current_config.peers[key]:
                 self.wg.set(self.interface, peer=self._wg_set_peer_arg(peer))
 
-        # add any new peers
         for key in new_peers.difference(cur_peers):
             peer = config.peers[key]
             self.wg.set(self.interface, peer=self._wg_set_peer_arg(peer))

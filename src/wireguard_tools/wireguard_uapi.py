@@ -7,8 +7,10 @@
 
 from __future__ import annotations
 
+import os
 import socket
-from ipaddress import ip_address, ip_interface
+import time
+from ipaddress import IPv6Address, ip_address, ip_interface
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator
 
@@ -52,8 +54,10 @@ class WireguardUAPIDevice(WireguardDevice):
             # interface
             if key == "private_key":
                 config.private_key = WireguardKey(value)
-            elif key in ["listen_port", "fwmark"]:
-                setattr(config, key, int(value))
+            elif key == "listen_port":
+                config.listen_port = int(value)
+            elif key == "fwmark":
+                config.fwmark = int(value)
 
             # peer
             elif key == "public_key":
@@ -82,9 +86,12 @@ class WireguardUAPIDevice(WireguardDevice):
                 assert peer is not None
                 if peer.last_handshake is not None:
                     peer.last_handshake += int(value) * 1e-9
-            elif key in ["rx_bytes", "tx_bytes"]:
+            elif key == "rx_bytes":
                 assert peer is not None
-                setattr(peer, key, int(value))
+                peer.rx_bytes = int(value)
+            elif key == "tx_bytes":
+                assert peer is not None
+                peer.tx_bytes = int(value)
 
             # misc
             elif key == "protocol_version":
@@ -101,7 +108,80 @@ class WireguardUAPIDevice(WireguardDevice):
                     raise RuntimeError(msg)
         return config
 
+    @staticmethod
+    def _resolve_endpoint(peer: WireguardPeer) -> tuple[str, int] | None:
+        """Resolve a peer endpoint to an (ip, port) tuple, handling hostnames.
+
+        Respects WG_ENDPOINT_RESOLUTION_RETRIES (default 15) for transient
+        DNS failures, matching the behavior of the C wg(8) implementation.
+        """
+        if peer.endpoint_host is None or peer.endpoint_port is None:
+            return None
+        host = peer.endpoint_host
+        if isinstance(host, str):
+            retries_env = os.environ.get("WG_ENDPOINT_RESOLUTION_RETRIES", "15")
+            if retries_env == "infinity":
+                max_retries = float("inf")
+            else:
+                try:
+                    max_retries = int(retries_env)
+                except ValueError:
+                    max_retries = 15
+            attempt = 0
+            while True:
+                try:
+                    infos = socket.getaddrinfo(
+                        host, peer.endpoint_port, type=socket.SOCK_DGRAM
+                    )
+                    if infos:
+                        host = infos[0][4][0]
+                        break
+                except socket.gaierror:
+                    pass
+                attempt += 1
+                if attempt > max_retries:
+                    msg = f"Unable to resolve endpoint: {host}"
+                    raise RuntimeError(msg)
+                time.sleep(min(attempt * 0.25, 5.0))
+        return str(host), peer.endpoint_port
+
+    def _build_peer_uapi(self, peer: WireguardPeer) -> list[str]:
+        """Build UAPI lines for a single peer."""
+        lines = [f"public_key={peer.public_key.hex}"]
+        endpoint = self._resolve_endpoint(peer)
+        if endpoint is not None:
+            host_str = endpoint[0]
+            try:
+                if isinstance(IPv6Address(host_str), IPv6Address):
+                    host_str = f"[{host_str}]"
+            except ValueError:
+                pass
+            lines.append(f"endpoint={host_str}:{endpoint[1]}")
+        if peer.preshared_key is not None:
+            lines.append(f"preshared_key={peer.preshared_key.hex}")
+        if peer.persistent_keepalive is not None:
+            lines.append(
+                f"persistent_keepalive_interval={peer.persistent_keepalive}",
+            )
+        lines.append("replace_allowed_ips=true")
+        lines.extend(f"allowed_ip={address}" for address in peer.allowed_ips)
+        return lines
+
+    def _send_uapi_set(self, uapi: list[str]) -> None:
+        """Send a UAPI set message and check the response."""
+        uapi.append("\n")
+        self.uapi_socket.sendall("\n".join(uapi).encode())
+        response = self._recvmsg()
+        if not response or response[0][0] != "errno":
+            msg = "WireguardUAPIDevice: unexpected UAPI response"
+            raise RuntimeError(msg)
+        errno = int(response[0][1])
+        if errno != 0:
+            msg = f"WireguardUAPIDevice: set failed with errno {errno}"
+            raise RuntimeError(msg)
+
     def set_config(self, config: WireguardConfig) -> None:
+        """Atomically replace the full config (setconf semantics)."""
         uapi = ["set=1"]
         if config.private_key is not None:
             uapi.append(f"private_key={config.private_key.hex}")
@@ -112,34 +192,37 @@ class WireguardUAPIDevice(WireguardDevice):
 
         uapi.append("replace_peers=true")
         for peer in config.peers.values():
-            # should resolve hostname for endpoint here
-            assert not isinstance(peer.endpoint_host, str)
-            uapi.extend(
-                [
-                    f"public_key={peer.public_key.hex}",
-                    f"endpoint={peer.endpoint_host}:{peer.endpoint_port}",
-                ],
-            )
-            if peer.preshared_key is not None:
-                uapi.append(f"preshared_key={peer.preshared_key}")
-            if peer.persistent_keepalive is not None:
-                uapi.append(
-                    f"persistent_keepalive_interval={peer.persistent_keepalive}",
-                )
+            uapi.extend(self._build_peer_uapi(peer))
 
-            uapi.append("replace_allowed_ips=true")
-            uapi.extend([f"allowed_ip={address}" for address in peer.allowed_ips])
+        self._send_uapi_set(uapi)
 
-        uapi.append("\n")
-        self.uapi_socket.sendall("\n".join(uapi).encode())
+    def sync_config(self, config: WireguardConfig) -> None:
+        """Diff against running config and apply only changes (syncconf semantics)."""
+        current = self.get_config()
 
-        response = self._recvmsg()
-        assert len(response) == 1
-        assert response[0][0] == "errno"
-        errno = int(response[0][1])
-        if errno != 0:
-            msg = f"WireguardUAPIDevice.set_config failed with {errno}"
-            raise RuntimeError(msg)
+        uapi = ["set=1"]
+        if config.private_key is not None:
+            uapi.append(f"private_key={config.private_key.hex}")
+        if config.listen_port is not None:
+            uapi.append(f"listen_port={config.listen_port}")
+        if config.fwmark is not None:
+            uapi.append(f"fwmark={config.fwmark}")
+
+        cur_keys = set(current.peers)
+        new_keys = set(config.peers)
+
+        for key in cur_keys - new_keys:
+            uapi.append(f"public_key={key.hex}")
+            uapi.append("remove=true")
+
+        for key in new_keys:
+            new_peer = config.peers[key]
+            old_peer = current.peers.get(key)
+            if old_peer is not None and old_peer == new_peer:
+                continue
+            uapi.extend(self._build_peer_uapi(new_peer))
+
+        self._send_uapi_set(uapi)
 
     # a wireguard UAPI response message is a series of key=value lines
     # followed by an empty line

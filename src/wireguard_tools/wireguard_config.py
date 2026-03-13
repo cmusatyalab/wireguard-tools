@@ -30,6 +30,23 @@ SimpleJsonTypes = Union[str, int, float, bool, None]
 T = TypeVar("T")
 
 
+def _parse_endpoint(value: str) -> tuple[str, int]:
+    """Parse an endpoint string into (host, port), handling IPv6 bracket notation."""
+    if value.startswith("["):
+        bracket_end = value.index("]")
+        host = value[1:bracket_end]
+        port = int(value[bracket_end + 2 :])
+    else:
+        host, port_str = value.rsplit(":", 1)
+        port = int(port_str)
+    return host, port
+
+
+def _split_comma_list(value: str) -> list[str]:
+    """Split a comma-separated value list, tolerating whitespace and empty entries."""
+    return [item for item in (s.strip() for s in value.split(",")) if item]
+
+
 def _ipaddress_or_host(
     host: IPv4Address | IPv6Address | str,
 ) -> IPv4Address | IPv6Address | str:
@@ -87,9 +104,9 @@ class WireguardPeer:
     def from_dict(cls, config_dict: dict[str, Any]) -> WireguardPeer:
         endpoint = config_dict.pop("endpoint", None)
         if endpoint is not None:
-            host, port = endpoint.rsplit(":", 1)
+            host, port = _parse_endpoint(endpoint)
             config_dict["endpoint_host"] = host
-            config_dict["endpoint_port"] = int(port)
+            config_dict["endpoint_port"] = port
         return cls(**config_dict)
 
     def asdict(self) -> dict[str, Any]:
@@ -116,14 +133,14 @@ class WireguardPeer:
             elif key == "presharedkey":
                 conf["preshared_key"] = WireguardKey(value)
             elif key == "endpoint":
-                host, port = value.rsplit(":", 1)
+                host, port = _parse_endpoint(value)
                 conf["endpoint_host"] = host
-                conf["endpoint_port"] = int(port)
+                conf["endpoint_port"] = port
             elif key == "persistentkeepalive":
                 conf["persistent_keepalive"] = int(value)
             elif key == "allowedips":
                 conf.setdefault("allowed_ips", []).extend(
-                    ip_interface(addr.strip()) for addr in value.split(",")
+                    ip_interface(addr) for addr in _split_comma_list(value)
                 )
             elif key == "# friendly_name":
                 conf["friendly_name"] = value
@@ -142,7 +159,11 @@ class WireguardPeer:
         if self.preshared_key:
             conf.append(f"PresharedKey = {self.preshared_key}")
         if self.endpoint_host:
-            conf.append(f"Endpoint = {self.endpoint_host}:{self.endpoint_port}")
+            host = self.endpoint_host
+            if isinstance(host, IPv6Address):
+                conf.append(f"Endpoint = [{host}]:{self.endpoint_port}")
+            else:
+                conf.append(f"Endpoint = {host}:{self.endpoint_port}")
         if self.persistent_keepalive:
             conf.append(f"PersistentKeepalive = {self.persistent_keepalive}")
         conf.extend([f"AllowedIPs = {addr}" for addr in self.allowed_ips])
@@ -276,17 +297,17 @@ class WireguardConfig:
             if key == "privatekey":
                 self.private_key = WireguardKey(value)
             elif key == "fwmark":
-                self.fwmark = int(value)
+                self.fwmark = int(value, 0)
             elif key == "listenport":
                 self.listen_port = int(value)
             # wg-quick specific extensions
             elif key == "address":
                 self.addresses.extend(
-                    ip_interface(addr.strip()) for addr in value.split(",")
+                    ip_interface(addr) for addr in _split_comma_list(value)
                 )
             elif key == "dns":
-                for item in value.split(","):
-                    self._add_dns_entry(item.strip())
+                for item in _split_comma_list(value):
+                    self._add_dns_entry(item)
             elif key == "mtu":
                 self.mtu = int(value)
             elif key == "table":
@@ -300,16 +321,12 @@ class WireguardConfig:
             elif key == "postdown":
                 self.postdown.append(value)
             elif key == "saveconfig":
-                self.saveconfig = value == "true"
+                self.saveconfig = value.lower() == "true"
             # wireguard-android specific extensions
             elif key == "includedapplications":
-                self.included_applications.extend(
-                    item.strip() for item in value.split(",")
-                )
+                self.included_applications.extend(_split_comma_list(value))
             elif key == "excludedapplications":
-                self.excluded_applications.extend(
-                    item.strip() for item in value.split(",")
-                )
+                self.excluded_applications.extend(_split_comma_list(value))
 
     def _add_dns_entry(self, item: str) -> None:
         try:
