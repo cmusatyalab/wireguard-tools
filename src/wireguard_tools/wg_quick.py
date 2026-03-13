@@ -42,8 +42,11 @@ def _find_config(name_or_path: str) -> tuple[str, Path]:
     if p.suffix == ".conf" and p.exists():
         return p.stem, p
     config_path = WG_CONFIG_DIR / f"{name_or_path}.conf"
-    if config_path.exists():
-        return name_or_path, config_path
+    try:
+        if config_path.exists():
+            return name_or_path, config_path
+    except PermissionError:
+        pass
     msg = f"Configuration file not found for '{name_or_path}'"
     raise WgQuickError(msg)
 
