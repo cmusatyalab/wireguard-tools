@@ -315,7 +315,8 @@ def up(name_or_path: str) -> None:
 
     try:
         # Apply WireGuard configuration (keys, peers, etc.)
-        wg_config = WireguardConfig.from_wgconfig(open(config_path))
+        with open(config_path) as f:
+            wg_config = WireguardConfig.from_wgconfig(f)
         with closing(WireguardDevice.get(ifname)) as device:
             device.set_config(wg_config)
 

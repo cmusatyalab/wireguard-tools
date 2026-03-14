@@ -4,6 +4,7 @@
 from io import StringIO
 from ipaddress import IPv4Network, IPv6Network, ip_interface
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -139,3 +140,52 @@ class TestUpDown:
             from wireguard_tools.wg_quick import down
 
             down(str(conf))
+
+    @patch("wireguard_tools.wg_quick._setup_dns", return_value=False)
+    @patch("wireguard_tools.wg_quick._collect_allowed_networks", return_value=[])
+    @patch("wireguard_tools.wg_quick._resolve_table", return_value=None)
+    @patch("wireguard_tools.wg_quick._set_link_up")
+    @patch("wireguard_tools.wg_quick._create_interface")
+    @patch("wireguard_tools.wg_quick._interface_exists", return_value=False)
+    def test_up_closes_config_file_handles(
+        self,
+        mock_exists: MagicMock,
+        mock_create_interface: MagicMock,
+        mock_set_link_up: MagicMock,
+        mock_resolve_table: MagicMock,
+        mock_collect_allowed_networks: MagicMock,
+        mock_setup_dns: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        conf = tmp_path / "wg0.conf"
+        conf.write_text(SAMPLE_CONFIG)
+
+        captured_files = []
+        fake_config = SimpleNamespace(
+            preup=[],
+            postup=[],
+            addresses=[],
+            mtu=None,
+            peers={},
+            table="auto",
+            fwmark=None,
+            dns_servers=[],
+            search_domains=[],
+        )
+
+        def fake_from_wgconfig(file_obj):
+            captured_files.append(file_obj)
+            return fake_config
+
+        fake_device = MagicMock()
+        with (
+            patch("wireguard_tools.wg_quick.WireguardConfig.from_wgconfig", side_effect=fake_from_wgconfig),
+            patch("wireguard_tools.wg_quick.WireguardDevice.get", return_value=fake_device),
+        ):
+            from wireguard_tools.wg_quick import up
+
+            up(str(conf))
+
+        assert len(captured_files) == 2
+        assert captured_files[0].closed is True
+        assert captured_files[1].closed is True
