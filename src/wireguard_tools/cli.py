@@ -361,7 +361,8 @@ def set_(args: argparse.Namespace) -> int:
             if "listen_port" in iface_params:
                 config.listen_port = iface_params["listen_port"]
             if "fwmark" in iface_params:
-                config.fwmark = iface_params["fwmark"] or None
+                # Keep explicit zero when user requests "fwmark off"/0.
+                config.fwmark = iface_params["fwmark"]
 
             for spec in peer_specs:
                 pub_key = spec["public_key"]

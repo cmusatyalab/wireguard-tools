@@ -1,9 +1,13 @@
 # Tests for CLI command parsing and logic.
 # SPDX-License-Identifier: MIT
 
+import argparse
+from unittest.mock import MagicMock, patch
+
 import pytest
 
-from wireguard_tools.cli import SHOW_FIELDS, _parse_set_args, _resolve_show_args
+from wireguard_tools.cli import SHOW_FIELDS, _parse_set_args, _resolve_show_args, set_
+from wireguard_tools.wireguard_config import WireguardConfig
 from wireguard_tools.wireguard_key import WireguardKey
 
 
@@ -194,3 +198,20 @@ class TestResolveShowArgs:
     def test_invalid_field_raises(self) -> None:
         with pytest.raises(ValueError, match="Unknown field"):
             _resolve_show_args(["wg0", "not-a-field"])
+
+
+class TestSetCommand:
+    @pytest.mark.parametrize("fwmark_token", ["off", "0"])
+    def test_set_fwmark_zero_is_preserved(self, fwmark_token: str) -> None:
+        config = WireguardConfig()
+        config.fwmark = 123
+        fake_device = MagicMock()
+        fake_device.get_config.return_value = config
+
+        args = argparse.Namespace(remaining=["wg0", "fwmark", fwmark_token])
+        with patch("wireguard_tools.cli.WireguardDevice.get", return_value=fake_device):
+            result = set_(args)
+
+        assert result == 0
+        assert config.fwmark == 0
+        fake_device.set_config.assert_called_once_with(config)
