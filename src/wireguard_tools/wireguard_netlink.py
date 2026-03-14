@@ -5,6 +5,18 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""Linux Netlink backend for managing WireGuard devices.
+
+This module provides :class:`WireguardNetlinkDevice`, a
+:class:`~wireguard_tools.wireguard_device.WireguardDevice` implementation
+that communicates with the WireGuard kernel module through the Netlink
+socket interface via `pyroute2 <https://pyroute2.org/>`_.
+
+.. note::
+
+   Netlink operations typically require ``CAP_NET_ADMIN`` privileges.
+"""
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -18,14 +30,40 @@ from .wireguard_key import WireguardKey
 
 
 class WireguardNetlinkDevice(WireguardDevice):
+    """WireGuard device backed by Linux Netlink (pyroute2).
+
+    Manages the lifecycle of a :class:`pyroute2.WireGuard` handle used
+    for all get/set operations on the named interface.  Callers should
+    invoke :meth:`close` (or use the device as a context manager via the
+    base class) when finished to release the Netlink socket.
+
+    :param interface: Name of the WireGuard network interface
+        (e.g. ``"wg0"``).
+    """
+
     def __init__(self, interface: str) -> None:
         super().__init__(interface)
         self.wg = pyroute2.WireGuard()
 
     def close(self) -> None:
+        """Close the underlying Netlink socket.
+
+        After this call, further operations on this device will fail.
+        """
         self.wg.close()
 
     def get_config(self) -> WireguardConfig:
+        """Retrieve the current WireGuard configuration from the kernel.
+
+        Queries the Netlink interface for private key, listen port, fwmark,
+        and all peer state including allowed IPs, endpoint, handshake time,
+        and transfer statistics.
+
+        :returns: Snapshot of the running interface configuration.
+        :rtype: WireguardConfig
+        :raises RuntimeError: If the interface cannot be accessed (e.g. it
+            does not exist or the caller lacks privileges).
+        """
         try:
             info = self.wg.info(self.interface)
             attrs = dict(info[0]["attrs"])
@@ -78,9 +116,40 @@ class WireguardNetlinkDevice(WireguardDevice):
         return wgconfig
 
     def set_config(self, config: WireguardConfig) -> None:
+        """Replace the interface configuration via Netlink.
+
+        Delegates to :meth:`_apply_config`, which diffs against the current
+        running state, removes stale peers, and updates or adds new ones.
+
+        :param config: Desired configuration to apply.
+        """
+        self._apply_config(config)
+
+    def sync_config(self, config: WireguardConfig) -> None:
+        """Synchronise the interface configuration via Netlink.
+
+        Functionally equivalent to :meth:`set_config` for the Netlink
+        backend — both diff against the running state before applying
+        changes.
+
+        :param config: Desired configuration to synchronise.
+        """
+        self._apply_config(config)
+
+    def _apply_config(self, config: WireguardConfig) -> None:
+        """Diff the desired configuration against running state and apply changes.
+
+        Reads the current device configuration, then:
+
+        1. Sets interface-level parameters (private key, listen port, fwmark).
+        2. Removes peers present in the current config but absent from *config*.
+        3. Updates peers whose settings have changed.
+        4. Adds peers that are new in *config*.
+
+        :param config: Desired full interface configuration.
+        """
         current_config = self.get_config()
 
-        # set/update the configuration
         self.wg.set(
             interface=self.interface,
             private_key=str(config.private_key) if config.private_key else None,
@@ -91,22 +160,29 @@ class WireguardNetlinkDevice(WireguardDevice):
         cur_peers = set(current_config.peers)
         new_peers = set(config.peers)
 
-        # remove peers that are no longer in the configuration
         for key in cur_peers.difference(new_peers):
             self.wg.set(self.interface, peer={"public_key": str(key), "remove": True})
 
-        # update any changed peers
         for key in cur_peers.intersection(new_peers):
             peer = config.peers[key]
             if peer != current_config.peers[key]:
                 self.wg.set(self.interface, peer=self._wg_set_peer_arg(peer))
 
-        # add any new peers
         for key in new_peers.difference(cur_peers):
             peer = config.peers[key]
             self.wg.set(self.interface, peer=self._wg_set_peer_arg(peer))
 
     def _wg_set_peer_arg(self, peer: WireguardPeer) -> dict[str, str | int | list[str]]:
+        """Build a pyroute2-compatible peer argument dictionary.
+
+        Translates a :class:`~wireguard_tools.wireguard_config.WireguardPeer`
+        into the dictionary format expected by :meth:`pyroute2.WireGuard.set`.
+
+        :param peer: Peer whose attributes are to be serialised.
+        :returns: Dictionary suitable for the ``peer`` keyword of
+            :meth:`pyroute2.WireGuard.set`.
+        :rtype: dict[str, str | int | list[str]]
+        """
         peer_dict: dict[str, str | int | list[str]] = {
             "public_key": str(peer.public_key),
         }
@@ -122,6 +198,14 @@ class WireguardNetlinkDevice(WireguardDevice):
 
     @classmethod
     def list(cls) -> Iterator[WireguardNetlinkDevice]:
+        """Yield all WireGuard interfaces discovered via Netlink.
+
+        Uses :class:`pyroute2.NDB` to enumerate network interfaces and
+        filters for those with ``kind == "wireguard"``.
+
+        :returns: Iterator of :class:`WireguardNetlinkDevice` instances.
+        :rtype: Iterator[WireguardNetlinkDevice]
+        """
         with pyroute2.NDB() as ndb:
             for nic in ndb.interfaces:
                 if nic.kind == "wireguard":
