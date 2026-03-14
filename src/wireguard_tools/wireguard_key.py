@@ -24,10 +24,24 @@ HEX_KEY_LENGTH = 64
 
 
 def convert_wireguard_key(value: str | bytes | WireguardKey) -> bytes:
-    """Decode a wireguard key to its byte string form.
+    """Decode a WireGuard key from various representations into raw bytes.
 
-    Accepts urlsafe encoded base64 keys with possibly missing padding.
-    Validates that the resulting key value is a 32-byte byte string.
+    Accept a key in one of several common formats and normalise it to a
+    32-byte ``bytes`` object suitable for cryptographic operations.
+
+    The following input types are handled:
+
+    * :class:`WireguardKey` — the existing ``keydata`` is returned directly.
+    * ``bytes`` — assumed to be the raw 32-byte key material.
+    * ``str`` of length 64 — decoded as a hexadecimal string.
+    * Any other ``str`` — decoded as URL-safe Base64 (missing ``=`` padding
+      is tolerated).
+
+    :param value: Key material in any of the accepted formats.
+    :type value: str | bytes | WireguardKey
+    :returns: The raw 32-byte key.
+    :rtype: bytes
+    :raises ValueError: If the decoded key is not exactly 32 bytes long.
     """
     if isinstance(value, WireguardKey):
         return value.keydata
@@ -48,39 +62,105 @@ def convert_wireguard_key(value: str | bytes | WireguardKey) -> bytes:
 
 @define(frozen=True)
 class WireguardKey:
-    """Representation of a WireGuard key."""
+    """Immutable representation of a WireGuard Curve25519 key.
+
+    This is an *attrs*-based frozen class that wraps 32 bytes of key
+    material.  Instances can be created from raw ``bytes``, hexadecimal
+    strings, Base64-encoded strings, or existing :class:`WireguardKey`
+    objects — the :func:`convert_wireguard_key` converter is applied
+    automatically by the constructor.
+
+    Being frozen, :class:`WireguardKey` is hashable and can be used as a
+    dictionary key or in sets.
+
+    :param keydata: Key material in any format accepted by
+        :func:`convert_wireguard_key`.
+    :type keydata: str | bytes | WireguardKey
+    """
 
     keydata: bytes = field(converter=convert_wireguard_key)
 
     @classmethod
     def generate(cls) -> WireguardKey:
-        """Generate a new private key."""
+        """Generate a new random Curve25519 private key.
+
+        Obtain 32 cryptographically-secure random bytes via
+        :func:`secrets.token_bytes` and clamp them into a valid
+        Curve25519 private scalar using
+        :meth:`X25519PrivateKey.from_private_bytes`.
+
+        :returns: A freshly generated private key.
+        :rtype: WireguardKey
+        """
         random_data = token_bytes(RAW_KEY_LENGTH)
         # turn it into a proper curve25519 private key by fixing/clamping the value
         private_bytes = X25519PrivateKey.from_private_bytes(random_data).private_bytes()
         return cls(private_bytes)
 
     def public_key(self) -> WireguardKey:
-        """Derive public key from private key."""
+        """Derive the Curve25519 public key from this private key.
+
+        Perform a scalar multiplication of the Curve25519 base point by
+        the private scalar stored in this key.
+
+        :returns: The corresponding public key.
+        :rtype: WireguardKey
+        """
         public_bytes = X25519PrivateKey.from_private_bytes(self.keydata).public_key()
         return WireguardKey(public_bytes)
 
     def __bool__(self) -> bool:
+        """Return whether the key contains non-zero data.
+
+        An all-zero key is treated as *falsy*, which is useful for
+        detecting unset or placeholder keys.
+
+        :returns: ``False`` if every byte is zero, ``True`` otherwise.
+        :rtype: bool
+        """
         return int.from_bytes(self.keydata, "little") != 0
 
     def __repr__(self) -> str:
+        """Return an unambiguous string that can recreate this key.
+
+        The format is ``WireguardKey('<base64>')`` so that it is both
+        human-readable and usable in ``eval()`` round-trips.
+
+        :returns: Evaluable representation of the key.
+        :rtype: str
+        """
         return f"WireguardKey('{self}')"
 
     def __str__(self) -> str:
-        """Return a base64 encoded representation of the key."""
+        """Return the standard (non-URL-safe) Base64 encoding of the key.
+
+        This is the canonical encoding used by ``wg(8)`` and WireGuard
+        configuration files.
+
+        :returns: Base64-encoded key string (44 characters, ``=`` padded).
+        :rtype: str
+        """
         return standard_b64encode(self.keydata).decode("utf-8")
 
     @property
     def urlsafe(self) -> str:
-        """Return a urlsafe base64 encoded representation of the key."""
+        """Return the URL-safe Base64 encoding of the key without padding.
+
+        Uses ``+`` → ``-`` and ``/`` → ``_`` substitutions per
+        :rfc:`4648` §5 and strips trailing ``=`` padding characters.
+
+        :returns: URL-safe Base64 key string with no ``=`` padding.
+        :rtype: str
+        """
         return urlsafe_b64encode(self.keydata).decode("utf-8").rstrip("=")
 
     @property
     def hex(self) -> str:
-        """Return a hexadecimal encoded representation of the key."""
+        """Return the lowercase hexadecimal encoding of the key.
+
+        The result is a 64-character string containing only ``[0-9a-f]``.
+
+        :returns: Hex-encoded key string.
+        :rtype: str
+        """
         return self.keydata.hex()

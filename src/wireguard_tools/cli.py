@@ -5,6 +5,19 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""Command-line interface for the pure-Python WireGuard tools.
+
+Provides subcommands that mirror the ``wg(8)`` utility: ``show``, ``showconf``,
+``set``, ``setconf``, ``addconf``, ``syncconf``, ``genkey``, ``genpsk``,
+``pubkey``, and ``strip``.  Additionally exposes ``up`` and ``down`` as
+convenience wrappers around the :mod:`wireguard_tools.wg_quick` module.
+
+Each public subcommand function accepts an :class:`argparse.Namespace` and
+returns an ``int`` exit code (``0`` for success, ``1`` for failure).  The
+module is intended to be invoked via :func:`main` or as
+``python -m wireguard_tools.cli``.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -40,9 +53,26 @@ SHOW_FIELDS = (
     "transfer",
     "dump",
 )
+"""Valid field names accepted by the ``wg show`` subcommand.
+
+When a single positional argument is passed to ``wg show`` and it matches one
+of these strings, it is interpreted as a *field selector* applied to every
+interface rather than an interface name.  The ``"dump"`` pseudo-field triggers
+the machine-readable tab-separated output format.
+"""
 
 
 def _format_endpoint(peer: WireguardPeer) -> str:
+    """Format a peer's endpoint as a human-readable ``host:port`` string.
+
+    IPv6 addresses are enclosed in brackets to disambiguate the colon-delimited
+    address from the port separator (e.g. ``[::1]:51820``).
+
+    :param peer: The peer whose endpoint should be formatted.
+    :returns: ``"(none)"`` when the peer has no endpoint configured, otherwise
+        a ``host:port`` string.
+    :rtype: str
+    """
     if peer.endpoint_host is None:
         return "(none)"
     host = peer.endpoint_host
@@ -54,6 +84,21 @@ def _format_endpoint(peer: WireguardPeer) -> str:
 def _show_pretty(
     device: WireguardDevice, config: WireguardConfig, hide_keys: bool
 ) -> None:
+    """Print a human-readable summary of an interface and its peers to stdout.
+
+    The output mirrors the default ``wg show <interface>`` format: interface-level
+    fields (public key, private key, listening port, fwmark) followed by a blank
+    line and per-peer blocks (preshared key, endpoint, keepalive, allowed IPs,
+    latest handshake, transfer statistics).
+
+    :param device: The device whose name will be shown in the ``interface:``
+        header line.
+    :param config: The configuration snapshot to render.
+    :param hide_keys: When ``True``, private and preshared keys are replaced
+        with ``"(hidden)"``.  Controlled by the ``WG_HIDE_KEYS`` environment
+        variable at the call-site.
+    :rtype: None
+    """
     print(f"interface: {device.interface}")
     if config.private_key is not None:
         print(f"  public key: {config.private_key.public_key()}")
@@ -93,6 +138,20 @@ def _show_pretty(
 def _show_dump(
     device: WireguardDevice, config: WireguardConfig, prefix_iface: bool
 ) -> None:
+    """Print the machine-readable tab-separated dump of an interface.
+
+    The first line contains interface-level fields
+    (``private-key  public-key  listen-port  fwmark``) and each subsequent line
+    contains per-peer fields (``public-key  preshared-key  endpoint  allowed-ips
+    latest-handshake  rx  tx  persistent-keepalive``).  When *prefix_iface* is
+    ``True`` every line is prefixed with the interface name — this is the format
+    used by ``wg show all dump``.
+
+    :param device: The device providing the interface name.
+    :param config: The configuration snapshot to render.
+    :param prefix_iface: Prepend ``<ifname>\\t`` to every output line.
+    :rtype: None
+    """
     pfx = f"{device.interface}\t" if prefix_iface else ""
     private_key = str(config.private_key) if config.private_key else "(none)"
     public_key = (
@@ -122,6 +181,20 @@ def _show_field(
     field: str,
     prefix_iface: bool,
 ) -> None:
+    """Print a single field value for an interface and its peers.
+
+    For interface-level fields (``public-key``, ``private-key``, ``listen-port``,
+    ``fwmark``) one line is emitted.  For per-peer fields (``peers``,
+    ``preshared-keys``, ``endpoints``, ``allowed-ips``, ``latest-handshakes``,
+    ``persistent-keepalive``, ``transfer``) one line is emitted per peer.
+
+    :param device: The device providing the interface name.
+    :param config: The configuration snapshot to render.
+    :param field: One of the :data:`SHOW_FIELDS` names (excluding ``"dump"``
+        which is handled by :func:`_show_dump`).
+    :param prefix_iface: Prepend ``<ifname>\\t`` to every output line.
+    :rtype: None
+    """
     pfx = f"{device.interface}\t" if prefix_iface else ""
     if field == "public-key":
         if config.private_key:
@@ -165,7 +238,27 @@ def _show_field(
 def _resolve_show_args(
     show_args: list[str],
 ) -> tuple[str | None, str | None]:
-    """Resolve `wg show` positional arguments into (interface, field)."""
+    """Resolve ``wg show`` positional arguments into an (interface, field) pair.
+
+    Disambiguation rules:
+
+    * **No arguments** — show all interfaces in pretty mode:
+      ``(None, None)``.
+    * **One argument that matches a** :data:`SHOW_FIELDS` **name** — treat it
+      as a field selector for every interface: ``(None, field)``.
+    * **One argument that does** *not* **match a field** — treat it as an
+      interface name: ``(interface, None)``.
+    * **Two arguments** — first is the interface, second must be a valid field:
+      ``(interface, field)``.
+
+    :param show_args: Positional arguments from the ``wg show`` invocation
+        (0–2 items).
+    :returns: A ``(interface, field)`` tuple where either element may be
+        ``None``.
+    :rtype: tuple[str | None, str | None]
+    :raises ValueError: If more than two positional arguments are provided or
+        the second argument is not a recognised field name.
+    """
     if len(show_args) > 2:
         msg = "Usage: wg show [<interface>|all|interfaces] [<field>]"
         raise ValueError(msg)
@@ -184,7 +277,24 @@ def _resolve_show_args(
 
 
 def show(args: argparse.Namespace) -> int:
-    """Show the current configuration and device information."""
+    """Display current WireGuard interface configuration and runtime state.
+
+    Implements the ``wg show`` subcommand.  Behaviour depends on the positional
+    arguments resolved by :func:`_resolve_show_args`:
+
+    * No interface and no field — pretty-print every interface.
+    * ``"interfaces"`` — list interface names only.
+    * ``"all"`` or no interface with a field — iterate all interfaces showing
+      the requested field.
+    * Specific interface, optional field — show that interface.
+
+    Keys are hidden by default; set ``WG_HIDE_KEYS=never`` to reveal them.
+
+    :param args: Parsed CLI namespace.  May contain a ``show_args`` attribute
+        with 0–2 positional strings.
+    :returns: ``0`` on success, ``1`` on error.
+    :rtype: int
+    """
     hide_keys = os.environ.get("WG_HIDE_KEYS", "always") != "never"
     try:
         interface, field = _resolve_show_args(getattr(args, "show_args", []))
@@ -227,7 +337,17 @@ def show(args: argparse.Namespace) -> int:
 
 
 def showconf(args: argparse.Namespace) -> int:
-    """Show the configuration of a WireGuard interface, for use with `setconf`."""
+    """Print the running configuration of a WireGuard interface in ``wg`` config format.
+
+    The output is suitable for piping into ``wg setconf`` or saving to a
+    ``.conf`` file.  Runtime-only state (transfer counters, handshake
+    timestamps) is *not* included.
+
+    :param args: Parsed CLI namespace with an ``interface`` attribute naming the
+        WireGuard device to query.
+    :returns: ``0`` on success, ``1`` on error.
+    :rtype: int
+    """
     try:
         with closing(WireguardDevice.get(args.interface)) as device:
             config = device.get_config()
@@ -239,7 +359,21 @@ def showconf(args: argparse.Namespace) -> int:
 
 
 def _read_key_file(path: str) -> WireguardKey | None:
-    """Read a key from a file path. Returns None for /dev/null or empty files."""
+    """Read a WireGuard key from a file path.
+
+    Used by ``wg set`` for ``--private-key`` and ``--preshared-key`` options
+    where the value is a filesystem path rather than a literal key string.
+    ``/dev/null`` is the conventional way to *clear* a key.
+
+    :param path: Filesystem path to the key file, or ``"/dev/null"`` to
+        indicate that the key should be removed.
+    :returns: A :class:`~wireguard_tools.wireguard_key.WireguardKey` parsed
+        from the file contents, or ``None`` if *path* is ``"/dev/null"`` or
+        the file is empty.
+    :rtype: WireguardKey | None
+    :raises FileNotFoundError: If *path* does not exist.
+    :raises ValueError: If the file contents are not a valid WireGuard key.
+    """
     if path == "/dev/null":
         return None
     with open(path) as f:
@@ -252,9 +386,51 @@ def _read_key_file(path: str) -> WireguardKey | None:
 def _parse_set_args(
     argv: list[str],
 ) -> tuple[str, dict[str, Any], list[dict[str, Any]]]:
-    """Parse the ``wg set`` argument syntax.
+    """Parse the ``wg set`` argument vector into structured parameters.
 
-    Returns (interface, iface_params, peers).
+    The grammar mirrors the ``wg(8)`` man-page::
+
+        wg set <interface>
+            [listen-port <port>]
+            [fwmark <fwmark> | off]
+            [private-key <file-path>]
+            [peer <base64-public-key>
+                [remove]
+                [preshared-key <file-path>]
+                [endpoint <host>:<port>]
+                [persistent-keepalive <interval> | off]
+                [allowed-ips <ip1>[,<ip2>]... ]
+            ]...
+
+    **allowed-ips modes:**
+
+    * *Replace mode* (default) — a plain comma-separated list replaces the
+      peer's entire allowed-ips set.  An empty string clears the list.
+    * *Incremental mode* — when *any* entry carries a ``+`` or ``-`` prefix,
+      the list is interpreted incrementally: ``+``-prefixed (or bare) addresses
+      are added and ``-``-prefixed addresses are removed.
+
+    **Clearing semantics:**
+
+    * ``fwmark off`` sets ``fwmark`` to ``0``.
+    * ``persistent-keepalive off`` sets the value to ``0`` (disabled).
+    * ``private-key /dev/null`` clears the private key (see
+      :func:`_read_key_file`).
+
+    :param argv: Raw argument list *including* the interface name as the first
+        element (``args.remaining`` from the CLI parser).
+    :returns: A three-tuple ``(interface, iface_params, peers)`` where
+        *iface_params* is a ``dict`` of interface-level settings and *peers*
+        is a ``list`` of ``dict`` objects each keyed by ``public_key`` with
+        optional ``remove``, ``preshared_key``, ``endpoint_host``,
+        ``endpoint_port``, ``persistent_keepalive``, ``allowed_ips``,
+        ``replace_allowed_ips``, ``add_allowed_ips``, and
+        ``remove_allowed_ips`` entries.
+    :rtype: tuple[str, dict[str, Any], list[dict[str, Any]]]
+    :raises ValueError: On unknown tokens, out-of-order peer options, or
+        missing values.
+    :raises IndexError: If a keyword token is the last element and its
+        required value is missing.
     """
     if not argv:
         msg = "Usage: wg set <interface> [listen-port <port>] ..."
@@ -345,7 +521,27 @@ def _parse_set_args(
 
 
 def set_(args: argparse.Namespace) -> int:
-    """Change the current configuration, add peers, remove peers, or change peers."""
+    """Apply in-place mutations to a live WireGuard interface.
+
+    Implements the ``wg set`` subcommand.  Reads the current device
+    configuration, merges in the changes described by the raw argument vector
+    (parsed by :func:`_parse_set_args`), and writes the result back.
+
+    **Mutation semantics:**
+
+    * ``fwmark 0`` / ``fwmark off`` — clears the firewall mark (stored as
+      ``0``).
+    * ``persistent-keepalive 0`` / ``persistent-keepalive off`` — disables
+      keepalive (stored as ``None``).
+    * ``peer <key> remove`` — deletes the peer entirely.
+    * ``allowed-ips`` in *replace* mode overwrites the peer's list; in
+      *incremental* mode individual addresses are added or removed.
+
+    :param args: Parsed CLI namespace with a ``remaining`` attribute containing
+        the unparsed ``wg set`` arguments.
+    :returns: ``0`` on success, ``1`` on error.
+    :rtype: int
+    """
     try:
         interface, iface_params, peer_specs = _parse_set_args(args.remaining)
     except (ValueError, IndexError) as exc:
@@ -404,7 +600,17 @@ def set_(args: argparse.Namespace) -> int:
 
 
 def setconf(args: argparse.Namespace) -> int:
-    """Apply a configuration file to a WireGuard interface."""
+    """Replace the entire configuration of a WireGuard interface from a file.
+
+    Implements the ``wg setconf`` subcommand.  The file is parsed as a standard
+    ``wg``-format configuration and applied atomically — any peers present on
+    the device but absent from the file are removed.
+
+    :param args: Parsed CLI namespace with ``interface`` (device name) and
+        ``configfile`` (open file handle) attributes.
+    :returns: ``0`` on success, ``1`` on error.
+    :rtype: int
+    """
     try:
         config = WireguardConfig.from_wgconfig(args.configfile)
         with closing(WireguardDevice.get(args.interface)) as device:
@@ -416,7 +622,18 @@ def setconf(args: argparse.Namespace) -> int:
 
 
 def addconf(args: argparse.Namespace) -> int:
-    """Append a configuration file to a WireGuard interface."""
+    """Merge a configuration file into an existing WireGuard interface.
+
+    Implements the ``wg addconf`` subcommand.  Unlike :func:`setconf`, existing
+    peers that are not mentioned in the file are left untouched.  Interface-level
+    settings (``private_key``, ``listen_port``, ``fwmark``) from the file
+    override the current values only when explicitly provided (i.e. non-``None``).
+
+    :param args: Parsed CLI namespace with ``interface`` (device name) and
+        ``configfile`` (open file handle) attributes.
+    :returns: ``0`` on success, ``1`` on error.
+    :rtype: int
+    """
     try:
         new_config = WireguardConfig.from_wgconfig(args.configfile)
         with closing(WireguardDevice.get(args.interface)) as device:
@@ -440,7 +657,18 @@ def addconf(args: argparse.Namespace) -> int:
 
 
 def syncconf(args: argparse.Namespace) -> int:
-    """Synchronize a configuration file with a WireGuard interface."""
+    """Synchronize a WireGuard interface to match a configuration file.
+
+    Implements the ``wg syncconf`` subcommand.  This is similar to
+    :func:`setconf` but uses the device-level ``sync_config`` method, which
+    preserves runtime state (e.g. latest-handshake, transfer counters) for
+    peers whose configuration has not changed.
+
+    :param args: Parsed CLI namespace with ``interface`` (device name) and
+        ``configfile`` (open file handle) attributes.
+    :returns: ``0`` on success, ``1`` on error.
+    :rtype: int
+    """
     try:
         config = WireguardConfig.from_wgconfig(args.configfile)
         with closing(WireguardDevice.get(args.interface)) as device:
@@ -452,14 +680,30 @@ def syncconf(args: argparse.Namespace) -> int:
 
 
 def _check_stdout() -> None:
-    """Check and warn if stdout is a world accessible file."""
+    """Warn on stderr if stdout is redirected to a world-accessible file.
+
+    Called before writing sensitive key material to stdout.  If stdout is a
+    regular file whose permissions include *any* bits in ``S_IRWXO`` (other
+    read/write/execute), a warning is emitted to stderr.  This mirrors the
+    safety check in the upstream C ``wg`` implementation.
+
+    :rtype: None
+    """
     stat = os.fstat(sys.stdout.fileno())
     if S_ISREG(stat.st_mode) and (stat.st_mode & S_IRWXO):
         print("Warning: writing to world accessible file.", file=sys.stderr)
 
 
 def genkey(_args: argparse.Namespace) -> int:
-    """Generate a new private key and write it to stdout."""
+    """Generate a new Curve25519 private key and write it to stdout.
+
+    Implements the ``wg genkey`` subcommand.  Emits a warning via
+    :func:`_check_stdout` if stdout is world-readable.
+
+    :param _args: Parsed CLI namespace (unused).
+    :returns: ``0`` unconditionally.
+    :rtype: int
+    """
     _check_stdout()
     secret_key = WireguardKey.generate()
     print(secret_key)
@@ -467,7 +711,16 @@ def genkey(_args: argparse.Namespace) -> int:
 
 
 def genpsk(_args: argparse.Namespace) -> int:
-    """Generate a new preshared key and write it to stdout."""
+    """Generate a new 256-bit preshared key and write it to stdout.
+
+    Implements the ``wg genpsk`` subcommand.  The key is derived from 32 bytes
+    of cryptographically secure random data (:func:`secrets.token_bytes`).
+    Emits a warning via :func:`_check_stdout` if stdout is world-readable.
+
+    :param _args: Parsed CLI namespace (unused).
+    :returns: ``0`` unconditionally.
+    :rtype: int
+    """
     _check_stdout()
     random_data = token_bytes(32)
     preshared_key = WireguardKey(random_data)
@@ -476,7 +729,16 @@ def genpsk(_args: argparse.Namespace) -> int:
 
 
 def pubkey(_args: argparse.Namespace) -> int:
-    """Read a private key from stdin and write a public key to stdout."""
+    """Derive a Curve25519 public key from a private key read on stdin.
+
+    Implements the ``wg pubkey`` subcommand.  Reads the entirety of stdin,
+    interprets it as a base64-encoded private key, computes the corresponding
+    public key, and prints it to stdout.
+
+    :param _args: Parsed CLI namespace (unused).
+    :returns: ``0`` unconditionally.
+    :rtype: int
+    """
     private_key = sys.stdin.read()
     public_key = WireguardKey(private_key).public_key()
     print(public_key)
@@ -484,14 +746,35 @@ def pubkey(_args: argparse.Namespace) -> int:
 
 
 def strip(args: argparse.Namespace) -> int:
-    """Output a configuration file with all wg-quick specific options removed."""
+    """Print a configuration file stripped of ``wg-quick``-specific options.
+
+    Implements the ``wg strip`` subcommand.  Parses the input file and
+    re-serialises it using :meth:`WireguardConfig.to_wgconfig`, which omits
+    directives such as ``Address``, ``DNS``, ``MTU``, ``Table``, and
+    hook commands (``PreUp``, ``PostUp``, ``PreDown``, ``PostDown``).
+
+    :param args: Parsed CLI namespace with a ``configfile`` (open file handle)
+        attribute.
+    :returns: ``0`` unconditionally.
+    :rtype: int
+    """
     config = WireguardConfig.from_wgconfig(args.configfile)
     print(config.to_wgconfig())
     return 0
 
 
 def up(args: argparse.Namespace) -> int:
-    """Create and configure a WireGuard interface from a config file."""
+    """Bring up a WireGuard interface via ``wg-quick``.
+
+    Implements the ``wg-py up`` subcommand by delegating to
+    :func:`wireguard_tools.wg_quick.up`.  Creates the interface, applies
+    configuration, sets addresses/routes, and runs lifecycle hooks.
+
+    :param args: Parsed CLI namespace with an ``interface`` attribute (name
+        or path to a ``.conf`` file).
+    :returns: ``0`` on success, ``1`` if :class:`WgQuickError` is raised.
+    :rtype: int
+    """
     from .wg_quick import WgQuickError, up as wg_up
 
     try:
@@ -503,7 +786,18 @@ def up(args: argparse.Namespace) -> int:
 
 
 def down(args: argparse.Namespace) -> int:
-    """Tear down a WireGuard interface."""
+    """Tear down a WireGuard interface via ``wg-quick``.
+
+    Implements the ``wg-py down`` subcommand by delegating to
+    :func:`wireguard_tools.wg_quick.down`.  Runs pre-down hooks, removes DNS
+    configuration, deletes routing rules and routes, destroys the interface,
+    and runs post-down hooks.
+
+    :param args: Parsed CLI namespace with an ``interface`` attribute (name
+        or path to a ``.conf`` file).
+    :returns: ``0`` on success, ``1`` if :class:`WgQuickError` is raised.
+    :rtype: int
+    """
     from .wg_quick import WgQuickError, down as wg_down
 
     try:
@@ -515,6 +809,17 @@ def down(args: argparse.Namespace) -> int:
 
 
 def main() -> int:
+    """Parse command-line arguments and dispatch to the appropriate subcommand.
+
+    Entry point for the ``wg-py`` console script.  Builds an
+    :class:`argparse.ArgumentParser` with one sub-parser per subcommand, parses
+    ``sys.argv``, and invokes the handler function stored in the ``func``
+    default.
+
+    :returns: The exit code returned by the dispatched subcommand, or the
+        result of printing help when no subcommand is given.
+    :rtype: int
+    """
     parser = argparse.ArgumentParser(prog="wg-py")
     parser.set_defaults(func=lambda _: parser.print_help())
 

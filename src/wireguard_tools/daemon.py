@@ -5,6 +5,30 @@
 # SPDX-License-Identifier: MIT
 #
 
+"""Privileged WireGuard management daemon exposing a JSON-over-Unix-socket API.
+
+The daemon listens on a ``SOCK_STREAM`` Unix socket (default
+``/var/run/wg-daemon.sock``) and accepts one JSON request per connection.
+
+**Protocol:**
+
+*  **Request** — a single JSON line::
+
+       {"cmd": "<command>", "args": {<command-specific fields>}}
+
+*  **Response** — a single JSON line::
+
+       {"ok": true, "data": ...}   // on success
+       {"ok": false, "error": "..."}  // on failure
+
+Supported commands: ``up``, ``down``, ``show``, ``set_peer``,
+``remove_peer``, ``list_devices``.
+
+Socket ownership is configurable via ``--group`` (or ``WG_DAEMON_GROUP``)
+so that unprivileged users in the designated group can issue requests
+without requiring root.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -32,6 +56,16 @@ logger = logging.getLogger("wg-daemon")
 
 
 def _cmd_up(args: dict[str, Any]) -> dict[str, Any]:
+    """Bring a WireGuard interface up.
+
+    Delegates to :func:`~.wg_quick.up` which configures addresses, routes,
+    and the WireGuard tunnel.
+
+    :param args: Must contain ``"interface"`` (str) — the interface name.
+    :returns: ``{"ok": True}`` on success, or ``{"ok": False, "error": ...}``
+        on failure.
+    :rtype: dict[str, Any]
+    """
     interface = args.get("interface")
     if not interface:
         return {"ok": False, "error": "Missing required argument: interface"}
@@ -43,6 +77,16 @@ def _cmd_up(args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _cmd_down(args: dict[str, Any]) -> dict[str, Any]:
+    """Tear down a WireGuard interface.
+
+    Delegates to :func:`~.wg_quick.down` which removes addresses, routes,
+    and the tunnel.
+
+    :param args: Must contain ``"interface"`` (str) — the interface name.
+    :returns: ``{"ok": True}`` on success, or ``{"ok": False, "error": ...}``
+        on failure.
+    :rtype: dict[str, Any]
+    """
     interface = args.get("interface")
     if not interface:
         return {"ok": False, "error": "Missing required argument: interface"}
@@ -54,6 +98,17 @@ def _cmd_down(args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _cmd_show(args: dict[str, Any]) -> dict[str, Any]:
+    """Return the current configuration of a WireGuard interface.
+
+    Open the device, call :meth:`~.wireguard_device.WireguardDevice.get_config`,
+    and serialise the result via
+    :meth:`~.wireguard_config.WireguardConfig.asdict`.
+
+    :param args: Must contain ``"interface"`` (str) — the interface name.
+    :returns: ``{"ok": True, "data": <config dict>}`` on success, or
+        ``{"ok": False, "error": ...}`` on failure.
+    :rtype: dict[str, Any]
+    """
     interface = args.get("interface")
     if not interface:
         return {"ok": False, "error": "Missing required argument: interface"}
@@ -66,6 +121,22 @@ def _cmd_show(args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _cmd_set_peer(args: dict[str, Any]) -> dict[str, Any]:
+    """Add or update a peer on a WireGuard interface.
+
+    Construct a :class:`~.wireguard_config.WireguardPeer` from *args*, merge
+    it into the current running configuration via
+    :meth:`~.wireguard_config.WireguardConfig.add_peer`, and apply the result
+    with :meth:`~.wireguard_device.WireguardDevice.set_config`.
+
+    :param args: Required keys: ``"interface"`` (str), ``"public_key"``
+        (str, base64).  Optional keys: ``"allowed_ips"`` (list of CIDR
+        strings), ``"endpoint_host"`` (str), ``"endpoint_port"`` (int/str),
+        ``"preshared_key"`` (str, base64), ``"persistent_keepalive"``
+        (int/str).
+    :returns: ``{"ok": True}`` on success, or ``{"ok": False, "error": ...}``
+        on failure.
+    :rtype: dict[str, Any]
+    """
     interface = args.get("interface")
     public_key = args.get("public_key")
     if not interface or not public_key:
@@ -100,6 +171,18 @@ def _cmd_set_peer(args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _cmd_remove_peer(args: dict[str, Any]) -> dict[str, Any]:
+    """Remove a peer from a WireGuard interface.
+
+    Look up the peer by its public key in the running configuration,
+    delete it via :meth:`~.wireguard_config.WireguardConfig.del_peer`,
+    and push the updated configuration to the device.
+
+    :param args: Required keys: ``"interface"`` (str), ``"public_key"``
+        (str, base64).
+    :returns: ``{"ok": True}`` on success, or ``{"ok": False, "error": ...}``
+        when the peer is not found or another error occurs.
+    :rtype: dict[str, Any]
+    """
     interface = args.get("interface")
     public_key = args.get("public_key")
     if not interface or not public_key:
@@ -118,6 +201,17 @@ def _cmd_remove_peer(args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _cmd_list_devices(_args: dict[str, Any]) -> dict[str, Any]:
+    """List all active WireGuard interface names.
+
+    Discovers interfaces via
+    :meth:`~.wireguard_device.WireguardDevice.list` and returns their
+    names.
+
+    :param _args: Ignored (no arguments required for this command).
+    :returns: ``{"ok": True, "data": [<interface names>]}`` on success, or
+        ``{"ok": False, "error": ...}`` on failure.
+    :rtype: dict[str, Any]
+    """
     try:
         devices = [d.interface for d in WireguardDevice.list()]
         return {"ok": True, "data": devices}
@@ -136,9 +230,25 @@ COMMANDS = {
 
 
 class DaemonHandler(socketserver.StreamRequestHandler):
-    """Handle one JSON-line request per connection."""
+    """Handle a single JSON-line request per connection.
+
+    Each accepted connection is expected to send exactly **one** JSON line
+    (see the module docstring for the protocol).  The handler reads the
+    line, dispatches it to the matching ``_cmd_*`` function from
+    :data:`COMMANDS`, and writes a single JSON-line response before closing
+    the connection.
+
+    Malformed JSON or an unrecognised ``cmd`` value results in an
+    ``{"ok": false, "error": "..."}`` response — the connection is never
+    left hanging.
+    """
 
     def handle(self) -> None:
+        """Read one JSON request, dispatch it, and write the response.
+
+        :returns: Nothing; the response is written directly to the socket.
+        :rtype: None
+        """
         try:
             raw = self.rfile.readline()
             if not raw:
@@ -161,18 +271,48 @@ class DaemonHandler(socketserver.StreamRequestHandler):
         self._send(response)
 
     def _send(self, response: dict[str, Any]) -> None:
+        """Serialise *response* as a JSON line and flush it to the client.
+
+        :param response: Dictionary to serialise.  By convention contains at
+            least an ``"ok"`` boolean key.
+        """
         data = json.dumps(response) + "\n"
         self.wfile.write(data.encode("utf-8"))
         self.wfile.flush()
 
 
 class ThreadedUnixServer(socketserver.ThreadingMixIn, socketserver.UnixStreamServer):
+    """Thread-per-connection Unix-domain stream server.
+
+    Inherits :class:`~socketserver.ThreadingMixIn` to spawn a daemon thread
+    for each accepted connection and :class:`~socketserver.UnixStreamServer`
+    for ``AF_UNIX`` ``SOCK_STREAM`` transport.
+
+    :cvar daemon_threads: ``True`` — worker threads do not prevent process
+        exit.
+    :cvar allow_reuse_address: ``True`` — allows rebinding after unclean
+        shutdown.
+
+    The socket file is created by the standard library; callers should set
+    ownership and permissions via :func:`_set_socket_permissions` immediately
+    after construction.
+    """
+
     daemon_threads = True
     allow_reuse_address = True
 
 
 def _set_socket_permissions(socket_path: str, group: str | None) -> None:
-    """Set ownership and permissions on the daemon socket."""
+    """Set ownership and permissions on the daemon socket.
+
+    If *group* is provided, the socket file's group is changed via
+    :func:`os.chown`; if the group name cannot be resolved a warning is
+    logged but execution continues.  Permissions are always set to
+    :data:`SOCKET_PERMISSIONS` (``0o660``).
+
+    :param socket_path: Filesystem path of the Unix socket.
+    :param group: Optional Unix group name to assign to the socket file.
+    """
     if group:
         try:
             gid = grp.getgrnam(group).gr_gid
@@ -186,7 +326,20 @@ def serve(
     socket_path: str = DEFAULT_SOCKET_PATH,
     group: str | None = None,
 ) -> None:
-    """Start the daemon and serve requests until interrupted."""
+    """Start the daemon and block, serving requests until interrupted.
+
+    Create a :class:`ThreadedUnixServer` bound to *socket_path*, install
+    ``SIGTERM`` / ``SIGINT`` handlers that trigger a graceful shutdown, and
+    enter :meth:`~socketserver.BaseServer.serve_forever`.  On exit the
+    socket file is unlinked.
+
+    If *socket_path* already exists (e.g. from a previous unclean shutdown)
+    it is removed before binding.
+
+    :param socket_path: Filesystem path for the listening Unix socket.
+    :param group: Optional Unix group name passed to
+        :func:`_set_socket_permissions`.
+    """
     path = Path(socket_path)
     if path.exists():
         path.unlink()
@@ -213,6 +366,23 @@ def serve(
 
 
 def main() -> None:
+    """Parse CLI arguments and start the daemon.
+
+    Accepted arguments:
+
+    ``--socket``
+        Path for the Unix socket (env: ``WG_DAEMON_SOCKET``, default
+        ``/var/run/wg-daemon.sock``).
+    ``--group``
+        Group name for socket ownership (env: ``WG_DAEMON_GROUP``, default
+        ``wireguard``).
+    ``--foreground``
+        Run in foreground (default; intended for systemd management).
+    ``-v`` / ``--verbose``
+        Enable ``DEBUG``-level logging.
+
+    Logging is emitted to *stderr* in a timestamped format.
+    """
     parser = argparse.ArgumentParser(description="WireGuard Tools Daemon")
     parser.add_argument(
         "--socket",
