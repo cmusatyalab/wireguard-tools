@@ -32,6 +32,7 @@ repository = "https://github.com/cmusatyalab/wireguard-tools"
 
 [project.scripts]
 wg-py = "wireguard_tools.cli:main"
+wg-daemon = "wireguard_tools.daemon:main"
 
 [dependency-groups]
 dev = [
@@ -101,6 +102,8 @@ ignore = ["ANN401", "COM812", "D", "S101"]
 "src/wireguard_tools/wireguard_config.py" = ["C901", "PLR0912"]
 "src/wireguard_tools/wg_quick.py" = ["C901", "PLR0912", "PLR0915", "S603"]
 "src/wireguard_tools/wireguard_device.py" = ["PLC0415"]
+"src/wireguard_tools/daemon.py" = ["C901", "PLR0912", "T201"]
+"src/wireguard_tools/daemon_client.py" = ["S101"]
 "tests/*" = ["PLR2004", "S101"]
 
 [tool.uv.build-backend]

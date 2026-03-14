@@ -1,0 +1,33 @@
+# systemd service for the WireGuard Tools Daemon
+#
+# Install:
+#   1. Copy this file to /etc/systemd/system/wg-daemon.service
+#   2. Adjust ExecStart to point at the venv where wireguard-tools is installed
+#   3. Create the 'wireguard' group:  sudo groupadd wireguard
+#   4. Add the GUI user to the group: sudo usermod -aG wireguard <gui-user>
+#   5. sudo systemctl daemon-reload && sudo systemctl enable --now wg-daemon
+#
+[Unit]
+Description=WireGuard Tools Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/wg-daemon
+Restart=on-failure
+RestartSec=3
+
+User=root
+Group=wireguard
+
+RuntimeDirectory=wg-daemon
+RuntimeDirectoryMode=0755
+
+# Harden
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+NoNewPrivileges=no
+
+[Install]
+WantedBy=multi-user.target

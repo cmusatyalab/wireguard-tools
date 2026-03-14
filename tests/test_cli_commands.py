@@ -3,7 +3,7 @@
 
 import pytest
 
-from wireguard_tools.cli import SHOW_FIELDS, _parse_set_args
+from wireguard_tools.cli import SHOW_FIELDS, _parse_set_args, _resolve_show_args
 from wireguard_tools.wireguard_key import WireguardKey
 
 
@@ -82,6 +82,15 @@ class TestParseSetArgs:
         )
         assert len(peers[0]["allowed_ips"]) == 2
         assert peers[0]["replace_allowed_ips"] is True
+
+    def test_peer_allowed_ips_replace_ignores_empty_entries(self) -> None:
+        key = str(WireguardKey.generate())
+        _, _, peers = _parse_set_args(
+            ["wg0", "peer", key, "allowed-ips", "10.0.0.0/24,,10.1.0.0/24"]
+        )
+        assert len(peers[0]["allowed_ips"]) == 2
+        assert str(peers[0]["allowed_ips"][0]) == "10.0.0.0/24"
+        assert str(peers[0]["allowed_ips"][1]) == "10.1.0.0/24"
 
     def test_peer_allowed_ips_empty_clears(self) -> None:
         key = str(WireguardKey.generate())
@@ -163,3 +172,25 @@ class TestShowFields:
             "dump",
         }
         assert set(SHOW_FIELDS) == expected
+
+
+class TestResolveShowArgs:
+    def test_no_args(self) -> None:
+        assert _resolve_show_args([]) == (None, None)
+
+    def test_single_interface(self) -> None:
+        assert _resolve_show_args(["wg0"]) == ("wg0", None)
+
+    def test_single_field_targets_all_interfaces(self) -> None:
+        assert _resolve_show_args(["public-key"]) == (None, "public-key")
+
+    def test_interface_and_field(self) -> None:
+        assert _resolve_show_args(["wg0", "public-key"]) == ("wg0", "public-key")
+
+    def test_too_many_args_raises(self) -> None:
+        with pytest.raises(ValueError, match="Usage: wg show"):
+            _resolve_show_args(["wg0", "public-key", "extra"])
+
+    def test_invalid_field_raises(self) -> None:
+        with pytest.raises(ValueError, match="Unknown field"):
+            _resolve_show_args(["wg0", "not-a-field"])

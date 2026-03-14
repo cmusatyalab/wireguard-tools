@@ -16,7 +16,12 @@ from secrets import token_bytes
 from stat import S_IRWXO, S_ISREG
 from typing import Any, Iterable
 
-from .wireguard_config import WireguardConfig, WireguardPeer, _parse_endpoint
+from .wireguard_config import (
+    WireguardConfig,
+    WireguardPeer,
+    _parse_endpoint,
+    _split_comma_list,
+)
 from .wireguard_device import WireguardDevice
 from .wireguard_key import WireguardKey
 
@@ -157,11 +162,35 @@ def _show_field(
             print(f"{pfx}{peer.public_key}\t{rx}\t{tx}")
 
 
+def _resolve_show_args(
+    show_args: list[str],
+) -> tuple[str | None, str | None]:
+    """Resolve `wg show` positional arguments into (interface, field)."""
+    if len(show_args) > 2:
+        msg = "Usage: wg show [<interface>|all|interfaces] [<field>]"
+        raise ValueError(msg)
+    if not show_args:
+        return None, None
+    if len(show_args) == 1:
+        token = show_args[0]
+        if token in SHOW_FIELDS:
+            return None, token
+        return token, None
+    interface, field = show_args
+    if field not in SHOW_FIELDS:
+        msg = f"Unknown field: {field}"
+        raise ValueError(msg)
+    return interface, field
+
+
 def show(args: argparse.Namespace) -> int:
     """Show the current configuration and device information."""
     hide_keys = os.environ.get("WG_HIDE_KEYS", "always") != "never"
-    interface = args.interface
-    field = getattr(args, "field", None)
+    try:
+        interface, field = _resolve_show_args(getattr(args, "show_args", []))
+    except ValueError as exc:
+        print(exc, file=sys.stderr)
+        return 1
 
     if interface == "interfaces":
         try:
@@ -290,7 +319,7 @@ def _parse_set_args(
                 current_peer["allowed_ips"] = []
                 current_peer["replace_allowed_ips"] = True
             else:
-                entries = [e.strip() for e in raw.split(",")]
+                entries = _split_comma_list(raw)
                 has_prefix = any(e.startswith(("+", "-")) for e in entries if e)
                 if has_prefix:
                     add_ips: list[Any] = []
@@ -490,13 +519,7 @@ def main() -> int:
 
     sub = parser.add_subparsers(title="Available subcommands")
     show_parser = sub.add_parser("show", help=show.__doc__, description=show.__doc__)
-    show_parser.add_argument("interface", nargs="?")
-    show_parser.add_argument(
-        "field",
-        nargs="?",
-        choices=SHOW_FIELDS,
-        default=None,
-    )
+    show_parser.add_argument("show_args", nargs="*")
     show_parser.set_defaults(func=show)
 
     showconf_parser = sub.add_parser(
